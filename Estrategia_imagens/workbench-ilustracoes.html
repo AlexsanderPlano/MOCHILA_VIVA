@@ -1909,6 +1909,20 @@ document.querySelectorAll('.dropzone').forEach(dz => {
   if (saved) setDropzoneImage(dz, saved);
 });
 
+// ══════ PRE-LOAD FOTOS ══════
+const preloadFotos = {
+  'p01': 'Capa_versao_1.png'
+};
+Object.entries(preloadFotos).forEach(([panelId, src]) => {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const dz = panel.querySelector('.dropzone');
+  if (!dz || dz.classList.contains('has-image')) return;
+  const key = 'img_' + (dz.dataset.name || panelId);
+  if (sessionStorage.getItem(key)) return; // ja restaurado
+  setDropzoneImage(dz, src);
+});
+
 // ══════ GRADE / GRID ══════
 let gridActive = false;
 const gridStates = {}; // per-panel grid state
