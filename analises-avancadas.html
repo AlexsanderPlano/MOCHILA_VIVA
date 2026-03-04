@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mochila Viva — Analises Avancadas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --input-bg: #f8f9fa;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --title: #0f172a;
+    --text: #334155;
+    --text-light: #64748b;
+    --text-muted: #94a3b8;
+    --teal: #0d9488;
+    --teal-hover: #0f766e;
+    --teal-light: #f0fdfa;
+    --teal-bg: rgba(13, 148, 136, 0.06);
+    --green: #16a34a;
+    --green-dark: #15803d;
+    --green-bg: #f0fdf4;
+    --blue: #2563eb;
+    --blue-bg: #eff6ff;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --purple: #7c3aed;
+    --purple-bg: #f5f3ff;
+    --yellow: #ca8a04;
+    --yellow-bg: #fefce8;
+    --orange: #ea580c;
+    --orange-bg: #fff7ed;
+    --pink: #db2777;
+    --pink-bg: #fdf2f8;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.06);
+    --shadow-hover: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-pill: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -50%; right: -20%;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: rgba(13, 148, 136, 0.08);
+  }
+  .header h1 { font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; position: relative; }
+  .header h1 span { color: #5eead4; }
+  .header .subtitle { font-size: 14px; color: #94a3b8; margin-top: 6px; position: relative; }
+  .header .badge-row { display: flex; justify-content: center; gap: 8px; margin-top: 18px; flex-wrap: wrap; position: relative; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 12px; border-radius: var(--radius-pill);
+    font-size: 11px; font-weight: 600;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .badge-teal { background: #0d9488; color: #ffffff; border-color: #0d9488; font-size: 12px; font-weight: 700; padding: 6px 14px; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(13,148,136,0.3); }
+  .badge-green { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+  .badge-orange { background: #ea580c; color: #ffffff; border-color: #ea580c; font-size: 12px; font-weight: 700; padding: 6px 14px; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(234,88,12,0.3); }
+  .badge-purple { background: #ede9fe; color: #6d28d9; border-color: #ddd6fe; }
+  .badge-yellow { background: #fef9c3; color: #a16207; border-color: #fef08a; }
+  .badge-red { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
+  .badge-pink { background: #fce7f3; color: #be185d; border-color: #fbcfe8; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 32px; }
+  .section-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--text-muted);
+    padding: 0 4px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; transition: color 0.2s;
+    user-select: none;
+  }
+  .section-title:hover { color: var(--teal); }
+  .section-title .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 8px;
+    background: linear-gradient(135deg, #0d9488, #0f766e); color: #fff;
+    font-size: 12px; font-weight: 700; box-shadow: 0 2px 6px rgba(13,148,136,0.25);
+  }
+<style>
+  .help-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--border); color: var(--text-muted);
+    font-size: 10px; font-weight: 700;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .section-title .help-icon { margin-left: auto; }
+  .section-title:hover .help-icon, .discovery h4:hover .help-icon { background: var(--teal); color: #fff; }
+
+  /* METRICS */
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .metric {
+    background: var(--card); border-radius: var(--radius);
+    padding: 22px 24px; box-shadow: var(--shadow);
+    border-left: 4px solid transparent; transition: all 0.25s;
+  }
+  .metric:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .metric .metric-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px; }
+  .metric .metric-value { font-size: 30px; font-weight: 800; color: var(--title); line-height: 1.1; }
+  .metric .metric-sub { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+  .metric.teal { border-left-color: var(--teal); }
+  .metric.teal .metric-value { color: var(--teal); }
+  .metric.green { border-left-color: var(--green); }
+  .metric.green .metric-value { color: var(--green-dark); }
+  .metric.blue { border-left-color: var(--blue); }
+  .metric.blue .metric-value { color: var(--blue); }
+  .metric.purple { border-left-color: var(--purple); }
+  .metric.purple .metric-value { color: var(--purple); }
+  .metric.orange { border-left-color: var(--orange); }
+  .metric.orange .metric-value { color: var(--orange); }
+  .metric.red { border-left-color: var(--red); }
+  .metric.red .metric-value { color: var(--red); }
+  .metric.pink { border-left-color: var(--pink); }
+  .metric.pink .metric-value { color: var(--pink); }
+
+  /* TABLES */
+  .table-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: auto; }
+  thead th {
+    background: #0f172a; padding: 8px 6px; text-align: left;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.3px; color: #94a3b8;
+    border-bottom: none; white-space: nowrap;
+  }
+  thead th:first-child { border-radius: var(--radius) 0 0 0; }
+  thead th:last-child { border-radius: 0 var(--radius) 0 0; }
+  tbody td { padding: 8px 6px; border-bottom: 1px solid var(--border-light); color: var(--text); white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--teal-bg); }
+  tbody tr { transition: background 0.15s; }
+  .fw700 { font-weight: 700; }
+  .price { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .price-teal { color: var(--teal); }
+  .price-green { color: var(--green-dark); }
+  .price-red { color: var(--red); font-weight: 500; }
+  .small { font-size: 12px; color: var(--text-light); }
+  .highlight-row { background: var(--teal-light) !important; }
+  .highlight-row td:first-child { border-left: 3px solid var(--teal); }
+  .new-row { background: var(--orange-bg) !important; }
+  .new-row td:first-child { border-left: 3px solid var(--orange); }
+
+  /* CHART CARD */
+  .chart-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; }
+  .chart-card h3 { font-size: 16px; font-weight: 700; color: var(--title); margin-bottom: 20px; }
+  .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .bar-label { width: 130px; text-align: right; font-size: 12px; font-weight: 600; color: var(--text-light); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 34px; background: var(--input-bg); border-radius: 10px; overflow: hidden; position: relative; }
+  .bar-fill {
+    height: 100%; border-radius: 10px; display: flex; align-items: center;
+    padding-left: 12px; font-size: 12px; font-weight: 700; color: #fff;
+    transition: width 0.8s ease; min-width: 40px;
+  }
+  .chart-note {
+    margin-top: 14px; font-size: 13px; color: var(--text);
+    padding: 14px 18px; background: var(--input-bg);
+    border-radius: var(--radius-sm); border-left: 4px solid var(--text-muted);
+  }
+  .chart-note.warning { background: var(--yellow-bg); border-left-color: var(--yellow); }
+  .chart-note.danger { background: var(--red-bg); border-left-color: var(--red); }
+  .chart-note.success { background: var(--green-bg); border-left-color: var(--green); }
+
+  /* SPEC GRID */
+  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .spec-box {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 24px; transition: all 0.25s;
+  }
+  .spec-box:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .spec-box h3 {
+    font-size: 14px; font-weight: 700; color: var(--title);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .spec-box ul { list-style: none; }
+  .spec-box ul li {
+    padding: 9px 0; border-bottom: 1px solid var(--border-light);
+    display: flex; justify-content: space-between; font-size: 13px; gap: 12px;
+  }
+  .spec-box ul li:last-child { border-bottom: none; }
+  .spec-box ul li .lbl { color: var(--text-light); }
+  .spec-box ul li .val { font-weight: 700; text-align: right; color: var(--title); }
+
+  /* CALENDAR */
+  .calendar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .cal-month {
+    background: var(--card); border-radius: var(--radius-sm);
+    box-shadow: var(--shadow); padding: 16px 18px;
+    border-left: 4px solid transparent; transition: all 0.25s;
+  }
+  .cal-month:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .cal-month .month-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+  .cal-month .month-demand { font-size: 18px; font-weight: 800; margin: 6px 0; }
+  .cal-month .month-event { font-size: 11px; color: var(--text-light); line-height: 1.4; }
+  .cal-high { border-left-color: var(--teal); }
+  .cal-high .month-demand { color: var(--teal); }
+  .cal-med { border-left-color: var(--blue); }
+  .cal-med .month-demand { color: var(--blue); }
+  .cal-low { border-left-color: var(--text-muted); }
+  .cal-low .month-demand { color: var(--text-light); }
+  .cal-peak { border-left-color: var(--orange); background: var(--orange-bg); }
+  .cal-peak .month-demand { color: var(--orange); font-weight: 800; }
+
+  /* DISCOVERY */
+  .discovery {
+    background: linear-gradient(135deg, #0f172a, #1e293b); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); padding: 24px 28px; margin-top: 16px;
+    border-left: 4px solid var(--teal);
+  }
+  .discovery h4 { font-size: 14px; font-weight: 700; color: #e2e8f0; margin-bottom: 8px; }
+  .discovery p { font-size: 13px; color: #94a3b8; line-height: 1.8; }
+  .discovery b { color: #5eead4; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px);
+    z-index: 1000; justify-content: center; align-items: center;
+    padding: 24px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--card); border-radius: var(--radius);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    max-width: 680px; width: 100%; max-height: 85vh;
+    overflow-y: auto; padding: 36px;
+    animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-close {
+    float: right; width: 36px; height: 36px; border-radius: 10px;
+    border: none; background: var(--input-bg); color: var(--text-light);
+    font-size: 18px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--red-bg); color: var(--red); }
+  .modal h2 { font-size: 20px; font-weight: 800; color: var(--title); margin-bottom: 18px; padding-right: 44px; }
+  .modal-badge {
+    display: inline-block; padding: 5px 14px; border-radius: var(--radius-pill);
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 14px;
+  }
+  .modal h3 { font-size: 15px; font-weight: 700; color: var(--title); margin: 20px 0 10px; }
+  .modal p { font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 12px; }
+  .modal ul { list-style: none; margin-bottom: 14px; }
+  .modal ul li {
+    padding: 8px 0 8px 20px; font-size: 13px; position: relative;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .modal ul li:last-child { border-bottom: none; }
+  .modal ul li::before {
+    content: ''; position: absolute; left: 0; top: 15px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal);
+  }
+  .modal .example-box {
+    background: var(--input-bg); border-radius: var(--radius-sm);
+    padding: 16px 20px; margin: 14px 0; border-left: 4px solid var(--teal);
+  }
+  .modal .example-box strong { color: var(--title); }
+  .modal .example-box p { margin-bottom: 4px; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center; padding: 40px 20px; color: var(--text-muted);
+    font-size: 12px; margin-top: 48px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  @media (max-width: 768px) {
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .spec-grid { grid-template-columns: 1fr; }
+    .calendar-grid { grid-template-columns: repeat(3, 1fr); }
+    .header h1 { font-size: 22px; }
+    .metric .metric-value { font-size: 24px; }
+    .container { padding: 14px; }
+    .modal { padding: 24px; margin: 12px; }
+    .bar-label { width: 100px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1><span>Mochila Viva</span> — Analises Avancadas</h1>
+    <div class="subtitle">Estrategia Agressiva R$ 159,90 · 8 Analises · Clique nos titulos para entender cada conceito</div>
+    <div class="badge-row">
+      <span class="badge badge-red">Estrategia Agressiva</span>
+      <span class="badge badge-teal">R$ 159,90 unitario</span>
+      <span class="badge badge-green">Margem 30,5%</span>
+      <span class="badge badge-purple">8 Analises</span>
+      <span class="badge badge-blue">02/03/2026</span>
+    </div>
+  </div>
+
+  <!-- 0. NOVA TABELA DE PRECOS -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-pricing')">
+      <span class="num">$</span> Nova Tabela de Precos — Estrategia Agressiva
+      <span class="help-icon">?</span>
+    </div>
+    <div class="metrics" style="margin-bottom:14px">
+      <div class="metric teal">
+        <div class="metric-label">Preco novo</div>
+        <div class="metric-value">R$ 159,90</div>
+        <div class="metric-sub">-1,6% vs mediana R$ 162,50</div>
+      </div>
+      <div class="metric green">
+        <div class="metric-label">Margem por venda</div>
+        <div class="metric-value">R$ 48,82</div>
+        <div class="metric-sub">30,5% com Decola</div>
+      </div>
+      <div class="metric purple">
+        <div class="metric-label">Custo producao</div>
+        <div class="metric-value">R$ 78</div>
+        <div class="metric-sub">Inalterado</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>R$ Unt.</th>
+            <th>R$ por Unid.</th>
+            <th>Desc. vs Unit</th>
+            <th>Mediana Mercado</th>
+            <th>vs Mercado</th>
+            <th>Custo Total</th>
+            <th>Comissao 16%</th>
+            <th>Frete Est.</th>
+            <th>Lucro Liquido</th>
+            <th>Lucro/Unid.</th>
+            <th>Margem</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-orange">Colete Avulso</span></td>
+            <td class="price">R$ 109,90</td>
+            <td class="price">R$ 109,90</td>
+            <td class="small">-R$ 50,00</td>
+            <td class="small">R$ 98,03</td>
+            <td class="small" style="color:var(--green)">+R$ 11,87</td>
+            <td class="price-red">-R$ 54,00</td>
+            <td class="price-red">-R$ 17,58</td>
+            <td class="price-red">-R$ 7,50</td>
+            <td class="price price-green fw700">R$ 30,82</td>
+            <td class="price fw700" style="color:var(--green-dark)">R$ 30,82</td>
+            <td class="fw700">28,0%</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><span class="badge badge-teal">Mochila Pirulito</span></td>
+            <td class="price price-teal fw700">R$ 159,90</td>
+            <td class="price price-teal fw700">R$ 159,90</td>
+            <td class="small">—</td>
+            <td class="small">R$ 162,50</td>
+            <td class="small" style="color:var(--red)">-R$ 2,60</td>
+            <td class="price-red">-R$ 78,00</td>
+            <td class="price-red">-R$ 25,58</td>
+            <td class="price-red">-R$ 7,50</td>
+            <td class="price price-teal fw700">R$ 48,82</td>
+            <td class="price fw700" style="color:var(--green-dark)">R$ 48,82</td>
+            <td class="fw700">30,5%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 2</span></td>
+            <td class="price">R$ 299,80</td>
+            <td class="price">R$ 149,90</td>
+            <td class="small">-R$ 10,00</td>
+            <td class="small">R$ 174,40</td>
+            <td class="small" style="color:var(--red)">-R$ 24,50</td>
+            <td class="price-red">-R$ 151,00</td>
+            <td class="price-red">-R$ 47,98</td>
+            <td class="price-red">-R$ 7,50</td>
+            <td class="price price-green fw700">R$ 93,42</td>
+            <td class="price fw700" style="color:var(--green-dark)">R$ 46,71</td>
+            <td>31,2%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-purple">Kit 3</span></td>
+            <td class="price">R$ 419,70</td>
+            <td class="price">R$ 139,90</td>
+            <td class="small">-R$ 20,00</td>
+            <td class="small">R$ 127,30</td>
+            <td class="small" style="color:var(--green)">+R$ 12,60</td>
+            <td class="price-red">-R$ 224,00</td>
+            <td class="price-red">-R$ 67,15</td>
+            <td class="price-red">-R$ 7,50</td>
+            <td class="price price-green fw700">R$ 121,05</td>
+            <td class="price fw700" style="color:var(--green-dark)">R$ 40,35</td>
+            <td>28,8%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Kit 5</span></td>
+            <td class="price">R$ 679,50</td>
+            <td class="price">R$ 135,90</td>
+            <td class="small">-R$ 24,00</td>
+            <td class="small">R$ 137,15</td>
+            <td class="small" style="color:var(--red)">-R$ 1,25</td>
+            <td class="price-red">-R$ 370,00</td>
+            <td class="price-red">-R$ 108,72</td>
+            <td class="price-red">-R$ 7,50</td>
+            <td class="price price-green fw700">R$ 193,28</td>
+            <td class="price fw700" style="color:var(--green-dark)">R$ 38,66</td>
+            <td>28,4%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Kit 10</span></td>
+            <td class="price">R$ 1.299,00</td>
+            <td class="price">R$ 129,90</td>
+            <td class="small">-R$ 30,00</td>
+            <td class="small">R$ 135,06</td>
+            <td class="small" style="color:var(--red)">-R$ 5,16</td>
+            <td class="price-red">-R$ 735,00</td>
+            <td class="price-red">-R$ 207,84</td>
+            <td class="price-red">-R$ 15,00</td>
+            <td class="price price-green fw700">R$ 341,16</td>
+            <td class="price fw700" style="color:var(--green-dark)">R$ 34,12</td>
+            <td>26,3%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="spec-grid" style="margin-top:14px">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--teal)"></span> Lucro Total do Pedido</h3>
+        <ul>
+          <li><span class="lbl"><span class="badge badge-orange">Colete Avulso</span></span><span class="val" style="color:#006600">R$ 30,82</span></li>
+          <li><span class="lbl"><span class="badge badge-teal">Mochila Pirulito</span></span><span class="val" style="color:#006600">R$ 48,82</span></li>
+          <li><span class="lbl"><span class="badge badge-blue">Kit 2</span></span><span class="val" style="color:#006600">R$ 93,42</span></li>
+          <li><span class="lbl"><span class="badge badge-purple">Kit 3</span></span><span class="val" style="color:#006600">R$ 121,05</span></li>
+          <li><span class="lbl"><span class="badge badge-green">Kit 5</span></span><span class="val" style="color:#006600">R$ 193,28</span></li>
+          <li><span class="lbl"><span class="badge badge-red">Kit 10</span></span><span class="val" style="color:#006600">R$ 341,16</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--purple)"></span> Calculo de Equivalencia em Lucro</h3>
+        <ul>
+          <li><span class="lbl">Lucro base <span class="badge badge-teal">Mochila Pirulito</span></span><span class="val" style="color:#006600">R$ 48,82/venda</span></li>
+          <li><span class="lbl">1 <span class="badge badge-red">Kit 10</span> (R$ 341,16) = lucro de</span><span class="val">7,0 vendas unitarias</span></li>
+          <li><span class="lbl">1 <span class="badge badge-green">Kit 5</span> (R$ 193,28) = lucro de</span><span class="val">4,0 vendas unitarias</span></li>
+          <li><span class="lbl">1 <span class="badge badge-purple">Kit 3</span> (R$ 121,05) = lucro de</span><span class="val">2,5 vendas unitarias</span></li>
+          <li><span class="lbl">1 <span class="badge badge-blue">Kit 2</span> (R$ 93,42) = lucro de</span><span class="val">1,9 vendas unitarias</span></li>
+          <li><span class="lbl">1 <span class="badge badge-orange">Colete Avulso</span> (R$ 30,82) = lucro de</span><span class="val">0,6 vendas unitarias</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. MARKET SHARE -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-1')">
+      <span class="num">1</span> Estimativa de Market Share
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="chart-card">
+      <h3>Vendas Estimadas por Vendedor (reviews x 15)</h3>
+      <div class="bar-row">
+        <span class="bar-label" style="font-weight:700;color:var(--blue)">CLAUDINHO</span>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#1e40af,#3b82f6)">~3.165 vendas</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="font-weight:700;color:var(--purple)">AREA+BALCAO</span>
+        <div class="bar-track"><div class="bar-fill" style="width:32%;background:linear-gradient(90deg,#6d28d9,#8b5cf6)">~1.020</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="font-weight:700;color:var(--pink)">MOCHILA PIRUL.</span>
+        <div class="bar-track"><div class="bar-fill" style="width:25%;background:linear-gradient(90deg,#be185d,#ec4899)">~800 est.</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="font-weight:700;color:#b45309">MIDIAS</span>
+        <div class="bar-track"><div class="bar-fill" style="width:19%;background:linear-gradient(90deg,#c2410c,#f97316)">~600 est.</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">OUTROS</span>
+        <div class="bar-track"><div class="bar-fill" style="width:16%;background:linear-gradient(90deg,#64748b,#94a3b8)">~500 est.</div></div>
+      </div>
+      <div class="bar-row" style="margin-top:4px;padding:6px 0;background:var(--teal-light);border-radius:8px">
+        <span class="bar-label" style="color:var(--teal);font-weight:800;font-size:13px">MOCHILA VIVA</span>
+        <div class="bar-track"><div class="bar-fill" style="width:3%;background:linear-gradient(90deg,#0f766e,#14b8a6)">~50</div></div>
+      </div>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead><tr><th>Vendedor</th><th>Anuncios</th><th>Reviews</th><th>Vendas Est.</th><th>Share Est.</th><th>Receita Anual Est.</th><th>Conversao</th></tr></thead>
+        <tbody>
+          <tr><td class="fw700" style="color:var(--blue)">CLAUDINHO DO SOM</td><td>10</td><td class="fw700">211</td><td class="fw700">3.165</td><td><span class="badge badge-blue">~52%</span></td><td class="price">R$ 427k</td><td class="small" style="color:var(--green-dark)">316 vendas/anuncio</td></tr>
+          <tr><td class="fw700" style="color:var(--purple)">AREA + BALCAO (mesma emp.)</td><td>53</td><td>68</td><td>1.020</td><td><span class="badge badge-purple">~17%</span></td><td class="price">R$ 143k</td><td class="small">19 vendas/anuncio</td></tr>
+          <tr><td>MOCHILA PIRULITO</td><td>22</td><td>—</td><td>~800</td><td>~13%</td><td class="price">~R$ 112k</td><td class="small">Estimativa por volume listings</td></tr>
+          <tr><td>MIDIAS</td><td>12</td><td>—</td><td>~600</td><td>~10%</td><td class="price">~R$ 47k</td><td class="small">Alto volume, margem zero</td></tr>
+          <tr><td>Outros</td><td>62</td><td>—</td><td>~500</td><td>~8%</td><td class="price">~R$ 70k</td><td class="small">Fragmentado</td></tr>
+          <tr style="background:var(--teal-light)"><td class="fw700" style="color:var(--teal)">MOCHILA VIVA</td><td>6</td><td>~5</td><td>~50</td><td><span class="badge badge-red">&lt;1%</span></td><td class="price">~R$ 9k</td><td class="small">Potencial enorme</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="discovery">
+      <h4 onclick="openModal('modal-claudinho')" style="cursor:pointer;display:flex;align-items:center;gap:8px"><span class="modal-badge" style="background:var(--blue-bg);color:var(--blue);font-size:10px">ANALISE</span> O que os numeros revelam <span class="help-icon" style="margin-left:auto">?</span></h4>
+    </div>
+  </div>
+
+  <!-- 2. AVALIACOES NEGATIVAS -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-2')">
+      <span class="num">2</span> Analise de Avaliacoes Negativas dos Concorrentes
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Reclamacao</th><th>Fonte</th><th>Gravidade</th><th>Quem sofre</th><th>Como a MV resolve</th><th>Onde comunicar</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="fw700">"Placa solta e balanca"</td>
+            <td><span class="badge badge-purple">AREAPROMOCIONAL 4*</span></td>
+            <td><span class="badge badge-red">ALTA</span></td>
+            <td class="small">Todos com "2 pontos" VHB</td>
+            <td class="fw700" style="color:var(--teal)">VHB 3M 40cm (4-8x mais)</td>
+            <td class="small">Titulo + 1a foto + descricao bloco 2</td>
+          </tr>
+          <tr>
+            <td class="fw700">"Mochila molenga/amassa"</td>
+            <td><span class="badge badge-orange">Inferido do mercado</span></td>
+            <td><span class="badge badge-red">ALTA</span></td>
+            <td class="small">AREA, BALCAO, MIDIAS (sem estrutura)</td>
+            <td class="fw700" style="color:var(--teal)">E.V.A. 8mm rigido</td>
+            <td class="small">Foto detalhe + descricao bloco 1</td>
+          </tr>
+          <tr>
+            <td class="fw700">"Pesada, dor nas costas"</td>
+            <td><span class="badge badge-orange">Inferido (haste metal)</span></td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td class="small">Todos com haste metal/ferro 75cm</td>
+            <td class="fw700" style="color:var(--teal)">Aluminio 85cm / 220g / 610g total</td>
+            <td class="small">Infografico peso + descricao bloco 3</td>
+          </tr>
+          <tr>
+            <td>"Nao serve, sou grande"</td>
+            <td><span class="badge badge-orange">Inferido (P/M/G)</span></td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td class="small">100% dos concorrentes (so P/M/G)</td>
+            <td class="fw700" style="color:var(--teal)">P a GG + 4 reguladores</td>
+            <td class="small">Ficha tecnica + descricao bloco 4</td>
+          </tr>
+          <tr>
+            <td>"Tecido rasgou com uso"</td>
+            <td><span class="badge badge-orange">Inferido (TNT fragil)</span></td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td class="small">Economicos com TNT</td>
+            <td class="small">Comunicar material (lacuna atual!)</td>
+            <td class="small">Ficha tecnica — urgente preencher</td>
+          </tr>
+          <tr>
+            <td>"Haste curta, placa baixa"</td>
+            <td><span class="badge badge-orange">Inferido (75cm)</span></td>
+            <td><span class="badge badge-blue">BAIXA</span></td>
+            <td class="small">Maioria (haste 75cm)</td>
+            <td class="fw700" style="color:var(--teal)">Haste 85cm (+13%)</td>
+            <td class="small">Descricao bloco 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note danger" style="margin-top:12px">
+      <b>Lacuna critica:</b> A Mochila Viva nao informa o material do tecido em nenhum anuncio. Se o tecido e superior ao TNT+Nylon padrao, isso deve ser comunicado URGENTEMENTE. Se nao e, e uma vulnerabilidade que concorrentes podem explorar.
+    </div>
+  </div>
+
+  <!-- 3. PERGUNTAS DOS COMPRADORES -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-3')">
+      <span class="num">3</span> Perguntas Reais dos Compradores (Inferidas)
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Pergunta do Comprador</th><th>Frequencia</th><th>Objecao Real</th><th>Resposta que Vende</th><th>Onde Resolver</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="fw700">"Tem frete gratis?"</td>
+            <td><span class="badge badge-red">MUITO ALTA</span></td>
+            <td>Custo total</td>
+            <td>Sim — Decola ativo, frete gratis</td>
+            <td class="small">Selo automatico ML</td>
+          </tr>
+          <tr>
+            <td class="fw700">"Aguenta chuva/sol?"</td>
+            <td><span class="badge badge-red">ALTA</span></td>
+            <td>Durabilidade</td>
+            <td class="fw700" style="color:var(--teal)">E.V.A. 8mm nao absorve agua</td>
+            <td class="small">Descricao bloco 1 + foto</td>
+          </tr>
+          <tr>
+            <td class="fw700">"Serve em pessoa grande?"</td>
+            <td><span class="badge badge-red">ALTA</span></td>
+            <td>Tamanho</td>
+            <td class="fw700" style="color:var(--teal)">P a GG com 4 reguladores</td>
+            <td class="small">Ficha tecnica + titulo ("todos os tamanhos")</td>
+          </tr>
+          <tr>
+            <td>"Personaliza com minha marca?"</td>
+            <td><span class="badge badge-red">ALTA</span></td>
+            <td>Customizacao B2B</td>
+            <td>Fase 5 — ou indicar como trocar placa</td>
+            <td class="small">FAQ na descricao</td>
+          </tr>
+          <tr>
+            <td>"Qual diferenca do mais barato?"</td>
+            <td><span class="badge badge-red">ALTA</span></td>
+            <td>Justificativa preco</td>
+            <td class="fw700" style="color:var(--teal)">5 diferenciais com numeros</td>
+            <td class="small">Infografico comparativo na foto 6</td>
+          </tr>
+          <tr>
+            <td>"A placa solta?"</td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td>Qualidade</td>
+            <td>VHB 3M 40cm = 4-8x mais adesao</td>
+            <td class="small">Descricao bloco 2 + foto detalhe VHB</td>
+          </tr>
+          <tr>
+            <td>"Quanto pesa?"</td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td>Conforto (uso 8-12h)</td>
+            <td>610g total — 30% mais leve que metal</td>
+            <td class="small">Ficha tecnica + descricao bloco 3</td>
+          </tr>
+          <tr>
+            <td>"Posso trocar a placa/arte?"</td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td>Versatilidade</td>
+            <td>Placas removiveis, troca em segundos</td>
+            <td class="small">Descricao bloco 5</td>
+          </tr>
+          <tr>
+            <td>"Quanto tempo entrega?"</td>
+            <td><span class="badge badge-yellow">MEDIA</span></td>
+            <td>Urgencia (evento proximo)</td>
+            <td>Pronta entrega Curitiba</td>
+            <td class="small">Status ML automatico</td>
+          </tr>
+          <tr>
+            <td>"Posso retirar pessoalmente?"</td>
+            <td><span class="badge badge-blue">BAIXA</span></td>
+            <td>Economia frete (local)</td>
+            <td>Sim, Curitiba — combinar via mensagem</td>
+            <td class="small">Descricao rodape</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note" style="margin-top:12px">
+      <b>Regra de ouro:</b> Se uma pergunta aparece 3+ vezes, a resposta deveria estar na descricao. Cada pergunta nao respondida proativamente e um comprador que pode desistir antes de perguntar.
+    </div>
+  </div>
+
+  <!-- 4. POSICAO ORGANICA -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-4')">
+      <span class="num">4</span> Posicao Organica no Ranking ML
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--teal)"></span> Fatores do Algoritmo ML</h3>
+        <ul>
+          <li><span class="lbl">1. Conversao (vendas/visitas)</span><span class="val" style="color:var(--red)">Baixa (poucas vendas)</span></li>
+          <li><span class="lbl">2. Reputacao</span><span class="val" style="color:var(--green-dark)">Verde-claro (OK)</span></li>
+          <li><span class="lbl">3. Preco competitivo</span><span class="val" style="color:var(--green-dark)">R$159,90 abaixo mediana</span></li>
+          <li><span class="lbl">4. Frete gratis</span><span class="val" style="color:var(--green-dark)">Sim (Decola)</span></li>
+          <li><span class="lbl">5. Titulo otimizado</span><span class="val" style="color:var(--green-dark)">10+ keywords</span></li>
+          <li><span class="lbl">6. Ficha tecnica</span><span class="val" style="color:var(--yellow)">Incompleta</span></li>
+          <li><span class="lbl">7. Fotos profissionais</span><span class="val" style="color:var(--red)">A melhorar</span></li>
+          <li><span class="lbl">8. Historico vendas</span><span class="val" style="color:var(--red)">Baixo (novo)</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--purple)"></span> Impacto da Estrategia Agressiva</h3>
+        <ul>
+          <li><span class="lbl">Preco R$189,90 → R$159,90</span><span class="val" style="color:var(--green-dark)">Sobe no ranking</span></li>
+          <li><span class="lbl">Abaixo mediana R$162,50</span><span class="val" style="color:var(--green-dark)">Filtro "menor preco"</span></li>
+          <li><span class="lbl">Frete gratis (Decola)</span><span class="val" style="color:var(--green-dark)">Filtro "frete gratis"</span></li>
+          <li><span class="lbl">Titulo com 10+ keywords</span><span class="val" style="color:var(--green-dark)">Mais buscas captadas</span></li>
+          <li><span class="lbl">Categoria correta (novo)</span><span class="val" style="color:var(--green-dark)">Filtros de categoria</span></li>
+          <li><span class="lbl">Posicao estimada</span><span class="val" style="color:var(--teal)">Pag 1-2 (antes: pag 3-4)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead><tr><th>Vendedor</th><th>Posicao Tipica</th><th>Preco Unit.</th><th>Frete Gratis</th><th>Reviews</th><th>Por que esta la</th></tr></thead>
+        <tbody>
+          <tr><td class="fw700">AREAPROMOCIONAL</td><td><span class="badge badge-green">Pag 1</span></td><td>R$ 175</td><td>Sim</td><td>56</td><td class="small">Platinum + historico + Ads</td></tr>
+          <tr><td class="fw700">BALCAO E BANDEJA</td><td><span class="badge badge-green">Pag 1-2</span></td><td>R$ 137</td><td>Sim</td><td>12</td><td class="small">32 anuncios = saturacao</td></tr>
+          <tr><td class="fw700">CLAUDINHO DO SOM</td><td><span class="badge badge-green">Pag 1</span></td><td>R$ 135</td><td>Sim</td><td>211</td><td class="small">Mais reviews = confianca ML</td></tr>
+          <tr><td class="fw700">MIDIAS</td><td><span class="badge badge-blue">Pag 1-2</span></td><td>R$ 78</td><td>Variavel</td><td>—</td><td class="small">Menor preco = filtro "mais barato"</td></tr>
+          <tr style="background:var(--teal-light)"><td class="fw700" style="color:var(--teal)">MOCHILA VIVA (projetado)</td><td><span class="badge badge-teal">Pag 1-2</span></td><td class="price-teal">R$ 159,90</td><td class="fw700" style="color:var(--green-dark)">Sim</td><td>—</td><td class="small">Preco competitivo + Decola + titulo SEO</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note" style="margin-top:12px">
+      <b>Projecao:</b> Com preco a R$159,90 (abaixo da mediana), frete gratis, titulo otimizado e anuncio novo na categoria correta, a Mochila Viva deve aparecer entre pagina 1-2 nos primeiros 30 dias. Ads Decola (R$250) acelera esse posicionamento.
+    </div>
+  </div>
+
+  <!-- 5. GAP DE PRODUTO -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-5')">
+      <span class="num">5</span> Gap de Produto — Oportunidades Nao Atendidas
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="chart-card">
+      <h3>Concorrencia por Tamanho de Kit (menos = mais oportunidade)</h3>
+      <div class="bar-row">
+        <span class="bar-label">Unitario</span>
+        <div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--red)">28 anuncios</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 2</span>
+        <div class="bar-track"><div class="bar-fill" style="width:23%;background:var(--orange)">11</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--green-dark);font-weight:700">Kit 3 (GAP!)</span>
+        <div class="bar-track"><div class="bar-fill" style="width:8.5%;background:var(--green)">4</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 4</span>
+        <div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--orange)">10</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 5</span>
+        <div class="bar-track"><div class="bar-fill" style="width:25%;background:var(--orange)">12</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 6</span>
+        <div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--yellow)">9</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--green-dark);font-weight:700">Kit 8 (GAP!)</span>
+        <div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--green)">2</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:var(--green-dark);font-weight:700">Kit 9 (GAP!)</span>
+        <div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--green)">2</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 10</span>
+        <div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--red)">18</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 15</span>
+        <div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--yellow)">9</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 20</span>
+        <div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--orange)">10</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Kit 25</span>
+        <div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--green)">2</div></div>
+      </div>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead><tr><th>Oportunidade</th><th>Concorrentes</th><th>Potencial</th><th>Preco Sugerido</th><th>Acao</th></tr></thead>
+        <tbody>
+          <tr class="new-row">
+            <td class="fw700"><span class="badge badge-orange">Colete Avulso</span></td>
+            <td>6 anuncios</td>
+            <td><span class="badge badge-red">ALTO</span></td>
+            <td class="price price-teal">R$ 109,90</td>
+            <td class="small">Captura trafego, gera perguntas, upsell p/ kit completo</td>
+          </tr>
+          <tr class="new-row">
+            <td class="fw700">Kit 3 (GAP)</td>
+            <td>Apenas 4</td>
+            <td><span class="badge badge-red">ALTO</span></td>
+            <td class="price price-teal">R$ 419,70 (R$139,90/un)</td>
+            <td class="small">7x menos concorrencia que unitario</td>
+          </tr>
+          <tr>
+            <td class="fw700">Kit 8 (GAP)</td>
+            <td>Apenas 2</td>
+            <td><span class="badge badge-yellow">MEDIO</span></td>
+            <td class="price">R$ 1.039,20 (R$129,90/un)</td>
+            <td class="small">Proximo do Kit 10 — pode canibalizar</td>
+          </tr>
+          <tr>
+            <td>Personalizada unitaria</td>
+            <td>Rara</td>
+            <td><span class="badge badge-yellow">MEDIO</span></td>
+            <td class="price">R$ 229,90</td>
+            <td class="small">Margem alta (+R$70 upsell), Fase 5</td>
+          </tr>
+          <tr>
+            <td>Mochila + 1 placa (starter)</td>
+            <td>Poucos</td>
+            <td><span class="badge badge-blue">BAIXO</span></td>
+            <td class="price">R$ 129,90</td>
+            <td class="small">Entry level, pode confundir com kit completo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="discovery">
+      <h4>Recomendacao: 3 novos produtos prioritarios</h4>
+      <p><b>1. Colete Avulso (R$109,90)</b> — captura trafego de quem busca preco, gera perguntas e upsell. Margem 28%.<br>
+      <b>2. Kit 3 (R$419,70)</b> — nicho com 4 concorrentes apenas. Ideal para pequenas empresas/eventos locais.<br>
+      <b>3. Personalizada unitaria (R$229,90)</b> — Fase 5, margem alta, demanda confirmada nas buscas ML.</p>
+    </div>
+  </div>
+
+  <!-- 6. SIMULACAO FINANCEIRA -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-6')">
+      <span class="num">6</span> Simulacao Financeira Detalhada por Kit
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr><th>Kit</th><th>Receita</th><th>Custo Total</th><th>Comissao ML 16%</th><th>Frete (Decola)</th><th>Liquido</th><th>Lucro/Pedido</th><th>Lucro/Unidade</th><th>Margem %</th><th>Break-even/mes</th></tr>
+        </thead>
+        <tbody>
+          <tr class="new-row">
+            <td><span class="badge badge-orange">Colete Avulso</span></td>
+            <td class="price">R$ 109,90</td>
+            <td>R$ 54,00</td>
+            <td class="price-red">R$ 17,58</td>
+            <td>R$ 7,50</td>
+            <td>R$ 84,82</td>
+            <td class="price price-green fw700">R$ 30,82</td>
+            <td class="price">R$ 30,82</td>
+            <td>28,0%</td>
+            <td class="small">17 vendas</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><span class="badge badge-teal">Mochila Pirulito</span></td>
+            <td class="price">R$ 159,90</td>
+            <td>R$ 78,00</td>
+            <td class="price-red">R$ 25,58</td>
+            <td>R$ 7,50</td>
+            <td>R$ 126,82</td>
+            <td class="price price-teal fw700">R$ 48,82</td>
+            <td class="price price-teal fw700">R$ 48,82</td>
+            <td class="fw700">30,5%</td>
+            <td class="small">11 vendas</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 2</span></td>
+            <td class="price">R$ 299,90</td>
+            <td>R$ 151,00</td>
+            <td class="price-red">R$ 47,98</td>
+            <td>R$ 7,50</td>
+            <td>R$ 244,42</td>
+            <td class="price price-green fw700">R$ 93,42</td>
+            <td class="price">R$ 46,71</td>
+            <td>31,2%</td>
+            <td class="small">6 vendas</td>
+          </tr>
+          <tr class="new-row">
+            <td><span class="badge badge-purple">Kit 3</span></td>
+            <td class="price">R$ 419,70</td>
+            <td>R$ 224,00</td>
+            <td class="price-red">R$ 67,15</td>
+            <td>R$ 7,50</td>
+            <td>R$ 345,05</td>
+            <td class="price price-green fw700">R$ 121,05</td>
+            <td class="price">R$ 40,35</td>
+            <td>28,8%</td>
+            <td class="small">5 vendas</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-green">Kit 5</span></td>
+            <td class="price">R$ 679,50</td>
+            <td>R$ 370,00</td>
+            <td class="price-red">R$ 108,72</td>
+            <td>R$ 7,50</td>
+            <td>R$ 563,28</td>
+            <td class="price price-green fw700">R$ 193,28</td>
+            <td class="price">R$ 38,66</td>
+            <td>28,4%</td>
+            <td class="small">3 vendas</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Kit 10</span></td>
+            <td class="price">R$ 1.299,00</td>
+            <td>R$ 735,00</td>
+            <td class="price-red">R$ 207,84</td>
+            <td>R$ 15,00</td>
+            <td>R$ 1.076,16</td>
+            <td class="price price-green fw700">R$ 341,16</td>
+            <td class="price">R$ 34,12</td>
+            <td>26,3%</td>
+            <td class="small">2 vendas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec-grid" style="margin-top:14px">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--green)"></span> Cenarios de Meta Mensal</h3>
+        <ul>
+          <li><span class="lbl">Meta R$ 500/mes</span><span class="val">11 unitarios OU 2 Kit 10</span></li>
+          <li><span class="lbl">Meta R$ 1.000/mes</span><span class="val">21 unit. OU 3 Kit 10</span></li>
+          <li><span class="lbl">Meta R$ 2.500/mes</span><span class="val">52 unit. OU 8 Kit 10</span></li>
+          <li><span class="lbl">Meta R$ 5.000/mes</span><span class="val">103 unit. OU 15 Kit 10</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--purple)"></span> Sweet Spot</h3>
+        <ul>
+          <li><span class="lbl">Maior margem %</span><span class="val" style="color:var(--green-dark)">Unitario 30,5%</span></li>
+          <li><span class="lbl">Melhor lucro/pedido</span><span class="val" style="color:var(--purple)">Kit 10: R$341</span></li>
+          <li><span class="lbl">Melhor equilibrio</span><span class="val" style="color:var(--teal)">Kit 5: R$193 + 28,4%</span></li>
+          <li><span class="lbl">Menos esforco operacional</span><span class="val">Kit 10 (2 vendas = R$682)</span></li>
+          <li><span class="lbl">Recomendacao</span><span class="val" style="color:var(--teal)">Promover Kit 5 e Kit 10</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart-note warning" style="margin-top:12px">
+      <b>Break-even:</b> Considerando custo fixo mensal de ~R$500 (internet, embalagens, tempo), sao necessarios 11 vendas unitarias ou apenas 2 vendas de Kit 10 para cobrir. Kits grandes sao mais eficientes operacionalmente.
+    </div>
+  </div>
+
+  <!-- 7. SAZONALIDADE -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-7')">
+      <span class="num">7</span> Sazonalidade e Timing de Investimento
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="cal-month cal-peak">
+        <div class="month-name">Janeiro</div>
+        <div class="month-demand">PICO</div>
+        <div class="month-event">Prep. Carnaval, verao, promos ferias</div>
+      </div>
+      <div class="cal-month cal-peak">
+        <div class="month-name">Fevereiro</div>
+        <div class="month-demand">PICO</div>
+        <div class="month-event">Carnaval, blocos, promotores</div>
+      </div>
+      <div class="cal-month cal-low">
+        <div class="month-name">Marco</div>
+        <div class="month-demand">BAIXA</div>
+        <div class="month-event">Pos-Carnaval, volta as aulas</div>
+      </div>
+      <div class="cal-month cal-med">
+        <div class="month-name">Abril</div>
+        <div class="month-demand">MEDIA</div>
+        <div class="month-event">Pascoa, promos varejo</div>
+      </div>
+      <div class="cal-month cal-med">
+        <div class="month-name">Maio</div>
+        <div class="month-demand">MEDIA</div>
+        <div class="month-event">Dia das Maes, feiras</div>
+      </div>
+      <div class="cal-month cal-high">
+        <div class="month-name">Junho</div>
+        <div class="month-demand">ALTA</div>
+        <div class="month-event">Festas Juninas, Sao Joao</div>
+      </div>
+      <div class="cal-month cal-med">
+        <div class="month-name">Julho</div>
+        <div class="month-demand">MEDIA</div>
+        <div class="month-event">Ferias, promos inverno</div>
+      </div>
+      <div class="cal-month cal-med">
+        <div class="month-name">Agosto</div>
+        <div class="month-demand">MEDIA</div>
+        <div class="month-event">Dia dos Pais</div>
+      </div>
+      <div class="cal-month cal-med">
+        <div class="month-name">Setembro</div>
+        <div class="month-demand">MEDIA</div>
+        <div class="month-event">Primavera, Independencia</div>
+      </div>
+      <div class="cal-month cal-high">
+        <div class="month-name">Outubro</div>
+        <div class="month-demand">ALTA</div>
+        <div class="month-event">Dia Criancas, Halloween, prep. BF</div>
+      </div>
+      <div class="cal-month cal-peak">
+        <div class="month-name">Novembro</div>
+        <div class="month-demand">PICO</div>
+        <div class="month-event">Black Friday, promos massivas</div>
+      </div>
+      <div class="cal-month cal-high">
+        <div class="month-name">Dezembro</div>
+        <div class="month-demand">ALTA</div>
+        <div class="month-event">Natal, Reveillon, festas</div>
+      </div>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead><tr><th>Periodo</th><th>Demanda</th><th>Acao Ads</th><th>Acao Estoque</th><th>Acao Preco</th></tr></thead>
+        <tbody>
+          <tr style="background:var(--purple-bg)"><td class="fw700">Jan-Fev (Carnaval)</td><td><span class="badge badge-purple">PICO</span></td><td class="fw700" style="color:var(--green-dark)">Ads maximo (R$50-80/dia)</td><td>Estoque cheio (200+ un)</td><td>Manter R$159,90</td></tr>
+          <tr><td>Mar-Mai</td><td><span class="badge badge-blue">BAIXA-MEDIA</span></td><td class="small">Ads minimo (R$10-15/dia)</td><td>Reabastecer</td><td class="small">Considerar cupom 5%</td></tr>
+          <tr><td>Jun-Jul (Juninas)</td><td><span class="badge badge-yellow">MEDIA-ALTA</span></td><td>Ads moderado (R$25-40/dia)</td><td>Estoque medio (100+ un)</td><td>Manter R$159,90</td></tr>
+          <tr><td>Ago-Set</td><td><span class="badge badge-blue">MEDIA</span></td><td class="small">Ads minimo (R$10-15/dia)</td><td>Manter</td><td class="small">Testar promo Kit 10</td></tr>
+          <tr style="background:var(--purple-bg)"><td class="fw700">Out-Nov (BF)</td><td><span class="badge badge-purple">PICO</span></td><td class="fw700" style="color:var(--green-dark)">Ads maximo (R$80-100/dia)</td><td>Estoque cheio (300+ un)</td><td>BF: R$139,90 temporario</td></tr>
+          <tr><td>Dezembro</td><td><span class="badge badge-yellow">ALTA</span></td><td>Ads moderado (R$30-50/dia)</td><td>Liquidar sobra BF</td><td>Manter R$159,90</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec-grid" style="margin-top:14px">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--purple)"></span> Eventos Especiais (anos pares)</h3>
+        <ul>
+          <li><span class="lbl">Eleicoes (2026)</span><span class="val" style="color:var(--purple)">Jul-Out: PICO</span></li>
+          <li><span class="lbl">Copa do Mundo</span><span class="val">Proximo: 2026 (Jun-Jul)</span></li>
+          <li><span class="lbl">Olimpiadas</span><span class="val">2028</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--teal)"></span> Orcamento Ads Anual Estimado</h3>
+        <ul>
+          <li><span class="lbl">Meses pico (4 meses)</span><span class="val">~R$ 6.000-8.000</span></li>
+          <li><span class="lbl">Meses medios (4 meses)</span><span class="val">~R$ 2.000-3.000</span></li>
+          <li><span class="lbl">Meses baixos (4 meses)</span><span class="val">~R$ 1.200-1.800</span></li>
+          <li><span class="lbl">Total anual estimado</span><span class="val" style="color:var(--teal)">R$ 9.200-12.800</span></li>
+          <li><span class="lbl">Credito Decola (1o ano)</span><span class="val" style="color:var(--green-dark)">-R$ 250</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart-note warning" style="margin-top:12px">
+      <b>2026 sera excepcional:</b> Copa do Mundo (Jun-Jul) + Eleicoes (Jul-Out) = 5 meses consecutivos de demanda alta para midia movel/propaganda ambulante. Preparar estoque e Ads a partir de maio.
+    </div>
+  </div>
+
+  <!-- 8. CANAIS ALTERNATIVOS -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-8')">
+      <span class="num">8</span> Canais Alternativos ao Mercado Livre
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Canal</th><th>Comissao</th><th>Trafego</th><th>Publico</th><th>Custo Ads</th><th>Margem Unitario</th><th>Prioridade</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td class="fw700" style="color:var(--teal)">Mercado Livre</td>
+            <td class="price-red">16%</td>
+            <td><span class="badge badge-green">Muito Alto</span></td>
+            <td>B2B + B2C</td>
+            <td class="small">R$250 Decola + R$10-100/dia</td>
+            <td class="price price-teal">R$ 48,82 (30,5%)</td>
+            <td><span class="badge badge-teal">ATUAL</span></td>
+          </tr>
+          <tr>
+            <td class="fw700">Shopee</td>
+            <td class="price-green">12%</td>
+            <td><span class="badge badge-yellow">Alto</span></td>
+            <td>B2C (mais jovem)</td>
+            <td class="small">Shopee Ads ~R$5-15/dia</td>
+            <td class="price">R$ 55,21 (34,5%)</td>
+            <td><span class="badge badge-yellow">CURTO PRAZO</span></td>
+          </tr>
+          <tr>
+            <td class="fw700">Amazon BR</td>
+            <td class="price-red">15%</td>
+            <td><span class="badge badge-blue">Medio</span></td>
+            <td>B2C (premium)</td>
+            <td class="small">PPC ~R$0,50-2/click</td>
+            <td class="price">R$ 50,42 (31,5%)</td>
+            <td><span class="badge badge-blue">MEDIO PRAZO</span></td>
+          </tr>
+          <tr>
+            <td class="fw700">Site Proprio + Google Ads</td>
+            <td class="price-green">0%</td>
+            <td><span class="badge badge-red">Baixo (s/ Ads)</span></td>
+            <td>B2B direto</td>
+            <td class="small">R$3-10/click, conv. 2-3%</td>
+            <td class="price price-green">R$ 74,40 (46,5%)</td>
+            <td><span class="badge badge-purple">LONGO PRAZO</span></td>
+          </tr>
+          <tr>
+            <td class="fw700">Instagram + WhatsApp</td>
+            <td class="price-green">0%</td>
+            <td><span class="badge badge-yellow">Medio</span></td>
+            <td>B2B relacional</td>
+            <td class="small">R$5-15/click Meta Ads</td>
+            <td class="price price-green">R$ 74,40 (46,5%)</td>
+            <td><span class="badge badge-yellow">CURTO PRAZO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="spec-grid" style="margin-top:14px">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--green)"></span> Margem por Canal (R$159,90 unitario)</h3>
+        <ul>
+          <li><span class="lbl">Site proprio / WhatsApp</span><span class="val" style="color:var(--green-dark)">R$ 74,40 (46,5%)</span></li>
+          <li><span class="lbl">Shopee (12%)</span><span class="val">R$ 55,21 (34,5%)</span></li>
+          <li><span class="lbl">Amazon BR (15%)</span><span class="val">R$ 50,42 (31,5%)</span></li>
+          <li><span class="lbl">Mercado Livre (16%)</span><span class="val" style="color:var(--teal)">R$ 48,82 (30,5%)</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--purple)"></span> Roadmap de Canais</h3>
+        <ul>
+          <li><span class="lbl">Agora (Mar/2026)</span><span class="val" style="color:var(--teal)">ML otimizado + Instagram</span></li>
+          <li><span class="lbl">Jun/2026 (Copa)</span><span class="val">+ Shopee</span></li>
+          <li><span class="lbl">Set/2026</span><span class="val">+ Amazon BR</span></li>
+          <li><span class="lbl">2027</span><span class="val">Site proprio + Google Ads</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="discovery">
+      <h4>Shopee e a proxima fronteira</h4>
+      <p>Com comissao 4% menor que o ML (12% vs 16%), vender o mesmo produto a R$159,90 na Shopee gera <b>R$6,39 a mais de lucro por venda</b> (R$55,21 vs R$48,82). O publico e mais sensivel a preco — perfeito para a estrategia agressiva. Custo de entrada: zero (cadastro gratuito + mesmo estoque).</p>
+    </div>
+  </div>
+
+  <!-- VULNERABILIDADES -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">+</span> Bonus: Vulnerabilidades dos Concorrentes
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>#</th><th>Vulnerabilidade</th><th>Quem sofre</th><th>Como explorar</th><th>Impacto</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="fw700">Placa solta/balanca</td><td>AREA, BALCAO, maioria</td><td class="small" style="color:var(--teal)">Destacar VHB 40cm em TODAS as midias</td><td><span class="badge badge-red">ALTO</span></td></tr>
+          <tr><td>2</td><td class="fw700">Sem estrutura interna</td><td>AREA, BALCAO, MIDIAS</td><td class="small" style="color:var(--teal)">Foto detalhe E.V.A. 8mm + comparativo</td><td><span class="badge badge-red">ALTO</span></td></tr>
+          <tr><td>3</td><td class="fw700">Haste pesada e curta</td><td>Todos com metal 75cm</td><td class="small" style="color:var(--teal)">Infografico: aluminio 85cm / 220g</td><td><span class="badge badge-yellow">MEDIO</span></td></tr>
+          <tr><td>4</td><td class="fw700">So P/M/G (sem GG)</td><td>100% dos concorrentes</td><td class="small" style="color:var(--teal)">"Unico com P a GG" no titulo/descricao</td><td><span class="badge badge-yellow">MEDIO</span></td></tr>
+          <tr><td>5</td><td class="fw700">Categoria errada</td><td>Mercado inteiro</td><td class="small" style="color:var(--teal)">Publicar na categoria Mochilas = dominar filtros</td><td><span class="badge badge-red">ALTO</span></td></tr>
+          <tr><td>6</td><td class="fw700">Descricoes fracas</td><td>Ninguem comunica diferenciais</td><td class="small" style="color:var(--teal)">5 blocos com numeros concretos</td><td><span class="badge badge-red">ALTO</span></td></tr>
+          <tr><td>7</td><td class="fw700">Saturacao sem diferencial</td><td>BALCAO (32 anuncios genericos)</td><td class="small" style="color:var(--teal)">1 anuncio superior > 32 genericos</td><td><span class="badge badge-yellow">MEDIO</span></td></tr>
+          <tr><td>8</td><td class="fw700">Garantia 30 dias (MV: 1-3 dias!)</td><td><span style="color:var(--red)">MOCHILA VIVA</span></td><td class="small" style="color:var(--red)">URGENTE: aumentar para 30 dias minimo</td><td><span class="badge badge-red">CRITICO</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- KEYWORDS -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">+</span> Bonus: Keywords Reais dos Compradores ML
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Termo Buscado</th><th>Tipo</th><th>Concorrentes Captando</th><th>MV Capta?</th><th>Acao</th></tr></thead>
+        <tbody>
+          <tr><td class="fw700">mochila pirulito</td><td><span class="badge badge-teal">Principal</span></td><td>Todos</td><td style="color:var(--green-dark)">Sim</td><td class="small">OK — presente no titulo</td></tr>
+          <tr><td class="fw700">bolsa pirulito</td><td><span class="badge badge-green">Sinonimo</span></td><td class="price-red">NENHUM</td><td style="color:var(--green-dark)">Sim (novo titulo)</td><td class="small" style="color:var(--green-dark)">Vantagem exclusiva!</td></tr>
+          <tr><td class="fw700">colete pirulito</td><td><span class="badge badge-green">Sinonimo</span></td><td class="price-red">NENHUM</td><td style="color:var(--green-dark)">Sim (novo titulo)</td><td class="small" style="color:var(--green-dark)">Vantagem exclusiva!</td></tr>
+          <tr><td>mochila propaganda</td><td><span class="badge badge-blue">Funcional</span></td><td>CLAUDINHO, M.PIRUL.</td><td style="color:var(--green-dark)">Sim</td><td class="small">OK</td></tr>
+          <tr><td>caixa movel</td><td><span class="badge badge-blue">Funcional</span></td><td>CLAUDINHO</td><td style="color:var(--green-dark)">Sim</td><td class="small">OK</td></tr>
+          <tr><td>mochila eventos</td><td><span class="badge badge-purple">B2B</span></td><td>AREA, BALCAO</td><td style="color:var(--green-dark)">Sim</td><td class="small">OK</td></tr>
+          <tr><td>mochila pirulito personalizada</td><td><span class="badge badge-pink">Futuro</span></td><td>AREA, M.PIRUL.</td><td style="color:var(--red)">Nao (ainda)</td><td class="small">Fase 5 — novo anuncio personalizado</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-note success" style="margin-top:12px">
+      <b>Vantagem competitiva nos titulos:</b> "bolsa pirulito" e "colete pirulito" sao termos buscados por compradores reais (ML "outras pessoas pesquisaram") e NENHUM concorrente os utiliza. Mochila Viva e a unica que capta esses termos com o novo titulo otimizado.
+    </div>
+  </div>
+
+  <!-- TITULOS APROVADOS -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">+</span> Titulos Aprovados — Anuncios ML
+    </div>
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Anuncio</th><th>Titulo</th><th>Chars</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td class="fw700"><span class="badge badge-blue">Unitario ANTIGO</span></td>
+            <td>Mochila Pirulito Sem Impressao Caixa Movel Kit Completo</td>
+            <td>55</td>
+          </tr>
+          <tr class="highlight-row">
+            <td>2</td>
+            <td class="fw700"><span class="badge badge-teal">Unitario NOVO</span></td>
+            <td>Mochila Pirulito Eventos Panfletagem Eleicao Caixa Movel</td>
+            <td class="fw700">57</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td class="fw700"><span class="badge badge-blue">Kit 2</span></td>
+            <td>Mochila Pirulito Kit Completo 2 Mochilas Eventos Eleicao</td>
+            <td>56</td>
+          </tr>
+          <tr class="new-row">
+            <td>4</td>
+            <td class="fw700"><span class="badge badge-purple">Kit 3</span></td>
+            <td>Mochila Pirulito Kit Completo 3 Mochilas Eventos Eleicao</td>
+            <td>56</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td class="fw700"><span class="badge badge-green">Kit 5</span></td>
+            <td>Mochila Pirulito Kit Completo 5 Mochilas Eventos Eleicao</td>
+            <td>56</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td class="fw700"><span class="badge badge-red">Kit 10</span></td>
+            <td>Mochila Pirulito Kit Completo 10 Mochilas Eventos Eleicao</td>
+            <td>57</td>
+          </tr>
+          <tr class="new-row">
+            <td>7</td>
+            <td class="fw700"><span class="badge badge-orange">Colete Avulso</span></td>
+            <td>Mochila Pirulito Kit Avulso Colete Reforcado Haste Aluminio</td>
+            <td>59</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-note success" style="margin-top:12px">
+      <b>Padrao:</b> Todos os titulos comecam com <b>Mochila Pirulito</b> (keyword principal). Unitario NOVO foca em <b>Eventos + Panfletagem + Eleicao</b> (uso). Unitario ANTIGO foca em <b>Sem Impressao + Kit Completo</b> (produto). Kits usam <b>Kit Completo + N Mochilas + Eventos Eleicao</b>. Colete Avulso destaca <b>Reforcado + Haste Aluminio</b> (diferencial tecnico). Todos dentro do limite de 60 caracteres.
+    </div>
+  </div>
+
+  <!-- ESTRATEGIA DE FOTOS -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">+</span> Estrategia de Fotos — 7 Posicoes
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr><th>Foto</th><th>Conteudo</th><th>Objetivo</th></tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td class="fw700" style="font-size:16px">1</td>
+            <td class="fw700">Kit completo desmontado em fundo branco</td>
+            <td class="small">Mostrar TUDO que o comprador recebe</td>
+          </tr>
+          <tr>
+            <td class="fw700" style="font-size:16px">2</td>
+            <td class="fw700">Mochila vestida em pessoa (vista traseira) com haste e placas</td>
+            <td class="small">Referencia de tamanho e visual montado</td>
+          </tr>
+          <tr>
+            <td class="fw700" style="font-size:16px">3</td>
+            <td class="fw700">Detalhe painel traseiro: E.V.A. 8mm visivel, reguladores, alcas</td>
+            <td class="small">Evidenciar qualidade construtiva</td>
+          </tr>
+          <tr>
+            <td class="fw700" style="font-size:16px">4</td>
+            <td class="fw700">Detalhe haste com fita VHB 3M 20cm e placa fixada</td>
+            <td class="small">Mostrar diferencial de adesao</td>
+          </tr>
+          <tr>
+            <td class="fw700" style="font-size:16px">5</td>
+            <td class="fw700">5 cores de mochila e opcoes de cores de placas</td>
+            <td class="small">Variedade cromatica</td>
+          </tr>
+          <tr>
+            <td class="fw700" style="font-size:16px">6</td>
+            <td class="fw700">Uso real em evento (diurno, bem iluminado)</td>
+            <td class="small">Contexto profissional</td>
+          </tr>
+          <tr class="new-row">
+            <td class="fw700" style="font-size:16px">7</td>
+            <td class="fw700">Infografico comparativo "Mochila Viva vs. padrao de mercado"</td>
+            <td class="small">Conversao B2B</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note success" style="margin-top:14px">
+      <b>Ordem importa:</b> No ML, a foto 1 e a capa do anuncio — deve ser o kit completo em fundo branco. Fotos 3 e 4 comunicam os diferenciais tecnicos que NENHUM concorrente mostra. Foto 7 (infografico) e o fechamento para compradores B2B que comparam especificacoes.
+    </div>
+  </div>
+
+  <!-- PLANO DE ACAO -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">+</span> Plano de Acao — Proximos Passos
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Acao</th><th>Prioridade</th><th>Status</th><th>Impacto Esperado</th></tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td class="fw700">1</td>
+            <td class="fw700">Publicar anuncio <span class="badge badge-teal">Mochila Pirulito</span> novo na categoria correta (Mochilas) com titulo SEO otimizado</td>
+            <td><span class="badge badge-red">URGENTE</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Aparecer nos filtros corretos + pagina 1-2</td>
+          </tr>
+          <tr>
+            <td class="fw700">2</td>
+            <td class="fw700">Aumentar garantia de 1-3 dias para 30 dias minimo</td>
+            <td><span class="badge badge-red">URGENTE</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Eliminar objecao critica de confianca</td>
+          </tr>
+          <tr>
+            <td class="fw700">3</td>
+            <td class="fw700">Criar descricao com 5 blocos de diferenciais tecnicos (E.V.A. 8mm, VHB 40cm, Aluminio 85cm, P-GG, 610g)</td>
+            <td><span class="badge badge-red">URGENTE</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Justificar preco premium com dados concretos</td>
+          </tr>
+          <tr>
+            <td class="fw700">4</td>
+            <td class="fw700">Informar material do tecido nos anuncios</td>
+            <td><span class="badge badge-red">URGENTE</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Fechar lacuna critica vs. concorrentes</td>
+          </tr>
+          <tr class="new-row">
+            <td class="fw700">5</td>
+            <td class="fw700">Publicar anuncio <span class="badge badge-orange">Colete Avulso</span> a R$109,90 como isca de trafego</td>
+            <td><span class="badge badge-purple">ALTA</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Capturar buscas de preco baixo + upsell para kit completo</td>
+          </tr>
+          <tr>
+            <td class="fw700">6</td>
+            <td class="fw700">Criar anuncios <span class="badge badge-blue">Kit 2</span> <span class="badge badge-purple">Kit 3</span> <span class="badge badge-green">Kit 5</span> <span class="badge badge-red">Kit 10</span></td>
+            <td><span class="badge badge-purple">ALTA</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Kit 3 = gap de mercado (4 concorrentes apenas)</td>
+          </tr>
+          <tr>
+            <td class="fw700">7</td>
+            <td class="fw700">Produzir fotos profissionais: 7 posicoes + infografico "MV vs. Padrao de Mercado"</td>
+            <td><span class="badge badge-purple">ALTA</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Comunicacao visual dos diferenciais tecnicos</td>
+          </tr>
+          <tr>
+            <td class="fw700">8</td>
+            <td class="fw700">Ativar Ads Decola R$250 no anuncio novo (primeiros 30 dias)</td>
+            <td><span class="badge badge-blue">MEDIA</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Acelerar posicionamento na pagina 1</td>
+          </tr>
+          <tr>
+            <td class="fw700">9</td>
+            <td class="fw700">Ajustar precos dos kits 5-10 (reduzir premium de 25% para ~15% vs. mercado)</td>
+            <td><span class="badge badge-blue">MEDIA</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Competitividade nos kits de maior volume</td>
+          </tr>
+          <tr>
+            <td class="fw700">10</td>
+            <td class="fw700">Preencher ficha tecnica completa (13 atributos) no ML</td>
+            <td><span class="badge badge-blue">MEDIA</span></td>
+            <td><span class="badge badge-yellow">Pendente</span></td>
+            <td class="small">Aparecer em filtros laterais do ML</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note success" style="margin-top:14px">
+      <b>Prioridade:</b> Acoes 1-4 sao pre-requisitos — sem elas, Ads e novos anuncios nao convertem. Acoes 5-7 expandem o portfolio. Acoes 8-10 otimizam performance.
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Mochila Viva — Analises Avancadas · Estrategia Agressiva R$ 159,90</p>
+    <p>8 analises + simulacao financeira + plano de acao · Base: 159 anuncios, 12 vendedores</p>
+    <p style="margin-top:6px">Adm. Alexsander Machado — CRA 20-22229 · 03/03/2026</p>
+  </div>
+
+</div>
+
+<!-- ========== MODAIS ========== -->
+
+<!-- Modal: Pricing -->
+<div class="modal-overlay" id="modal-pricing">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-pricing')">&times;</button>
+    <span class="modal-badge" style="background:var(--red-bg);color:var(--red)">ESTRATEGIA</span>
+    <h2>Estrategia de Preco Agressiva — Por que R$ 159,90?</h2>
+
+    <h3>O que e uma estrategia agressiva?</h3>
+    <p>Estrategia agressiva significa posicionar o preco <b>abaixo ou na mediana do mercado</b>, sacrificando margem percentual para ganhar volume de vendas, visibilidade e posicao no ranking. O objetivo e conquistar market share rapidamente.</p>
+
+    <h3>Por que mudar de R$ 189,90 para R$ 159,90?</h3>
+    <ul>
+      <li>A R$189,90, a Mochila Viva estava +17% acima da mediana (R$162,50) — posicao premium isolada com poucos vizinhos (9 anuncios na faixa R$180-200)</li>
+      <li>A R$159,90, fica 1,6% ABAIXO da mediana — entra no "sweet spot" do algoritmo ML que favorece precos competitivos</li>
+      <li>A margem cai de 39% para 30,5% no unitario, mas o volume esperado compensa</li>
+    </ul>
+
+    <div class="example-box">
+      <strong>Exemplo pratico:</strong>
+      <p>A R$189,90 com 10 vendas/mes = R$740 lucro.</p>
+      <p>A R$159,90 com 20 vendas/mes (2x volume) = R$976 lucro.</p>
+      <p>Mesmo com margem menor, o lucro total e 24% maior se o volume dobrar.</p>
+    </div>
+
+    <h3>Logica dos kits</h3>
+    <p>Cada kit tem desconto progressivo (-6% a -19%) para incentivar compras maiores. O lucro por pedido cresce (R$49 unitario → R$341 Kit 10), compensando a margem % menor. O "Colete Avulso" (a R$109,90) atrai trafego e gera perguntas que convertem em kit completo.</p>
+  </div>
+</div>
+
+<!-- Modal 1: Market Share -->
+<div class="modal-overlay" id="modal-1">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-1')">&times;</button>
+    <span class="modal-badge" style="background:var(--blue-bg);color:var(--blue)">CONCEITO</span>
+    <h2>Estimativa de Market Share</h2>
+
+    <h3>O que e market share?</h3>
+    <p>Market share (participacao de mercado) e a fatia do mercado total que cada vendedor controla, medida por volume de vendas ou receita. No ML, <b>nao confundir numero de anuncios com numero de vendas</b> — um vendedor com 10 anuncios pode vender mais que outro com 50.</p>
+
+    <h3>Como estimamos sem dados oficiais?</h3>
+    <p>O ML nao divulga vendas por vendedor. Usamos <b>reviews como proxy</b>: em media, 5-10% dos compradores deixam avaliacao. Multiplicamos o numero de reviews por 15 (estimativa conservadora) para estimar vendas totais.</p>
+
+    <div class="example-box">
+      <strong>Exemplo:</strong>
+      <p>CLAUDINHO DO SOM tem 211 reviews com apenas 10 anuncios.</p>
+      <p>211 reviews x 15 = ~3.165 vendas estimadas.</p>
+      <p>BALCAO E BANDEJA tem 12 reviews com 32 anuncios.</p>
+      <p>12 reviews x 15 = ~180 vendas estimadas.</p>
+      <p><b>CLAUDINHO vende ~17x mais por anuncio!</b> Qualidade > quantidade.</p>
+    </div>
+
+    <h3>Por que isso importa para a Mochila Viva?</h3>
+    <p>Mostra que a estrategia de BALCAO (saturar com 32 anuncios genericos) e menos eficaz que a de CLAUDINHO (10 anuncios com boa comunicacao e muitas vendas). A MV deve focar em <b>poucos anuncios bem otimizados</b>, nao em volume de listings.</p>
+
+    <h3>Limitacoes</h3>
+    <ul>
+      <li>Reviews sao proxy imperfeito — vendedores podem ter taxa de review diferente</li>
+      <li>"Vendas estimadas" incluem TODOS os produtos do vendedor, nao so mochila pirulito</li>
+      <li>Vendedores sem reviews visiveis recebem estimativa por proporcao de anuncios</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Modal 2: Avaliacoes Negativas -->
+<div class="modal-overlay" id="modal-2">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-2')">&times;</button>
+    <span class="modal-badge" style="background:var(--orange-bg);color:var(--orange)">CONCEITO</span>
+    <h2>Analise de Avaliacoes Negativas</h2>
+
+    <h3>O que e e por que importa?</h3>
+    <p>Avaliacoes negativas dos concorrentes revelam os <b>problemas reais que compradores enfrentam</b>. Cada reclamacao e uma oportunidade: se voce resolve o problema e comunica isso, o comprador escolhe voce.</p>
+
+    <h3>Metodologia</h3>
+    <p>Analisamos avaliacoes 1-4 estrelas dos principais concorrentes. Cada problema e mapeado contra as especificacoes da Mochila Viva para verificar se ja temos a solucao. Dividimos em:</p>
+    <ul>
+      <li><b>Confirmadas:</b> avaliacoes reais publicadas no ML</li>
+      <li><b>Inferidas:</b> problemas previsiveis com base nas specs do produto (ex: sem estrutura = amassa)</li>
+    </ul>
+
+    <div class="example-box">
+      <strong>Exemplo real:</strong>
+      <p>AREAPROMOCIONAL recebeu avaliacao 4 estrelas: <i>"A placa fica com folga e balanca"</i>.</p>
+      <p><b>Causa:</b> Apenas "2 pontos" de VHB (~5-10cm total de adesao).</p>
+      <p><b>Solucao MV:</b> 40cm de VHB 3M (4-8x mais area adesiva).</p>
+      <p><b>Onde comunicar:</b> Na PRIMEIRA foto (infografico "4-8x mais adesao") + descricao bloco 2 + responder avaliacao alheia se possivel.</p>
+    </div>
+
+    <h3>Como usar na pratica</h3>
+    <p>Para cada reclamacao: (1) confirmar que a MV resolve o problema, (2) criar midia visual (foto/infografico), (3) incluir na descricao com dados numericos, (4) usar como argumento em perguntas de compradores.</p>
+  </div>
+</div>
+
+<!-- Modal 3: Perguntas -->
+<div class="modal-overlay" id="modal-3">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-3')">&times;</button>
+    <span class="modal-badge" style="background:var(--green-bg);color:var(--green-dark)">CONCEITO</span>
+    <h2>Analise de Perguntas dos Compradores</h2>
+
+    <h3>O que sao e por que importam?</h3>
+    <p>No ML, compradores podem fazer perguntas publicas nos anuncios. Essas perguntas revelam <b>informacoes que faltam na descricao</b> e as <b>objecoes que impedem a compra</b>. Se 10 pessoas perguntam "aguenta chuva?", a resposta deveria estar na descricao.</p>
+
+    <h3>O funil invisivel</h3>
+    <p>Para cada pessoa que pergunta, ~10 desistem sem perguntar. Se 5 compradores perguntam "serve em pessoa grande?", significa que ~50 visitaram o anuncio com essa duvida. Desses 50, talvez 40 foram embora sem comprar porque a resposta nao estava visivel.</p>
+
+    <div class="example-box">
+      <strong>Exemplo pratico:</strong>
+      <p>Pergunta frequente: <i>"Qual a diferenca do mais barato?"</i></p>
+      <p><b>Objecao real:</b> O comprador esta comparando e nao entende por que pagar mais.</p>
+      <p><b>Resposta ruim:</b> "Nosso produto e de qualidade superior."</p>
+      <p><b>Resposta que vende:</b> "Estrutura E.V.A. 8mm (nao amassa), haste aluminio 85cm/220g (30% mais leve), VHB 3M 40cm (placa NUNCA solta), regulagem P a GG. Os mais baratos usam haste de ferro 75cm sem estrutura interna."</p>
+    </div>
+
+    <h3>Regra de ouro</h3>
+    <p>A melhor descricao e aquela que responde TODAS as perguntas antes de serem feitas. Cada pergunta eliminada = mais conversoes automaticas (sem depender de resposta manual).</p>
+  </div>
+</div>
+
+<!-- Modal 4: Posicao Organica -->
+<div class="modal-overlay" id="modal-4">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-4')">&times;</button>
+    <span class="modal-badge" style="background:var(--purple-bg);color:var(--purple)">CONCEITO</span>
+    <h2>Posicao Organica no Ranking ML</h2>
+
+    <h3>O que e posicao organica?</h3>
+    <p>Quando alguem busca "mochila pirulito" no ML, os resultados aparecem em uma ordem determinada por um <b>algoritmo</b>. Posicao organica e onde seu anuncio aparece SEM pagar por Ads. Estar na pagina 1 vs pagina 3 pode significar 100 visitas vs 5.</p>
+
+    <h3>Fatores que o algoritmo considera</h3>
+    <ul>
+      <li><b>Relevancia do titulo:</b> O titulo contem as palavras buscadas? Mais keywords relevantes = mais chances</li>
+      <li><b>Historico de vendas:</b> Anuncios que vendem mais sobem no ranking (efeito "bola de neve")</li>
+      <li><b>Reputacao do vendedor:</b> Termometro verde > amarelo > vermelho</li>
+      <li><b>Preco competitivo:</b> Precos proximos ou abaixo da media tendem a subir</li>
+      <li><b>Frete gratis:</b> Anuncios com frete gratis sao priorizados</li>
+      <li><b>Taxa de conversao:</b> Se muita gente visita mas poucos compram, o anuncio desce</li>
+      <li><b>Ficha tecnica completa:</b> Atributos preenchidos = melhor indexacao</li>
+    </ul>
+
+    <div class="example-box">
+      <strong>Impacto da estrategia agressiva:</strong>
+      <p><b>Antes (R$189,90):</b> Acima da mediana, titulo generico, categoria errada → Pagina 3-4</p>
+      <p><b>Depois (R$159,90):</b> Abaixo da mediana, titulo com 10+ keywords, categoria correta, frete gratis → Pagina 1-2 (projetado)</p>
+      <p>A reducao de preco isoladamente ja melhora 2-3 posicoes. Combinada com titulo SEO e frete gratis, o salto e significativo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 5: Gap de Produto -->
+<div class="modal-overlay" id="modal-5">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-5')">&times;</button>
+    <span class="modal-badge" style="background:var(--green-bg);color:var(--green-dark)">CONCEITO</span>
+    <h2>Gap de Produto — Encontrando Oportunidades</h2>
+
+    <h3>O que e gap analysis?</h3>
+    <p>Gap analysis (analise de lacunas) identifica <b>configuracoes de produto que tem demanda mas pouca oferta</b>. Em um mercado com 159 anuncios, se uma configuracao especifica tem menos de 5 concorrentes, ela e um "gap" — uma oportunidade com menos competicao.</p>
+
+    <h3>Por que gaps sao valiosos?</h3>
+    <p>Menos concorrencia = mais visibilidade por anuncio = maior taxa de conversao. E mais facil ser o #1 de 4 concorrentes do que ser o #1 de 28.</p>
+
+    <div class="example-box">
+      <strong>Exemplo concreto:</strong>
+      <p><b>Kit 10:</b> 18 anuncios concorrentes. Para aparecer na 1a posicao, voce precisa superar 17 outros em preco, reputacao e vendas.</p>
+      <p><b>Kit 3:</b> Apenas 4 anuncios. Criar um Kit 3 com preco competitivo te coloca automaticamente entre os top 5 — com 4x menos esforco.</p>
+      <p><b>Colete Avulso:</b> Apenas 6 anuncios. Um produto a R$109,90 atrai compradores sensíveis a preco que podem ser convertidos para o kit completo via perguntas.</p>
+    </div>
+
+    <h3>Estrategia de isca (loss leader)</h3>
+    <p>O "Colete Avulso" a R$109,90 nao e para maximizar margem — e para <b>capturar trafego</b>. Quando o comprador pergunta "posso comprar com placa?", voce direciona para o anuncio unitario a R$159,90. O custo de aquisicao desse cliente e zero.</p>
+  </div>
+</div>
+
+<!-- Modal 6: Simulacao Financeira -->
+<div class="modal-overlay" id="modal-6">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-6')">&times;</button>
+    <span class="modal-badge" style="background:var(--teal-light);color:var(--teal)">CONCEITO</span>
+    <h2>Simulacao Financeira — Margem Real no ML</h2>
+
+    <h3>O que e margem real?</h3>
+    <p>Margem real e o lucro que sobra DEPOIS de descontar TODOS os custos. No ML:</p>
+    <p><b>Margem = Preco Venda - Custo Produto - Comissao ML (16%) - Frete - Embalagem</b></p>
+
+    <h3>Por que margem % e lucro absoluto sao diferentes?</h3>
+    <ul>
+      <li><b>Unitario R$159,90:</b> Margem 30,5% = R$48,82 de lucro</li>
+      <li><b>Kit 10 R$1.299:</b> Margem 26,3% = R$341,16 de lucro</li>
+      <li>A margem % cai nos kits, mas o lucro por pedido SOBE 7,0x</li>
+    </ul>
+
+    <div class="example-box">
+      <strong>Exemplo — Meta de R$1.000/mes:</strong>
+      <p>Via unitarios: 21 vendas necessarias (quase 1/dia)</p>
+      <p>Via Kit 10: 3 vendas necessarias (1 a cada 10 dias)</p>
+      <p>Cada venda Kit 10 = 1 envio, 1 embalagem, 1 SAC. Unitarios = 22 envios, 22 embalagens, potencialmente 22 SACs.</p>
+      <p><b>Kits grandes sao mais eficientes operacionalmente.</b></p>
+    </div>
+
+    <h3>O que e break-even?</h3>
+    <p>Break-even e o ponto onde receita = custos. Se seus custos fixos mensais (internet, embalagens, tempo) sao ~R$500, voce precisa de 11 vendas unitarias ou apenas 2 Kit 10 para "empatar". Tudo acima disso e lucro puro.</p>
+
+    <h3>Sweet spot</h3>
+    <p>O sweet spot e o ponto onde margem x probabilidade de venda e maximo. Kit 5 (R$193 lucro, 28% margem) oferece o melhor equilibrio: lucro razoavel por pedido sem ticket tao alto que reduza a frequencia de compra.</p>
+  </div>
+</div>
+
+<!-- Modal 7: Sazonalidade -->
+<div class="modal-overlay" id="modal-7">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-7')">&times;</button>
+    <span class="modal-badge" style="background:var(--yellow-bg);color:var(--yellow)">CONCEITO</span>
+    <h2>Sazonalidade — Timing e Tudo</h2>
+
+    <h3>O que e sazonalidade?</h3>
+    <p>Sazonalidade e a variacao da demanda ao longo do ano. Mochila pirulito e um produto <b>B2B (empresa para empresa)</b> usado para propaganda ambulante em eventos. A demanda segue o calendario comercial e de eventos do Brasil.</p>
+
+    <h3>Por que timing importa mais que preco?</h3>
+    <p>Um anuncio perfeito em marco (pos-Carnaval, demanda baixa) gera menos vendas que um anuncio mediano em janeiro (prep. Carnaval, demanda pico). Investir em Ads no momento certo multiplica o retorno.</p>
+
+    <div class="example-box">
+      <strong>Exemplo — Carnaval 2027:</strong>
+      <p><b>Novembro/2026:</b> Empresas de bebidas e eventos comecam a planejar Carnaval</p>
+      <p><b>Janeiro/2027:</b> Compras de material promocional atingem pico (blocos, promotores)</p>
+      <p><b>Fevereiro/2027:</b> Ultimas compras de emergencia (pre-Carnaval)</p>
+      <p><b>Acao MV:</b> Investir R$50-80/dia em Ads de Jan 1 a Fev 20 = capturar o pico inteiro</p>
+    </div>
+
+    <h3>Regra dos 30-45 dias</h3>
+    <p>Compradores B2B compram <b>30-45 dias antes do evento</b>. Preparar estoque e ativar Ads com essa antecedencia e essencial. Comprar Ads durante o evento ja e tarde — os compradores ja compraram.</p>
+
+    <h3>2026: Ano excepcional</h3>
+    <p>Copa do Mundo (Jun-Jul) + Eleicoes (Jul-Out) = 5 meses consecutivos de alta demanda para midia movel. Oportunidade unica que nao se repete ate 2030.</p>
+  </div>
+</div>
+
+<!-- Modal 8: Canais -->
+<div class="modal-overlay" id="modal-8">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-8')">&times;</button>
+    <span class="modal-badge" style="background:var(--pink-bg);color:var(--pink)">CONCEITO</span>
+    <h2>Canais Alternativos — Alem do Mercado Livre</h2>
+
+    <h3>Por que diversificar canais?</h3>
+    <p>Depender 100% de um unico canal e arriscado. Se o ML mudar a comissao, o algoritmo, ou suspender a conta, suas vendas vao a zero. Diversificar protege o negocio e pode aumentar margem total.</p>
+
+    <h3>Comparacao de canais</h3>
+    <ul>
+      <li><b>Mercado Livre (16%):</b> Maior trafego, Decola, frete subsidiado. Melhor para volume inicial. Comissao alta.</li>
+      <li><b>Shopee (12%):</b> Crescendo rapido, publico mais jovem, comissao menor. Bom para ampliar volume.</li>
+      <li><b>Amazon BR (15%):</b> Publico premium, FBA disponivel, menor trafego para nicho. Bom para diversificar.</li>
+      <li><b>Site proprio (0%):</b> Sem comissao, mas precisa gerar trafego (Google Ads, SEO). Melhor para B2B direto e kits grandes.</li>
+      <li><b>Instagram/WhatsApp (0%):</b> Relacionamento direto B2B, sem comissao, negociacao flexivel. Ideal para clientes recorrentes.</li>
+    </ul>
+
+    <div class="example-box">
+      <strong>Exemplo — Mesma venda, canais diferentes:</strong>
+      <p>Unitario R$159,90:</p>
+      <p><b>ML (16%):</b> Lucro R$48,82</p>
+      <p><b>Shopee (12%):</b> Lucro R$55,21 (+R$6,39)</p>
+      <p><b>Site proprio (0%):</b> Lucro R$74,40 (+R$25,58)</p>
+      <p>O mesmo produto no site proprio gera 52% mais lucro. Mas o ML traz o cliente "de graca" — no site, voce paga R$150-500 em Google Ads por cliente.</p>
+    </div>
+
+    <h3>Estrategia recomendada</h3>
+    <p><b>Curto prazo:</b> ML otimizado (principal) + Instagram/WhatsApp (B2B).<br>
+    <b>Medio prazo:</b> + Shopee (volume adicional com margem melhor).<br>
+    <b>Longo prazo:</b> + Amazon + site proprio (maximizar margem em kits grandes).</p>
+  </div>
+</div>
+
+<!-- Modal: CLAUDINHO 16x -->
+<div class="modal-overlay" id="modal-claudinho">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-claudinho')">&times;</button>
+    <span class="modal-badge" style="background:var(--blue-bg);color:var(--blue)">ANALISE</span>
+    <h2>O que os numeros revelam</h2>
+
+    <p>O dado mais disruptivo e que <b>AREA PROMO e BALCAO E BANDEJA sao a mesma empresa</b>. Os 53 anuncios que pareciam dois concorrentes fortes na verdade sao uma unica operacao — e com apenas 1.020 vendas estimadas contra 3.165 do CLAUDINHO com 10 anuncios. Isso invalida a premissa de que saturacao funciona nesse mercado.</p>
+
+    <h3>Por que CLAUDINHO converte 316 vendas/anuncio vs. 19 da AREA+BALCAO?</h3>
+    <p>Tres fatores se reforcam mutuamente:</p>
+
+    <p><b>1. Comunicacao de diferencial real.</b> CLAUDINHO e o unico vendedor do ML que transformou uma especificacao tecnica ("PLACA INTERNA RIGIDA — NAO E MOLENGA") em argumento central de venda. Enquanto AREA+BALCAO publica 53 anuncios com o mesmo texto generico sobre TNT+nylon e haste metal 75cm, CLAUDINHO fala algo que nenhum outro fala. O comprador B2B que esta montando equipe de 10 promotores para um evento nao quer o mais barato — quer o que nao vai dar problema no meio do evento. "Nao e molenga" resolve uma dor real.</p>
+
+    <p><b>2. Material diferenciado reforca a mensagem.</b> Duratran + Aerado Space em vez de TNT+nylon. Haste aluminio 100cm em vez de metal 75cm. Mesmo que o comprador nao entenda os materiais, a especificidade transmite credibilidade. Quando voce le "TNT e nylon preto" em 53 anuncios identicos e depois encontra "Duratran e Aerado Space, impermeavel, placa interna rigida", a diferenciacao e imediata.</p>
+
+    <p><b>3. Preco intermediario estrategico.</b> CLAUDINHO a R$135 mediana esta abaixo dos R$137-175 da AREA+BALCAO, mas acima dos R$78 da MIDIAS. Ele ocupa o sweet spot: preco competitivo com percepcao de produto superior. O comprador sente que esta levando mais por menos.</p>
+
+    <h3>O paradoxo da saturacao</h3>
+    <p>AREA+BALCAO apostou em dominar resultados de busca — 53 anuncios com 3 variantes por kit (redonda, quadrada, generica), mesma descricao, mesmo produto. O resultado? O algoritmo do ML provavelmente distribui as impressoes entre os 53 anuncios, diluindo a relevancia de cada um. Nenhum acumula vendas suficientes para ganhar tracao organica. As 21 avaliacoes (68 reviews) estao espalhadas em dezenas de anuncios em vez de concentradas.</p>
+
+    <p>CLAUDINHO concentrou em 10 anuncios e acumulou 21 reviews com nota alta. As 3.165 vendas alimentam o algoritmo de relevancia — mais vendas por anuncio = melhor posicionamento = mais vendas. E um ciclo virtuoso que a saturacao de AREA+BALCAO impede de acontecer.</p>
+
+    <h3>O que isso significa para a Mochila Viva</h3>
+    <p>A licao e clara: a Mochila Viva <b>nao precisa de 53 anuncios</b>. Precisa de 6-8 anuncios com comunicacao tecnica que o CLAUDINHO nem sonha em ter. Porque a ironia e que o CLAUDINHO domina o mercado declarando UMA especificacao ("placa rigida" sem dizer o material), enquanto a Mochila Viva tem <b>CINCO diferenciais mensuraveis</b> e nao comunica nenhum.</p>
+
+    <div class="example-box">
+      <strong>O potencial nao explorado:</strong>
+      <p>Se CLAUDINHO faz 316 vendas/anuncio com "placa rigida generica", o potencial de um anuncio que declara <b>E.V.A. 8mm + VHB 40cm + aluminio 220g + 4 reguladores P-GG + 610g total</b> e significativamente maior — desde que comunicado com a mesma clareza que CLAUDINHO comunicou o dele.</p>
+      <p>A share de mercado da Mochila Viva (&lt;1%, ~50 vendas, ~R$9k/ano) <b>nao reflete o produto — reflete exclusivamente a comunicacao</b>. O produto ja esta no nivel premium. O anuncio ainda esta no nivel commodity.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  });
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => {
+      m.classList.remove('active');
+    });
+    document.body.style.overflow = 'auto';
+  }
+});
+</script>
+
+</body>
+</html>

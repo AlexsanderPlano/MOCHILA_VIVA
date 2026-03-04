@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fotos ML — Mochila Viva</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Brand Mochila Viva (extraido do logo oficial) ── */
+    --brand-orange: #F5A623;
+    --brand-orange-dark: #E8961A;
+    --brand-brown: #7B5B2A;
+    --brand-brown-dark: #5D4420;
+    --brand-cream: #FFF9ED;
+    --brand-light: #FFFDF7;
+
+    /* ── Base ── */
+    --bg: #F7F5F0;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --header-dark: #1a1a2e;
+
+    /* ── Cores das fotos ── */
+    --green: #10b981;
+    --green-bg: #ecfdf5;
+    --blue: #3b82f6;
+    --blue-bg: #eff6ff;
+    --orange: #f59e0b;
+    --orange-bg: #fffbeb;
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --purple: #8b5cf6;
+    --purple-bg: #f5f3ff;
+    --pink: #ec4899;
+    --pink-bg: #fdf2f8;
+    --cyan: #06b6d4;
+    --cyan-bg: #ecfeff;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top:80px; }
+  body {
+    font-family:'Outfit',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+  }
+
+  .wrap { max-width:940px; margin:0 auto; padding:0 20px 60px; }
+
+  /* ════════════════════════════════════════════
+     HERO HEADER — com logo oficial
+  ════════════════════════════════════════════ */
+  .hero {
+    background: linear-gradient(135deg, var(--brand-brown-dark) 0%, var(--brand-brown) 40%, #8B6B30 100%);
+    padding: 36px 20px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60%; left: -20%;
+    width: 140%; height: 200%;
+    background: radial-gradient(ellipse at 30% 20%, rgba(245,166,35,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-orange), var(--brand-brown), var(--brand-orange));
+  }
+  .hero-logo {
+    width: 96px;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 16px rgba(245,166,35,0.4));
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 {
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.5px;
+    position: relative;
+    z-index: 1;
+    line-height: 1.15;
+  }
+  .hero h1 span {
+    color: var(--brand-orange);
+    text-shadow: 0 2px 8px rgba(245,166,35,0.3);
+  }
+  .hero .subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 8px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+  }
+  .hero .badge-hero {
+    display: inline-block;
+    background: var(--green);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-top: 14px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 2px 12px rgba(16,185,129,0.35);
+  }
+
+  /* ════════════════════════════════════════════
+     STATS CARDS — flutuando sobre hero
+  ════════════════════════════════════════════ */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 12px;
+    margin: -26px auto 28px;
+    max-width: 940px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .st {
+    text-align: center;
+    padding: 18px 10px 14px;
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-top: 3px solid transparent;
+  }
+  .st:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  }
+  .st:nth-child(1) { border-top-color: var(--green); }
+  .st:nth-child(2) { border-top-color: var(--blue); }
+  .st:nth-child(3) { border-top-color: var(--brand-orange); }
+  .st:nth-child(4) { border-top-color: var(--red); }
+  .st strong {
+    font-size: 30px;
+    font-weight: 900;
+    display: block;
+    line-height: 1;
+  }
+  .st span {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    display: block;
+  }
+  .st:nth-child(1) strong { color: var(--green); }
+  .st:nth-child(2) strong { color: var(--blue); }
+  .st:nth-child(3) strong { color: var(--brand-orange); }
+  .st:nth-child(4) strong { color: var(--red); }
+
+  /* ════════════════════════════════════════════
+     SECTION DIVIDERS — amber circles (like infografico)
+  ════════════════════════════════════════════ */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 32px 0 18px;
+  }
+  .section-divider .num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--brand-orange);
+    color: #fff;
+    font-weight: 900;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 14px rgba(245,166,35,0.35);
+  }
+  .section-divider h2 {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .section-divider .line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* ════════════════════════════════════════════
+     SPECS BOX — dark header like infografico
+  ════════════════════════════════════════════ */
+  .specs {
+    background: var(--card);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .specs-header {
+    padding: 14px 20px;
+    background: var(--header-dark);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .specs-header strong {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .specs-header .badge-check {
+    display: inline-block;
+    background: rgba(245,166,35,0.15);
+    color: var(--brand-orange);
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+  }
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 0;
+  }
+  .spec-item {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .spec-item:hover { background: var(--brand-cream); }
+  .spec-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .spec-val {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 3px;
+    color: var(--text);
+  }
+
+  /* ════════════════════════════════════════════
+     RULES — cards with left border
+  ════════════════════════════════════════════ */
+  .rules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .rule {
+    padding: 16px 18px;
+    border-radius: 12px;
+    border-left: 4px solid;
+    background: var(--card);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .rule:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+  }
+  .rule-r { border-color: var(--red); }
+  .rule-o { border-color: var(--brand-orange); }
+  .rule-g { border-color: var(--green); }
+  .rule-b { border-color: var(--blue); }
+  .rule strong {
+    font-size: 13px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .rule p {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ════════════════════════════════════════════
+     NAV — dark premium sticky
+  ════════════════════════════════════════════ */
+  .flow {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 24px;
+    padding: 10px 14px;
+    background: var(--header-dark);
+    border-radius: 14px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 24px rgba(26,26,46,0.3);
+  }
+  .flow::-webkit-scrollbar { height: 3px; }
+  .flow::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+  .fl {
+    text-align: center;
+    padding: 6px 10px;
+    min-width: 68px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .fl:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+  }
+  .fl-n {
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 50%;
+    width: 30px; height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 4px;
+    color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .fl:hover .fl-n {
+    transform: scale(1.15);
+    box-shadow: 0 2px 12px rgba(255,255,255,0.15);
+  }
+  .fl-l {
+    font-size: 9px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+  .fl:hover .fl-l { color: rgba(255,255,255,0.9); }
+  .fl-a {
+    color: rgba(255,255,255,0.12);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════════════════
+     PHOTO CARDS — premium with gradient numbs
+  ════════════════════════════════════════════ */
+  .photos { display:flex; flex-direction:column; gap:16px; }
+
+  .pc {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--card);
+    box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .pc:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.1);
+  }
+  .pc-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .pc-num::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
+  }
+  .pc-body { padding: 18px 20px; }
+  .pc-top { display:flex; gap:18px; align-items:flex-start; }
+  .pc-info { flex:1; min-width:0; }
+
+  .pc-sketch {
+    flex-shrink: 0;
+    width: 150px; height: 150px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.04);
+    transition: transform 0.3s;
+  }
+  .pc:hover .pc-sketch { transform: scale(1.03); }
+
+  /* ── Lado a lado: sketch (referencia) + imagem (resultado) ── */
+  .pc-visuals {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .pc-visual-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .pc-visual-label {
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .pc-img-slot {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    border: 2px dashed var(--border);
+    overflow: hidden;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.3s;
+  }
+  .pc-img-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .pc-img-slot.has-img {
+    border: 1px solid var(--border);
+  }
+  .pc:hover .pc-img-slot { transform: scale(1.03); }
+
+  /* Placeholder quando nao tem imagem */
+  .pc-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+  }
+  .pc-placeholder-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .pc-placeholder-text {
+    font-size: 9px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .pc-placeholder-file {
+    font-size: 8px;
+    font-family: monospace;
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--orange);
+  }
+
+  .pc-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .pc-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  .pc-obj {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-style: italic;
+    line-height: 1.45;
+  }
+  .pc-list { list-style:none; display:grid; gap:4px; }
+  .pc-list li {
+    font-size: 12px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .pc-list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 5px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 2px solid;
+    opacity: 0.6;
+  }
+
+  /* Card color variants */
+  .c-green .pc-num { background: linear-gradient(180deg, #34d399, #059669); }
+  .c-green .pc-badge { background: var(--green-bg); color: var(--green); }
+  .c-green .pc-list li::before { border-color: var(--green); }
+
+  .c-blue .pc-num { background: linear-gradient(180deg, #60a5fa, #2563eb); }
+  .c-blue .pc-badge { background: var(--blue-bg); color: var(--blue); }
+  .c-blue .pc-list li::before { border-color: var(--blue); }
+
+  .c-orange .pc-num { background: linear-gradient(180deg, #fbbf24, #d97706); }
+  .c-orange .pc-badge { background: var(--orange-bg); color: var(--orange); }
+  .c-orange .pc-list li::before { border-color: var(--orange); }
+
+  .c-red .pc-num { background: linear-gradient(180deg, #f87171, #dc2626); }
+  .c-red .pc-badge { background: var(--red-bg); color: var(--red); }
+  .c-red .pc-list li::before { border-color: var(--red); }
+
+  .c-purple .pc-num { background: linear-gradient(180deg, #a78bfa, #7c3aed); }
+  .c-purple .pc-badge { background: var(--purple-bg); color: var(--purple); }
+  .c-purple .pc-list li::before { border-color: var(--purple); }
+
+  .c-pink .pc-num { background: linear-gradient(180deg, #f472b6, #db2777); }
+  .c-pink .pc-badge { background: var(--pink-bg); color: var(--pink); }
+  .c-pink .pc-list li::before { border-color: var(--pink); }
+
+  .c-cyan .pc-num { background: linear-gradient(180deg, #22d3ee, #0891b2); }
+  .c-cyan .pc-badge { background: var(--cyan-bg); color: var(--cyan); }
+  .c-cyan .pc-list li::before { border-color: var(--cyan); }
+
+  /* ════════════════════════════════════════════
+     TABLE — dark header (estilo infografico)
+  ════════════════════════════════════════════ */
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .tbl th {
+    background: var(--header-dark);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 700;
+  }
+  .tbl th:nth-child(2) { color: var(--green); }
+  .tbl th:nth-child(3) { color: #f87171; }
+  .tbl td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .tbl tr:nth-child(even) td { background: #f9fafb; }
+  .tbl tr:last-child td { border: none; }
+  .tbl tr:hover td { background: var(--brand-cream); }
+  .ck { color: var(--green); font-weight: 700; }
+  .cx { color: var(--red); font-weight: 700; }
+
+  /* ════════════════════════════════════════════
+     TIPS / DICAS
+  ════════════════════════════════════════════ */
+  .tips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .tip {
+    padding: 18px 20px;
+    border-radius: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+  }
+  .tip-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .tip:nth-child(1) .tip-icon { background: var(--blue-bg); }
+  .tip:nth-child(2) .tip-icon { background: var(--orange-bg); }
+  .tip:nth-child(3) .tip-icon { background: var(--green-bg); }
+  .tip strong {
+    font-size: 13px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .tip p {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ════════════════════════════════════════════
+     FOOTER — branded
+  ════════════════════════════════════════════ */
+  .footer-wrap {
+    margin-top: 32px;
+    background: var(--header-dark);
+    padding: 24px 20px;
+    text-align: center;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .footer-wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-orange), var(--brand-brown), var(--brand-orange));
+  }
+  .footer-logo {
+    width: 48px;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 10px;
+    opacity: 0.7;
+    filter: drop-shadow(0 2px 8px rgba(245,166,35,0.3));
+  }
+  .footer-chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .footer-chip {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    padding: 4px 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+  .footer-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+  .footer-brand {
+    color: var(--brand-orange);
+    font-weight: 700;
+  }
+
+  /* ════════════════════════════════════════════
+     BRAND IDENTITY MANUAL
+  ════════════════════════════════════════════ */
+  .brand-section {
+    background: var(--card);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .brand-header {
+    padding: 14px 20px;
+    background: var(--header-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-header strong {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .brand-header .sub {
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .brand-body { padding: 24px; }
+
+  /* Logo display */
+  .logo-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .logo-card {
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    text-align: center;
+  }
+  .logo-card-preview {
+    padding: 28px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-card-preview img { width: 120px; height: auto; }
+  .logo-card-label {
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  /* Color table */
+  .color-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .color-table th {
+    background: var(--header-dark);
+    color: rgba(255,255,255,0.6);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .color-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .color-table tr:last-child td { border-bottom: none; }
+  .color-table tr:hover td { background: var(--brand-cream); }
+  .color-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .color-name {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .color-role {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .color-code {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  /* Font showcase */
+  .font-showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .font-card {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .font-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .font-family-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .font-alphabet {
+    font-size: 18px;
+    line-height: 1.4;
+    color: #374151;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+  .font-weights {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .fw-chip {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .fw-chip.active {
+    background: var(--header-dark);
+    color: #fff;
+    border-color: var(--header-dark);
+  }
+
+  /* ════════════════════════════════════════════
+     RESPONSIVE
+  ════════════════════════════════════════════ */
+  @media(max-width:600px) {
+    .stats { grid-template-columns: repeat(2,1fr); margin: -20px 12px 20px; }
+    .hero h1 { font-size: 24px; }
+    .hero-logo { width: 72px; }
+    .pc-top { flex-direction:column; }
+    .pc-sketch { width:100%; height:180px; }
+    .pc-visuals { flex-direction: column; width:100%; }
+    .pc-img-slot { width:100%; height:180px; }
+    .pc { grid-template-columns: 48px 1fr; }
+    .pc-num { font-size: 18px; }
+    .pc-title { font-size: 14px; }
+    .specs-grid { grid-template-columns: 1fr 1fr; }
+    .flow { border-radius: 0; margin-left: -20px; margin-right: -20px; }
+    .section-divider h2 { font-size: 15px; }
+    .logo-display { grid-template-columns: 1fr; }
+    .font-showcase { grid-template-columns: 1fr; }
+    .color-table { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ══════ HERO ══════ -->
+  <div class="hero">
+    <svg class="hero-logo" viewBox="0 0 600 600" width="96" height="96" role="img" aria-label="Mochila Viva">
+      <circle cx="300" cy="300" r="280" fill="#8B6914"/>
+      <circle cx="300" cy="300" r="268" fill="#F5A623"/>
+      <circle cx="375" cy="223" r="22" fill="none" stroke="#FFF" stroke-width="5"/>
+      <circle cx="375" cy="223" r="10" fill="#FFF"/>
+      <text x="300" y="323" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#8B6914" letter-spacing="1">MOCHILA</text>
+      <text x="404" y="398" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#FFF" letter-spacing="1">VIVA</text>
+    </svg>
+    <h1>Estrategia de <span>10 Fotos</span></h1>
+    <div class="subtitle">Anuncio Unitario · Mercado Livre · Guia de Producao</div>
+    <div class="badge-hero">Guia Completo de Fotografia</div>
+  </div>
+
+  <!-- ══════ STATS ══════ -->
+  <div class="stats">
+    <div class="st"><strong>10</strong><span>Fotos</span></div>
+    <div class="st"><strong>7</strong><span>Objecoes</span></div>
+    <div class="st"><strong>6</strong><span>Diferenciais</span></div>
+    <div class="st"><strong>1</strong><span>Exclusivo</span></div>
+  </div>
+
+<div class="wrap">
+
+  <!-- ══════ SECTION 1: SPECS ══════ -->
+  <div class="section-divider">
+    <div class="num">1</div>
+    <h2>Especificacoes Oficiais ML</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="specs">
+    <div class="specs-header">
+      <strong>Especificacoes Oficiais — Mercado Livre</strong>
+      <span class="badge-check">Verificadas Mar/2026</span>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-item">
+        <div class="spec-label">Resolucao recomendada</div>
+        <div class="spec-val">1200 x 1200 px (quadrado 1:1)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Resolucao minima</div>
+        <div class="spec-val">500 x 500 px (min lado maior)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Peso arquivo</div>
+        <div class="spec-val">Min ~600 KB · Max 10 MB</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Formatos aceitos</div>
+        <div class="spec-val">JPG, JPEG, PNG (RGB)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Proporcao</div>
+        <div class="spec-val">Quadrada ou similar (1:1)</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Max por variacao</div>
+        <div class="spec-val">10 fotos</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Produto na imagem</div>
+        <div class="spec-val">Centralizado, ~95% do espaco</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Foto 1 (capa)</div>
+        <div class="spec-val">Fundo branco, sem texto/logo/borda</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ REGRAS ══════ -->
+  <div class="rules" style="margin-top:16px;">
+    <div class="rule rule-r"><strong>Proibido em TODAS as fotos</strong><p>Logo, marca d'agua, bordas, QR code, dados de contato, selos ML (Full, MercadoLider, Mais Vendido), banners promocionais, precos, imagens de terceiros.</p></div>
+    <div class="rule rule-o"><strong>Proibido na FOTO 1 (capa)</strong><p>Qualquer texto, infografico, medidas, embalagem, multiplos produtos, colagem. Apenas produto centralizado em fundo branco digital.</p></div>
+    <div class="rule rule-g"><strong>Permitido nas fotos 2-10</strong><p>Infograficos, setas com texto, comparativos, contexto de uso, angulos diferentes, detalhes, embalagem. Sempre com produto como foco principal.</p></div>
+  </div>
+
+  <!-- ══════ SECTION 2: MANUAL DE IDENTIDADE VISUAL ══════ -->
+  <div class="section-divider">
+    <div class="num">2</div>
+    <h2>Manual de Identidade Visual</h2>
+    <div class="line"></div>
+  </div>
+
+  <!-- 2.1 LOGO -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <strong>2.1 — Logotipo</strong>
+      <span class="sub">Versoes e aplicacoes</span>
+    </div>
+    <div class="brand-body">
+      <div class="logo-display">
+        <div class="logo-card">
+          <div class="logo-card-preview" style="background:#FFFFFF;">
+            <svg viewBox="0 0 600 600" width="120" height="120" role="img" aria-label="Logo fundo branco">
+              <circle cx="300" cy="300" r="280" fill="#8B6914"/><circle cx="300" cy="300" r="268" fill="#F5A623"/>
+              <circle cx="375" cy="223" r="22" fill="none" stroke="#FFF" stroke-width="5"/><circle cx="375" cy="223" r="10" fill="#FFF"/>
+              <text x="300" y="323" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#8B6914" letter-spacing="1">MOCHILA</text>
+              <text x="404" y="398" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#FFF" letter-spacing="1">VIVA</text>
+            </svg>
+          </div>
+          <div class="logo-card-label">Fundo Branco (padrao)</div>
+        </div>
+        <div class="logo-card">
+          <div class="logo-card-preview" style="background:#1a1a2e;">
+            <svg viewBox="0 0 600 600" width="120" height="120" role="img" aria-label="Logo fundo escuro">
+              <circle cx="300" cy="300" r="280" fill="#8B6914"/><circle cx="300" cy="300" r="268" fill="#F5A623"/>
+              <circle cx="375" cy="223" r="22" fill="none" stroke="#FFF" stroke-width="5"/><circle cx="375" cy="223" r="10" fill="#FFF"/>
+              <text x="300" y="323" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#8B6914" letter-spacing="1">MOCHILA</text>
+              <text x="404" y="398" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#FFF" letter-spacing="1">VIVA</text>
+            </svg>
+          </div>
+          <div class="logo-card-label">Fundo Escuro</div>
+        </div>
+        <div class="logo-card">
+          <div class="logo-card-preview" style="background:#F7F5F0;">
+            <svg viewBox="0 0 600 600" width="120" height="120" role="img" aria-label="Logo fundo neutro">
+              <circle cx="300" cy="300" r="280" fill="#8B6914"/><circle cx="300" cy="300" r="268" fill="#F5A623"/>
+              <circle cx="375" cy="223" r="22" fill="none" stroke="#FFF" stroke-width="5"/><circle cx="375" cy="223" r="10" fill="#FFF"/>
+              <text x="300" y="323" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#8B6914" letter-spacing="1">MOCHILA</text>
+              <text x="404" y="398" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#FFF" letter-spacing="1">VIVA</text>
+            </svg>
+          </div>
+          <div class="logo-card-label">Fundo Neutro</div>
+        </div>
+      </div>
+      <!-- REGRA CANONICA -->
+      <div style="padding:16px 18px; background:linear-gradient(135deg, #2a1a0a, #3d2815); border-radius:12px; border:2px solid #F5A623; margin-bottom:14px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+          <div style="width:28px; height:28px; background:#F5A623; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:900; color:#3d2815;">!</div>
+          <div style="font-size:13px; font-weight:800; color:#F5A623; text-transform:uppercase; letter-spacing:1.5px;">Regra Canonica</div>
+        </div>
+        <div style="font-size:12px; color:#e8d5b8; line-height:1.7;">
+          O logotipo <strong style="color:#fff;">Mochila Viva</strong> e um ativo imutavel. O arquivo canonico e o vetor original <code style="background:rgba(245,166,35,0.2); padding:2px 6px; border-radius:4px; color:#F5A623;">Logo_mochila_viva.svg</code> — este arquivo <strong style="color:#fff;">nunca deve ser alterado, editado, redesenhado ou recriado</strong>. Para exibicao em HTML/web, o SVG deve ser embutido inline (nao via tag <code style="background:rgba(245,166,35,0.2); padding:2px 6px; border-radius:4px; color:#F5A623;">&lt;img&gt;</code>, que bloqueia fontes externas). A pagina importa a fonte Nunito via Google Fonts, garantindo renderizacao fiel do logotipo. <strong style="color:#fff;">Qualquer versao que difira visualmente do arquivo SVG canonico esta em desconformidade.</strong>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="padding:14px 16px; background:var(--green-bg); border-radius:10px; border-left:3px solid var(--green);">
+          <div style="font-size:12px; font-weight:700; margin-bottom:4px;">Uso correto</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.5;">Manter proporcoes originais. Area de respiro minima: 20% do diametro do logo em cada lado. Tamanho minimo: 40px digital / 15mm impresso. Arquivo canonico: SVG. Exibicao web/HTML: SVG inline (herda fonte Nunito da pagina).</div>
+        </div>
+        <div style="padding:14px 16px; background:var(--red-bg); border-radius:10px; border-left:3px solid var(--red);">
+          <div style="font-size:12px; font-weight:700; margin-bottom:4px;">Uso proibido</div>
+          <div style="font-size:11px; color:var(--muted); line-height:1.5;">Nao alterar o SVG canonico. Nao distorcer, rotacionar, aplicar sombra pesada, alterar cores, adicionar contorno extra, redesenhar ou recriar o logo. Nao usar SVG via tag &lt;img&gt; em HTML (fontes nao carregam).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.2 PALETA DE CORES -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <strong>2.2 — Paleta de Cores</strong>
+      <span class="sub">HEX · RGB · CMYK</span>
+    </div>
+    <div class="brand-body" style="padding:0;">
+
+      <!-- CORES PRIMARIAS (LOGO) -->
+      <div style="padding:16px 24px 8px;">
+        <div style="font-size:10px; font-weight:700; color:var(--brand-orange); text-transform:uppercase; letter-spacing:1.2px;">Cores Primarias — Logo</div>
+      </div>
+      <table class="color-table">
+        <thead>
+          <tr>
+            <th style="width:44px;"></th>
+            <th>Cor</th>
+            <th>HEX</th>
+            <th>RGB</th>
+            <th>CMYK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="color-dot" style="background:#F5A623;"></span></td>
+            <td><div class="color-name">Laranja Mochila Viva</div><div class="color-role">Circulo principal do logo</div></td>
+            <td class="color-code">#F5A623</td>
+            <td class="color-code">245, 166, 35</td>
+            <td class="color-code">0, 32, 86, 4</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#8B6914;"></span></td>
+            <td><div class="color-name">Marrom Dourado</div><div class="color-role">Borda do logo / texto "MOCHILA"</div></td>
+            <td class="color-code">#8B6914</td>
+            <td class="color-code">139, 105, 20</td>
+            <td class="color-code">0, 24, 86, 45</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#FFFFFF; border:1px solid #d1d5db;"></span></td>
+            <td><div class="color-name">Branco Puro</div><div class="color-role">Texto "VIVA" / elemento decorativo</div></td>
+            <td class="color-code">#FFFFFF</td>
+            <td class="color-code">255, 255, 255</td>
+            <td class="color-code">0, 0, 0, 0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- CORES SECUNDARIAS (UI) -->
+      <div style="padding:20px 24px 8px;">
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px;">Cores Secundarias — Interface</div>
+      </div>
+      <table class="color-table">
+        <thead>
+          <tr>
+            <th style="width:44px;"></th>
+            <th>Cor</th>
+            <th>HEX</th>
+            <th>RGB</th>
+            <th>CMYK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="color-dot" style="background:#1A1A2E;"></span></td>
+            <td><div class="color-name">Dark Navy</div><div class="color-role">Headers, nav, tabelas</div></td>
+            <td class="color-code">#1A1A2E</td>
+            <td class="color-code">26, 26, 46</td>
+            <td class="color-code">43, 43, 0, 82</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#10B981;"></span></td>
+            <td><div class="color-name">Verde Esmeralda</div><div class="color-role">Diferencial, badges, positivo</div></td>
+            <td class="color-code">#10B981</td>
+            <td class="color-code">16, 185, 129</td>
+            <td class="color-code">91, 0, 30, 27</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#EF4444;"></span></td>
+            <td><div class="color-name">Vermelho</div><div class="color-role">Proibicoes, exclusivo, alerta</div></td>
+            <td class="color-code">#EF4444</td>
+            <td class="color-code">239, 68, 68</td>
+            <td class="color-code">0, 72, 72, 6</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#3B82F6;"></span></td>
+            <td><div class="color-name">Azul</div><div class="color-role">Informativo, specs, links</div></td>
+            <td class="color-code">#3B82F6</td>
+            <td class="color-code">59, 130, 246</td>
+            <td class="color-code">76, 47, 0, 4</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#8B5CF6;"></span></td>
+            <td><div class="color-name">Roxo</div><div class="color-role">Tecnico, VHB 3M</div></td>
+            <td class="color-code">#8B5CF6</td>
+            <td class="color-code">139, 92, 246</td>
+            <td class="color-code">43, 63, 0, 4</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#06B6D4;"></span></td>
+            <td><div class="color-name">Ciano</div><div class="color-role">Construcao, ficha tecnica</div></td>
+            <td class="color-code">#06B6D4</td>
+            <td class="color-code">6, 182, 212</td>
+            <td class="color-code">97, 14, 0, 17</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#EC4899;"></span></td>
+            <td><div class="color-name">Rosa</div><div class="color-role">Peso, destaque numerico</div></td>
+            <td class="color-code">#EC4899</td>
+            <td class="color-code">236, 72, 153</td>
+            <td class="color-code">0, 69, 35, 7</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#F59E0B;"></span></td>
+            <td><div class="color-name">Amber</div><div class="color-role">Sections, placa removivel</div></td>
+            <td class="color-code">#F59E0B</td>
+            <td class="color-code">245, 158, 11</td>
+            <td class="color-code">0, 36, 96, 4</td>
+          </tr>
+          <tr>
+            <td><span class="color-dot" style="background:#F7F5F0;"></span></td>
+            <td><div class="color-name">Off-White Quente</div><div class="color-role">Background geral da pagina</div></td>
+            <td class="color-code">#F7F5F0</td>
+            <td class="color-code">247, 245, 240</td>
+            <td class="color-code">0, 1, 3, 3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2.3 TIPOGRAFIA -->
+  <div class="brand-section">
+    <div class="brand-header">
+      <strong>2.3 — Tipografia</strong>
+      <span class="sub">Fontes e hierarquia</span>
+    </div>
+    <div class="brand-body">
+      <div class="font-showcase">
+        <!-- NUNITO — Logo -->
+        <div class="font-card" style="border-color:var(--brand-orange);">
+          <div class="font-label" style="color:var(--brand-orange);">Fonte do Logo</div>
+          <div class="font-family-name" style="font-family:'Nunito',sans-serif; font-weight:900;">Nunito</div>
+          <div class="font-alphabet" style="font-family:'Nunito',sans-serif; font-weight:900; color:var(--brand-brown);">MOCHILA</div>
+          <div class="font-alphabet" style="font-family:'Nunito',sans-serif; font-weight:900; color:#fff; background:var(--brand-orange); display:inline-block; padding:2px 10px; border-radius:6px;">VIVA</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:10px; line-height:1.5;">Google Fonts · Rounded sans-serif · Usada exclusivamente no logotipo. Nao usar em textos corridos.</div>
+          <div class="font-weights">
+            <span class="fw-chip active">900 Black</span>
+            <span class="fw-chip">800 ExtraBold</span>
+          </div>
+        </div>
+        <!-- OUTFIT — UI -->
+        <div class="font-card">
+          <div class="font-label">Fonte da Interface</div>
+          <div class="font-family-name">Outfit</div>
+          <div class="font-alphabet" style="font-weight:900;">Aa Bb Cc Dd Ee</div>
+          <div class="font-alphabet" style="font-weight:400; font-size:14px;">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 !@#$%</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:10px; line-height:1.5;">Google Fonts · Geometric sans-serif · Usada em titulos, corpo, badges, tabelas e toda a interface.</div>
+          <div class="font-weights">
+            <span class="fw-chip active">900 Black</span>
+            <span class="fw-chip active">800 XBold</span>
+            <span class="fw-chip active">700 Bold</span>
+            <span class="fw-chip active">600 Semi</span>
+            <span class="fw-chip active">500 Medium</span>
+            <span class="fw-chip active">400 Regular</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HIERARQUIA -->
+      <div style="margin-top:20px; padding:18px 20px; background:var(--bg); border-radius:12px; border:1px solid var(--border);">
+        <div style="font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Escala Tipografica — Outfit</div>
+        <div style="display:grid; gap:6px;">
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--brand-orange); min-width:28px;">H1</span>
+            <span style="font-size:30px; font-weight:900; color:var(--brand-brown); line-height:1.1;">Hero Principal</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">30px / 900</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--brand-orange); min-width:28px;">H2</span>
+            <span style="font-size:18px; font-weight:800; color:var(--text);">Titulo de Secao</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">18px / 800</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--brand-orange); min-width:28px;">H3</span>
+            <span style="font-size:16px; font-weight:800; color:var(--text);">Titulo do Card</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">16px / 800</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--brand-orange); min-width:28px;">H4</span>
+            <span style="font-size:13px; font-weight:700; color:#374151;">Header de Specs</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">13px / 700</span>
+          </div>
+          <div style="height:1px; background:var(--border); margin:4px 0;"></div>
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--muted); min-width:28px;">Body</span>
+            <span style="font-size:12px; font-weight:400; color:#374151;">Texto corrido, listas, descricoes</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">12px / 400</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--muted); min-width:28px;">Obj</span>
+            <span style="font-size:11.5px; font-weight:400; color:var(--muted); font-style:italic;">Objetivo ou descricao secundaria</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">11.5px / 400i</span>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:12px;">
+            <span style="font-size:9px; font-weight:600; color:var(--muted); min-width:28px;">Label</span>
+            <span style="font-size:9px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px;">BADGE OU LABEL</span>
+            <span style="font-size:9px; color:var(--muted); margin-left:auto; white-space:nowrap;">9px / 700 CAPS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ SECTION 3: SEQUENCIA ══════ -->
+  <div class="section-divider">
+    <div class="num">3</div>
+    <h2>Sequencia das 10 Fotos</h2>
+    <div class="line"></div>
+  </div>
+
+  <!-- NAV -->
+  <div class="flow">
+    <a class="fl" href="#f1"><div class="fl-n" style="background:var(--green)">1</div><div class="fl-l">Impacto</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f2"><div class="fl-n" style="background:var(--blue)">2</div><div class="fl-l">Unboxing</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f3"><div class="fl-n" style="background:var(--red)">3</div><div class="fl-l">Guia Medidas</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f4"><div class="fl-n" style="background:var(--cyan)">4</div><div class="fl-l">Construcao</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f5"><div class="fl-n" style="background:var(--purple)">5</div><div class="fl-l">Haste+Fixacao</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f6"><div class="fl-n" style="background:var(--pink)">6</div><div class="fl-l">Discos PS</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f7"><div class="fl-n" style="background:var(--orange)">7</div><div class="fl-l">Pesos</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f8"><div class="fl-n" style="background:var(--green)">8</div><div class="fl-l">Comparativo</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f9"><div class="fl-n" style="background:var(--blue)">9</div><div class="fl-l">Uso Real</div></a><span class="fl-a">→</span>
+    <a class="fl" href="#f10"><div class="fl-n" style="background:var(--cyan)">10</div><div class="fl-l">Uso Real</div></a>
+  </div>
+
+  <div class="photos">
+
+    <!-- FOTO 1 -->
+    <div class="pc c-green" id="f1">
+      <div class="pc-num">01</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#10b981;">FOTO REAL</span>
+        <span class="pc-badge">FOTO PRINCIPAL (CAPA)</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Mochila Montada — Visao Frontal</div>
+            <div class="pc-obj">Parar o scroll. Decisao em 1,5s. Fundo branco obrigatorio, zero texto.</div>
+            <ul class="pc-list">
+              <li>Fundo branco digital puro (RGB 255,255,255)</li>
+              <li>Produto montado: mochila + haste + placa com arte exemplo</li>
+              <li>Centralizado, ocupando ~95% do enquadramento</li>
+              <li>Leve inclinacao 15° para profundidade</li>
+              <li>Sem texto, logo, borda ou marca d'agua</li>
+              <li>1200x1200px · JPG · RGB · >=600KB</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#fff"/>
+              <ellipse cx="70" cy="126" rx="26" ry="4" fill="#e5e7eb"/>
+              <path d="M46 68 Q44 62 48 56 Q58 48 70 46 Q82 48 92 56 Q96 62 94 68 L96 112 Q96 118 90 120 L50 120 Q44 118 44 112 Z" fill="#1e1e1e" stroke="#333" stroke-width="1"/>
+              <path d="M52 60 Q70 54 88 60" fill="none" stroke="#333" stroke-width="0.5" opacity="0.5"/>
+              <path d="M50 74 Q70 68 90 74" fill="none" stroke="#333" stroke-width="0.5" opacity="0.5"/>
+              <path d="M48 88 Q70 82 92 88" fill="none" stroke="#333" stroke-width="0.5" opacity="0.5"/>
+              <path d="M56 56 Q52 50 54 44 Q56 40 58 42" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+              <path d="M84 56 Q88 50 86 44 Q84 40 82 42" fill="none" stroke="#222" stroke-width="3" stroke-linecap="round"/>
+              <rect x="53" y="100" width="6" height="4" rx="1" fill="#444"/>
+              <rect x="81" y="100" width="6" height="4" rx="1" fill="#444"/>
+              <path d="M44 104 Q36 106 34 108 Q32 110 34 112" fill="none" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M96 104 Q104 106 106 108 Q108 110 106 112" fill="none" stroke="#222" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="70" y1="46" x2="70" y2="16" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="70" cy="16" r="14" fill="#f0f0f0" stroke="#d1d5db" stroke-width="1.2"/>
+              <text x="70" y="18" text-anchor="middle" font-size="5" fill="#9ca3af" font-weight="600" font-family="Outfit">ARTE</text>
+              <text x="70" y="138" text-anchor="middle" font-size="7" fill="#10b981" font-weight="700" font-family="Outfit">SEM TEXTO</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 2 -->
+    <div class="pc c-blue" id="f2">
+      <div class="pc-num">02</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#10b981;">FOTO REAL</span>
+        <span class="pc-badge">O QUE VEM JUNTO?</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Kit Completo Desmontado — Flat Lay</div>
+            <div class="pc-obj">Eliminar duvida #1 do pre-compra. Mostra tudo que o comprador recebe.</div>
+            <ul class="pc-list">
+              <li>Vista de cima (flat lay) com todos os componentes separados</li>
+              <li>Itens: mochila, haste aluminio, 2 placas PVC, fita VHB 3M</li>
+              <li>Legendas em texto pequeno (permitido a partir da foto 2)</li>
+              <li>Fundo branco ou cinza claro</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#f8fafc"/>
+              <path d="M10 20 Q10 14 16 14 L42 14 Q48 14 48 20 L48 56 Q48 62 42 62 L16 62 Q10 62 10 56 Z" fill="#1e1e1e" stroke="#333" stroke-width="0.8"/>
+              <text x="29" y="42" text-anchor="middle" font-size="5" fill="#666" font-family="Outfit">Mochila</text>
+              <rect x="56" y="16" width="6" height="44" rx="3" fill="#cbd5e1" stroke="#94a3b8" stroke-width="0.8"/>
+              <text x="59" y="70" text-anchor="middle" font-size="5" fill="#475569" font-family="Outfit">Haste</text>
+              <circle cx="90" cy="28" r="14" fill="#f0f0f0" stroke="#d1d5db" stroke-width="1"/>
+              <text x="90" y="30" text-anchor="middle" font-size="4.5" fill="#6b7280" font-family="Outfit">Placa 1</text>
+              <circle cx="122" cy="28" r="14" fill="#f0f0f0" stroke="#d1d5db" stroke-width="1"/>
+              <text x="122" y="30" text-anchor="middle" font-size="4.5" fill="#6b7280" font-family="Outfit">Placa 2</text>
+              <rect x="82" y="50" width="22" height="10" rx="2" fill="#dcfce7" stroke="#10b981" stroke-width="0.8"/>
+              <text x="93" y="58" text-anchor="middle" font-size="4.5" fill="#065f46" font-weight="600" font-family="Outfit">VHB 3M</text>
+              <line x1="10" y1="80" x2="130" y2="80" stroke="#e5e7eb" stroke-width="0.5" stroke-dasharray="3"/>
+              <text x="70" y="92" text-anchor="middle" font-size="6.5" fill="#3b82f6" font-weight="600" font-family="Outfit">FLAT LAY — VISTA DE CIMA</text>
+              <text x="70" y="102" text-anchor="middle" font-size="5" fill="#6b7280" font-family="Outfit">Legendas em cada item</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 3 — CINTA LOMBAR + GUIA DE MEDIDAS -->
+    <div class="pc c-red" id="f3">
+      <div class="pc-num">03</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#8b5cf6;">ILUSTRACAO</span>
+        <span class="pc-badge">DIFERENCIAL EXCLUSIVO + GUIA DE MEDIDAS</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Cinta Lombar + Regulagem P ao GG</div>
+            <div class="pc-obj">NENHUM concorrente tem cinta lombar. Foto resolve "serve em mim?" com tabela de medidas real — ABNT NBR 16060.</div>
+            <ul class="pc-list">
+              <li>Design limpo: silhueta + fita metrica na cintura</li>
+              <li>Tabela de ajuste: P (68-80cm) · M (80-92cm) · G (92-108cm) · GG (108-128cm)</li>
+              <li>Specs: Alca 125cm · Fita 2,5cm · Fivela frontal · Unissex · Manequim 34 ao 64</li>
+              <li>Selo: "DIFERENCIAL EXCLUSIVO — tamanho unico com regulagem"</li>
+              <li>Barra de gradiente P → GG visual</li>
+              <li>Referencia: infografico Guia de Medidas aprovado</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#fefce8"/>
+              <text x="70" y="11" text-anchor="middle" font-size="5.5" fill="#92400e" font-weight="800" font-family="Outfit">GUIA DE MEDIDAS</text>
+              <rect x="8" y="16" width="36" height="68" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="0.6"/>
+              <circle cx="26" cy="24" r="6" fill="#fde68a" stroke="#d97706" stroke-width="0.5"/>
+              <rect x="17" y="32" width="18" height="32" rx="3" fill="#fde68a" stroke="#d97706" stroke-width="0.4"/>
+              <line x1="12" y1="50" x2="40" y2="50" stroke="#ef4444" stroke-width="1.5"/>
+              <circle cx="12" cy="50" r="2" fill="#ef4444"/>
+              <circle cx="40" cy="50" r="2" fill="#ef4444"/>
+              <text x="26" y="48" text-anchor="middle" font-size="3.5" fill="#ef4444" font-weight="700" font-family="Outfit">MECA AQUI</text>
+              <line x1="22" y1="64" x2="20" y2="80" stroke="#d97706" stroke-width="0.5"/>
+              <line x1="30" y1="64" x2="32" y2="80" stroke="#d97706" stroke-width="0.5"/>
+              <rect x="50" y="18" width="84" height="10" rx="2" fill="#92400e"/>
+              <text x="60" y="25" font-size="4" fill="#fff" font-weight="700" font-family="Outfit">AJUSTE</text>
+              <text x="92" y="25" font-size="4" fill="#fff" font-weight="700" font-family="Outfit">ABDOMEN</text>
+              <rect x="50" y="30" width="84" height="9" fill="#fff" stroke="#e5e7eb" stroke-width="0.3"/>
+              <circle cx="56" cy="34.5" r="2.5" fill="#f59e0b" opacity="0.4"/>
+              <text x="64" y="36" font-size="4.5" fill="#1e1e1e" font-weight="700" font-family="Outfit">P</text>
+              <text x="92" y="36" font-size="4" fill="#6b7280" font-family="Outfit">68 - 80 cm</text>
+              <rect x="50" y="40" width="84" height="9" fill="#fefce8" stroke="#e5e7eb" stroke-width="0.3"/>
+              <circle cx="56" cy="44.5" r="2.5" fill="#f59e0b" opacity="0.6"/>
+              <text x="64" y="46" font-size="4.5" fill="#1e1e1e" font-weight="700" font-family="Outfit">M</text>
+              <text x="92" y="46" font-size="4" fill="#6b7280" font-family="Outfit">80 - 92 cm</text>
+              <rect x="50" y="50" width="84" height="9" fill="#fff" stroke="#e5e7eb" stroke-width="0.3"/>
+              <circle cx="56" cy="54.5" r="2.5" fill="#f59e0b" opacity="0.8"/>
+              <text x="64" y="56" font-size="4.5" fill="#1e1e1e" font-weight="700" font-family="Outfit">G</text>
+              <text x="92" y="56" font-size="4" fill="#6b7280" font-family="Outfit">92 - 108 cm</text>
+              <rect x="50" y="60" width="84" height="9" fill="#fefce8" stroke="#e5e7eb" stroke-width="0.3"/>
+              <circle cx="56" cy="64.5" r="2.5" fill="#f59e0b"/>
+              <text x="64" y="66" font-size="4.5" fill="#1e1e1e" font-weight="700" font-family="Outfit">GG</text>
+              <text x="92" y="66" font-size="4" fill="#6b7280" font-family="Outfit">108 - 128 cm</text>
+              <defs>
+                <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#fde68a"/>
+                  <stop offset="100%" stop-color="#d97706"/>
+                </linearGradient>
+              </defs>
+              <rect x="50" y="74" width="84" height="5" rx="2.5" fill="url(#grad)"/>
+              <text x="54" y="78" font-size="3.5" fill="#fff" font-weight="700" font-family="Outfit">P</text>
+              <text x="126" y="78" font-size="3.5" fill="#fff" font-weight="700" font-family="Outfit">GG</text>
+              <text x="10" y="96" font-size="3.8" fill="#92400e" font-weight="700" font-family="Outfit">125cm</text>
+              <text x="45" y="96" font-size="3.8" fill="#92400e" font-weight="700" font-family="Outfit">Fita 2,5cm</text>
+              <text x="85" y="96" font-size="3.8" fill="#92400e" font-weight="700" font-family="Outfit">Fivela frontal</text>
+              <rect x="10" y="104" width="120" height="14" rx="7" fill="#ef4444"/>
+              <text x="70" y="114" text-anchor="middle" font-size="5" fill="#fff" font-weight="700" font-family="Outfit">EXCLUSIVO — Unica com cinta lombar</text>
+              <text x="70" y="130" text-anchor="middle" font-size="3.5" fill="#9ca3af" font-family="Outfit">ABNT NBR 16060 · Unissex · Manequim 34 ao 64</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 4 — CONSTRUCAO (diferencial importante) -->
+    <div class="pc c-cyan" id="f4">
+      <div class="pc-num">04</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#8b5cf6;">ILUSTRACAO</span>
+        <span class="pc-badge">FICHA TECNICA — CONSTRUCAO</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Construcao Interna — Vista Explodida</div>
+            <div class="pc-obj">Comunicar qualidade real com corte tecnico. Claudinho fez isso — nos fazemos melhor, com mais camadas e dados.</div>
+            <ul class="pc-list">
+              <li>Vista explodida lateral: 4 camadas separadas com setas</li>
+              <li>Camada 1: Tecido externo resistente (protecao UV + impermeavel)</li>
+              <li>Camada 2: E.V.A. 8mm (estrutura + amortecimento)</li>
+              <li>Camada 3: PLACA INTERNA RIGIDA (costado reforcado — sustentacao)</li>
+              <li>Camada 4: Forro interno (conforto nas costas)</li>
+              <li>Texto principal: "4 camadas de protecao e conforto"</li>
+              <li>Cada camada com nome + funcao em 1 linha</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#ecfeff"/>
+              <text x="70" y="12" text-anchor="middle" font-size="6" fill="#0891b2" font-weight="700" font-family="Outfit">VISTA EXPLODIDA</text>
+              <rect x="50" y="18" width="50" height="10" rx="2" fill="#a5f3fc" stroke="#06b6d4" stroke-width="1"/>
+              <line x1="50" y1="23" x2="14" y2="23" stroke="#06b6d4" stroke-width="0.6" stroke-dasharray="2"/>
+              <text x="12" y="21" text-anchor="end" font-size="4.5" fill="#0891b2" font-weight="700" font-family="Outfit">Tecido externo</text>
+              <text x="12" y="27" text-anchor="end" font-size="3.8" fill="#6b7280" font-family="Outfit">UV + impermeavel</text>
+              <line x1="75" y1="29" x2="75" y2="34" stroke="#d1d5db" stroke-width="0.5" stroke-dasharray="1"/>
+              <rect x="50" y="36" width="50" height="14" rx="2" fill="#99f6e4" stroke="#0d9488" stroke-width="1.2"/>
+              <text x="75" y="45" text-anchor="middle" font-size="5" fill="#065f46" font-weight="700" font-family="Outfit">E.V.A. 8mm</text>
+              <line x1="100" y1="43" x2="130" y2="43" stroke="#0d9488" stroke-width="0.6" stroke-dasharray="2"/>
+              <text x="131" y="41" font-size="4.5" fill="#0d9488" font-weight="700" font-family="Outfit">8mm</text>
+              <text x="131" y="47" font-size="3.8" fill="#6b7280" font-family="Outfit">Estrutura</text>
+              <line x1="75" y1="51" x2="75" y2="56" stroke="#d1d5db" stroke-width="0.5" stroke-dasharray="1"/>
+              <rect x="48" y="58" width="54" height="16" rx="2" fill="#06b6d4" stroke="#0e7490" stroke-width="1.5"/>
+              <text x="75" y="67" text-anchor="middle" font-size="5" fill="#fff" font-weight="800" font-family="Outfit">PLACA RIGIDA</text>
+              <text x="75" y="72" text-anchor="middle" font-size="3.5" fill="#cffafe" font-weight="600" font-family="Outfit">COSTADO REFORCADO</text>
+              <line x1="48" y1="66" x2="14" y2="66" stroke="#0e7490" stroke-width="0.8" stroke-dasharray="2"/>
+              <text x="12" y="64" text-anchor="end" font-size="4.5" fill="#0e7490" font-weight="700" font-family="Outfit">Placa interna</text>
+              <text x="12" y="70" text-anchor="end" font-size="3.8" fill="#6b7280" font-family="Outfit">Sustentacao total</text>
+              <line x1="75" y1="75" x2="75" y2="80" stroke="#d1d5db" stroke-width="0.5" stroke-dasharray="1"/>
+              <rect x="50" y="82" width="50" height="10" rx="2" fill="#e0e7ff" stroke="#6366f1" stroke-width="1"/>
+              <line x1="100" y1="87" x2="130" y2="87" stroke="#6366f1" stroke-width="0.6" stroke-dasharray="2"/>
+              <text x="131" y="85" font-size="4.5" fill="#4f46e5" font-weight="700" font-family="Outfit">Forro</text>
+              <text x="131" y="91" font-size="3.8" fill="#6b7280" font-family="Outfit">Conforto</text>
+              <rect x="15" y="114" width="110" height="16" rx="8" fill="#06b6d4"/>
+              <text x="70" y="125" text-anchor="middle" font-size="5.5" fill="#fff" font-weight="700" font-family="Outfit">4 CAMADAS DE PROTECAO</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 5 -->
+    <div class="pc c-purple" id="f5">
+      <div class="pc-num">05</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#10b981;">FOTO REAL</span>
+        <span class="pc-badge">HASTE + FIXACAO</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Haste de Aluminio + Fixacao VHB 3M</div>
+            <div class="pc-obj">Mostrar a haste real e como a placa e fixada. Prova tecnica visual — logo 3M = confianca.</div>
+            <ul class="pc-list">
+              <li>Foto real da haste de aluminio desmontada e montada</li>
+              <li>Detalhe macro da fita VHB 3M colada na placa</li>
+              <li>Angulo que mostre a espessura e qualidade do material</li>
+              <li>Fundo branco ou cinza claro, iluminacao difusa</li>
+              <li>Texto permitido: "VHB 3M — 4 a 8x mais forte que fita comum"</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#f5f3ff"/>
+              <text x="70" y="12" text-anchor="middle" font-size="5.5" fill="#6d28d9" font-weight="700" font-family="Outfit">FOTO REAL</text>
+              <!-- Haste aluminio -->
+              <rect x="20" y="24" width="6" height="80" rx="3" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1"/>
+              <text x="26" y="108" font-size="4.5" fill="#6d28d9" font-weight="600" font-family="Outfit">Haste</text>
+              <text x="26" y="114" font-size="3.8" fill="#6b7280" font-family="Outfit">Aluminio</text>
+              <!-- Placa com VHB -->
+              <circle cx="80" cy="50" r="28" fill="#f0f0f0" stroke="#d1d5db" stroke-width="1"/>
+              <text x="80" y="48" text-anchor="middle" font-size="5" fill="#9ca3af" font-family="Outfit">Placa</text>
+              <text x="80" y="56" text-anchor="middle" font-size="4" fill="#9ca3af" font-family="Outfit">PVC</text>
+              <!-- Fita VHB detalhe -->
+              <rect x="56" y="64" width="48" height="8" rx="2" fill="#ddd6fe" stroke="#8b5cf6" stroke-width="1.2"/>
+              <text x="80" y="70" text-anchor="middle" font-size="4.5" fill="#6d28d9" font-weight="700" font-family="Outfit">VHB 3M</text>
+              <!-- Lupa zoom -->
+              <circle cx="116" cy="36" r="16" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="3"/>
+              <line x1="126" y1="48" x2="132" y2="56" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"/>
+              <text x="116" y="38" text-anchor="middle" font-size="4" fill="#6d28d9" font-weight="600" font-family="Outfit">MACRO</text>
+              <text x="70" y="130" text-anchor="middle" font-size="5.5" fill="#8b5cf6" font-weight="700" font-family="Outfit">4-8x MAIS FORTE</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 6 -->
+    <div class="pc c-pink" id="f6">
+      <div class="pc-num">06</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#10b981;">FOTO REAL</span>
+        <span class="pc-badge">DISCOS / PLACAS PS</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Discos e Placas PS — Versatilidade Visual</div>
+            <div class="pc-obj">Mostrar as opcoes de placas PS reais. Comprador ve a qualidade de impressao e possibilidades.</div>
+            <ul class="pc-list">
+              <li>Foto real dos discos/placas PS disponiveis</li>
+              <li>Variedade de artes impressas (exemplos reais)</li>
+              <li>Detalhe da qualidade de impressao e acabamento</li>
+              <li>Flat lay ou disposicao em leque sobre fundo limpo</li>
+              <li>Mostrar frente e verso se relevante</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#fdf2f8"/>
+              <text x="70" y="12" text-anchor="middle" font-size="5.5" fill="#ec4899" font-weight="700" font-family="Outfit">FOTO REAL</text>
+              <!-- Discos em leque -->
+              <circle cx="40" cy="58" r="24" fill="#fce7f3" stroke="#ec4899" stroke-width="1.2"/>
+              <text x="40" y="56" text-anchor="middle" font-size="5" fill="#ec4899" font-weight="700" font-family="Outfit">Arte</text>
+              <text x="40" y="64" text-anchor="middle" font-size="4" fill="#ec4899" font-family="Outfit">Disco 1</text>
+              <circle cx="70" cy="52" r="24" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.2"/>
+              <text x="70" y="50" text-anchor="middle" font-size="5" fill="#8b5cf6" font-weight="700" font-family="Outfit">Arte</text>
+              <text x="70" y="58" text-anchor="middle" font-size="4" fill="#8b5cf6" font-family="Outfit">Disco 2</text>
+              <circle cx="100" cy="58" r="24" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.2"/>
+              <text x="100" y="56" text-anchor="middle" font-size="5" fill="#3b82f6" font-weight="700" font-family="Outfit">Arte</text>
+              <text x="100" y="64" text-anchor="middle" font-size="4" fill="#3b82f6" font-family="Outfit">Disco 3</text>
+              <!-- Placa retangular -->
+              <rect x="30" y="90" width="80" height="20" rx="4" fill="#f0f0f0" stroke="#d1d5db" stroke-width="1"/>
+              <text x="70" y="103" text-anchor="middle" font-size="5" fill="#6b7280" font-weight="600" font-family="Outfit">Placa PS retangular</text>
+              <text x="70" y="128" text-anchor="middle" font-size="5.5" fill="#ec4899" font-weight="700" font-family="Outfit">QUALIDADE DE IMPRESSAO</text>
+              <text x="70" y="137" text-anchor="middle" font-size="4.5" fill="#6b7280" font-family="Outfit">Fundo limpo · Disposicao em leque</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 7 -->
+    <div class="pc c-orange" id="f7">
+      <div class="pc-num">07</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#8b5cf6;">ILUSTRACAO</span>
+        <span class="pc-badge">QUANTO PESA?</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Pesos dos Componentes + Peso Total</div>
+            <div class="pc-obj">Prova incontestavel de leveza. Infografico com peso de cada peca e total montado.</div>
+            <ul class="pc-list">
+              <li>Ilustracao com cada componente e seu peso individual</li>
+              <li>Mochila: Xg · Haste aluminio: Xg · Placa PVC: Xg · Fita VHB: Xg</li>
+              <li>Peso total montado em destaque: 610g</li>
+              <li>Comparativo: "30% mais leve que concorrentes (~850g)"</li>
+              <li>Icones ou silhuetas de cada componente</li>
+              <li>Barra visual de comparacao de peso</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#fffbeb"/>
+              <text x="70" y="12" text-anchor="middle" font-size="6" fill="#92400e" font-weight="800" font-family="Outfit">PESO DOS COMPONENTES</text>
+              <!-- Componentes com pesos -->
+              <rect x="8" y="20" width="60" height="14" rx="3" fill="#fef3c7" stroke="#f59e0b" stroke-width="0.8"/>
+              <text x="12" y="30" font-size="5" fill="#92400e" font-weight="700" font-family="Outfit">Mochila</text>
+              <text x="62" y="30" text-anchor="end" font-size="5" fill="#f59e0b" font-weight="800" font-family="Outfit">Xg</text>
+              <rect x="8" y="38" width="60" height="14" rx="3" fill="#fff" stroke="#f59e0b" stroke-width="0.8"/>
+              <text x="12" y="48" font-size="5" fill="#92400e" font-weight="700" font-family="Outfit">Haste Alu</text>
+              <text x="62" y="48" text-anchor="end" font-size="5" fill="#f59e0b" font-weight="800" font-family="Outfit">Xg</text>
+              <rect x="8" y="56" width="60" height="14" rx="3" fill="#fef3c7" stroke="#f59e0b" stroke-width="0.8"/>
+              <text x="12" y="66" font-size="5" fill="#92400e" font-weight="700" font-family="Outfit">Placa PVC</text>
+              <text x="62" y="66" text-anchor="end" font-size="5" fill="#f59e0b" font-weight="800" font-family="Outfit">Xg</text>
+              <rect x="8" y="74" width="60" height="14" rx="3" fill="#fff" stroke="#f59e0b" stroke-width="0.8"/>
+              <text x="12" y="84" font-size="5" fill="#92400e" font-weight="700" font-family="Outfit">Fita VHB</text>
+              <text x="62" y="84" text-anchor="end" font-size="5" fill="#f59e0b" font-weight="800" font-family="Outfit">Xg</text>
+              <!-- Peso total -->
+              <rect x="78" y="28" width="54" height="50" rx="8" fill="#f59e0b"/>
+              <text x="105" y="48" text-anchor="middle" font-size="6" fill="#fff" font-weight="700" font-family="Outfit">TOTAL</text>
+              <text x="105" y="64" text-anchor="middle" font-size="14" fill="#fff" font-weight="900" font-family="Outfit">610g</text>
+              <!-- Comparativo -->
+              <rect x="8" y="96" width="124" height="8" rx="4" fill="#e5e7eb"/>
+              <rect x="8" y="96" width="88" height="8" rx="4" fill="#10b981"/>
+              <text x="50" y="103" text-anchor="middle" font-size="4" fill="#fff" font-weight="700" font-family="Outfit">VIVA 610g</text>
+              <text x="122" y="103" text-anchor="middle" font-size="3.5" fill="#6b7280" font-weight="600" font-family="Outfit">850g</text>
+              <text x="70" y="120" text-anchor="middle" font-size="6" fill="#f59e0b" font-weight="700" font-family="Outfit">30% MAIS LEVE</text>
+              <text x="70" y="132" text-anchor="middle" font-size="5" fill="#6b7280" font-family="Outfit">Concorrentes pesam ~850g</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 8 -->
+    <div class="pc c-green" id="f8">
+      <div class="pc-num">08</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#8b5cf6;">ILUSTRACAO</span>
+        <span class="pc-badge">FECHA A VENDA</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Comparativo — Viva vs Genericas</div>
+            <div class="pc-obj">"Qual diferenca do mais barato?" — respondida com dados.</div>
+            <table class="tbl">
+              <thead><tr><th>Criterio</th><th>Mochila Viva</th><th>Genericas</th></tr></thead>
+              <tbody>
+                <tr><td>Cinta lombar</td><td class="ck">Exclusiva</td><td class="cx">Sem suporte</td></tr>
+                <tr><td>Peso</td><td class="ck">610g</td><td class="cx">~850g</td></tr>
+                <tr><td>Fixacao</td><td class="ck">VHB 3M</td><td class="cx">Fita comum</td></tr>
+                <tr><td>Material</td><td class="ck">E.V.A. 8mm</td><td class="cx">Nylon fino</td></tr>
+                <tr><td>Conforto</td><td class="ck">8-12h</td><td class="cx">3-4h</td></tr>
+                <tr><td>Costado</td><td class="ck">Placa rigida interna</td><td class="cx">Sem estrutura</td></tr>
+                <tr><td>Regulagem</td><td class="ck">4 pontos</td><td class="cx">2 alcas</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#ecfdf5"/>
+              <rect x="10" y="6" width="56" height="12" rx="3" fill="#10b981"/>
+              <text x="38" y="15" text-anchor="middle" font-size="5.5" fill="#fff" font-weight="700" font-family="Outfit">MOCHILA VIVA</text>
+              <rect x="74" y="6" width="56" height="12" rx="3" fill="#d1d5db"/>
+              <text x="102" y="15" text-anchor="middle" font-size="5.5" fill="#6b7280" font-weight="700" font-family="Outfit">GENERICAS</text>
+              <line x1="10" y1="24" x2="130" y2="24" stroke="#d1fae5" stroke-width="0.5"/>
+              <text x="38" y="33" text-anchor="middle" font-size="5.5" fill="#10b981" font-weight="700" font-family="Outfit">Cinta lombar</text>
+              <text x="102" y="33" text-anchor="middle" font-size="5.5" fill="#ef4444" font-weight="700" font-family="Outfit">Sem</text>
+              <line x1="10" y1="39" x2="130" y2="39" stroke="#d1fae5" stroke-width="0.5"/>
+              <text x="38" y="48" text-anchor="middle" font-size="5.5" fill="#10b981" font-weight="700" font-family="Outfit">610g</text>
+              <text x="102" y="48" text-anchor="middle" font-size="5.5" fill="#ef4444" font-weight="700" font-family="Outfit">850g</text>
+              <line x1="10" y1="54" x2="130" y2="54" stroke="#d1fae5" stroke-width="0.5"/>
+              <text x="38" y="63" text-anchor="middle" font-size="5.5" fill="#10b981" font-weight="700" font-family="Outfit">VHB 3M</text>
+              <text x="102" y="63" text-anchor="middle" font-size="5.5" fill="#ef4444" font-weight="700" font-family="Outfit">Fita comum</text>
+              <line x1="10" y1="69" x2="130" y2="69" stroke="#d1fae5" stroke-width="0.5"/>
+              <text x="38" y="78" text-anchor="middle" font-size="5.5" fill="#10b981" font-weight="700" font-family="Outfit">E.V.A. 8mm</text>
+              <text x="102" y="78" text-anchor="middle" font-size="5.5" fill="#ef4444" font-weight="700" font-family="Outfit">Nylon fino</text>
+              <line x1="10" y1="84" x2="130" y2="84" stroke="#d1fae5" stroke-width="0.5"/>
+              <text x="38" y="93" text-anchor="middle" font-size="5.5" fill="#10b981" font-weight="700" font-family="Outfit">Placa rigida</text>
+              <text x="102" y="93" text-anchor="middle" font-size="5.5" fill="#ef4444" font-weight="700" font-family="Outfit">Sem estrutura</text>
+              <line x1="10" y1="99" x2="130" y2="99" stroke="#d1fae5" stroke-width="0.5"/>
+              <text x="38" y="108" text-anchor="middle" font-size="5.5" fill="#10b981" font-weight="700" font-family="Outfit">8-12h</text>
+              <text x="102" y="108" text-anchor="middle" font-size="5.5" fill="#ef4444" font-weight="700" font-family="Outfit">3-4h</text>
+              <text x="70" y="124" text-anchor="middle" font-size="5" fill="#6b7280" font-family="Outfit">Sem citar marca concorrente</text>
+              <text x="70" y="134" text-anchor="middle" font-size="5" fill="#10b981" font-weight="700" font-family="Outfit">7 criterios · Fonte grande p/ celular</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 9 -->
+    <div class="pc c-blue" id="f9">
+      <div class="pc-num">09</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#10b981;">FOTO REAL</span>
+        <span class="pc-badge">PROVA SOCIAL</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Uso Real — Acao de Rua</div>
+            <div class="pc-obj">Comprador se imagina usando. Lifestyle confirma decisao.</div>
+            <ul class="pc-list">
+              <li>1-2 promotores em calcadao/evento com placa</li>
+              <li>Publico ao redor comprovando visibilidade</li>
+              <li>Placa acima das cabecas, iluminacao natural</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#eff6ff"/>
+              <rect x="0" y="0" width="140" height="50" fill="#bfdbfe"/>
+              <circle cx="120" cy="18" r="10" fill="#fbbf24" opacity="0.7"/>
+              <rect x="0" y="100" width="140" height="40" fill="#e2e8f0"/>
+              <circle cx="20" cy="88" r="5" fill="#cbd5e1"/>
+              <rect x="16" y="94" width="8" height="14" rx="2" fill="#cbd5e1"/>
+              <circle cx="40" cy="90" r="4" fill="#cbd5e1"/>
+              <rect x="37" y="95" width="6" height="12" rx="2" fill="#cbd5e1"/>
+              <circle cx="105" cy="86" r="5" fill="#cbd5e1"/>
+              <rect x="101" y="92" width="8" height="14" rx="2" fill="#cbd5e1"/>
+              <circle cx="122" cy="89" r="4" fill="#cbd5e1"/>
+              <rect x="119" y="94" width="6" height="12" rx="2" fill="#cbd5e1"/>
+              <circle cx="70" cy="60" r="7" fill="#93c5fd" stroke="#3b82f6" stroke-width="1"/>
+              <rect x="61" y="69" width="18" height="34" rx="3" fill="#bfdbfe" stroke="#3b82f6" stroke-width="0.8"/>
+              <path d="M63 72 Q70 69 77 72 L78 92 Q78 93 77 93 L63 93 Q62 93 62 92 Z" fill="#1e1e1e" stroke="#333" stroke-width="0.5"/>
+              <line x1="70" y1="69" x2="70" y2="26" stroke="#94a3b8" stroke-width="2"/>
+              <circle cx="70" cy="26" r="14" fill="#f0f0f0" stroke="#d1d5db" stroke-width="1"/>
+              <text x="70" y="28" text-anchor="middle" font-size="5" fill="#92400e" font-weight="600" font-family="Outfit">MARCA</text>
+              <line x1="30" y1="22" x2="52" y2="22" stroke="#3b82f6" stroke-width="0.8" stroke-dasharray="2"/>
+              <text x="10" y="20" font-size="4.5" fill="#3b82f6" font-family="Outfit">Acima</text>
+              <text x="8" y="26" font-size="4.5" fill="#3b82f6" font-family="Outfit">das cabecas</text>
+              <text x="70" y="120" text-anchor="middle" font-size="6" fill="#3b82f6" font-weight="700" font-family="Outfit">ACAO DE RUA REAL</text>
+              <text x="70" y="130" text-anchor="middle" font-size="5" fill="#6b7280" font-family="Outfit">Iluminacao natural · Publico real</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO 10 -->
+    <div class="pc c-cyan" id="f10">
+      <div class="pc-num">10</div>
+      <div class="pc-body">
+        <span class="pc-badge" style="background:#10b981;">FOTO REAL</span>
+        <span class="pc-badge">LIFESTYLE — USO REAL</span>
+        <div class="pc-top">
+          <div class="pc-info">
+            <div class="pc-title">Uso Real — Segundo Contexto</div>
+            <div class="pc-obj">Reforco de prova social. Mais um cenario real para o comprador se imaginar usando.</div>
+            <ul class="pc-list">
+              <li>Contexto diferente da foto 09 (outro local, evento ou situacao)</li>
+              <li>Promotor(a) em ambiente externo com mochila vestida</li>
+              <li>Placa com arte visivel e legivel a distancia</li>
+              <li>Iluminacao natural, cenario urbano ou comercial</li>
+              <li>Demonstra versatilidade de uso em diferentes contextos</li>
+            </ul>
+          </div>
+          <div class="pc-sketch">
+            <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+              <rect width="140" height="140" fill="#ecfeff"/>
+              <text x="70" y="12" text-anchor="middle" font-size="5.5" fill="#0891b2" font-weight="700" font-family="Outfit">FOTO REAL</text>
+              <!-- Cena urbana -->
+              <rect x="0" y="14" width="140" height="40" fill="#cffafe" opacity="0.5"/>
+              <rect x="10" y="30" width="20" height="30" rx="2" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="0.5"/>
+              <rect x="14" y="34" width="5" height="5" fill="#bfdbfe"/>
+              <rect x="21" y="34" width="5" height="5" fill="#bfdbfe"/>
+              <rect x="14" y="42" width="5" height="5" fill="#bfdbfe"/>
+              <rect x="21" y="42" width="5" height="5" fill="#bfdbfe"/>
+              <rect x="110" y="26" width="22" height="34" rx="2" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="0.5"/>
+              <rect x="114" y="30" width="5" height="5" fill="#fde68a"/>
+              <rect x="121" y="30" width="5" height="5" fill="#fde68a"/>
+              <rect x="114" y="38" width="5" height="5" fill="#fde68a"/>
+              <rect x="121" y="38" width="5" height="5" fill="#fde68a"/>
+              <!-- Promotor -->
+              <circle cx="70" cy="56" r="8" fill="#99f6e4" stroke="#0d9488" stroke-width="1"/>
+              <rect x="62" y="66" width="16" height="30" rx="3" fill="#ccfbf1" stroke="#0d9488" stroke-width="0.8"/>
+              <path d="M64 70 Q70 67 76 70 L77 88 Q77 89 76 89 L64 89 Q63 89 63 88 Z" fill="#1e1e1e" stroke="#333" stroke-width="0.5"/>
+              <line x1="70" y1="66" x2="70" y2="30" stroke="#94a3b8" stroke-width="2"/>
+              <circle cx="70" cy="30" r="12" fill="#f0f0f0" stroke="#0d9488" stroke-width="1"/>
+              <text x="70" y="32" text-anchor="middle" font-size="4.5" fill="#0d9488" font-weight="600" font-family="Outfit">ARTE</text>
+              <!-- Piso -->
+              <rect x="0" y="100" width="140" height="40" fill="#e2e8f0"/>
+              <!-- Pessoas ao redor -->
+              <circle cx="38" cy="82" r="4" fill="#cbd5e1"/>
+              <rect x="35" y="87" width="6" height="10" rx="2" fill="#cbd5e1"/>
+              <circle cx="102" cy="80" r="4" fill="#cbd5e1"/>
+              <rect x="99" y="85" width="6" height="10" rx="2" fill="#cbd5e1"/>
+              <text x="70" y="114" text-anchor="middle" font-size="5.5" fill="#0891b2" font-weight="700" font-family="Outfit">OUTRO CONTEXTO</text>
+              <text x="70" y="124" text-anchor="middle" font-size="5" fill="#6b7280" font-family="Outfit">Evento · Comercio · Feira</text>
+              <text x="70" y="134" text-anchor="middle" font-size="4.5" fill="#6b7280" font-family="Outfit">Iluminacao natural · Cenario urbano</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════ DICAS FINAIS ══════ -->
+  <div class="section-divider" style="margin-top:36px;">
+    <div class="num">4</div>
+    <h2>Dicas Finais</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="tips">
+    <div class="tip">
+      <div class="tip-icon">📱</div>
+      <strong>85% Mobile</strong>
+      <p>Textos nos infograficos legiveis em tela de 5". Teste no celular antes de subir cada foto.</p>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">⚡</div>
+      <strong>Vantagem Competitiva</strong>
+      <p>Concorrentes: 3-5 fotos amadoras. Voce: 10 fotos profissionais (6 fotos reais + 4 ilustracoes tecnicas). Maximo do ML aproveitado.</p>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">🎯</div>
+      <strong>Ordem Importa</strong>
+      <p>A sequencia foi pensada para responder objecoes na ordem que o comprador pensa: impacto → conteudo → diferencial → prova → decisao.</p>
+    </div>
+  </div>
+
+  <!-- ══════ FOOTER ══════ -->
+  <div class="footer-wrap">
+    <svg class="footer-logo" viewBox="0 0 600 600" width="56" height="56" role="img" aria-label="Mochila Viva">
+      <circle cx="300" cy="300" r="280" fill="#8B6914"/><circle cx="300" cy="300" r="268" fill="#F5A623"/>
+      <circle cx="375" cy="223" r="22" fill="none" stroke="#FFF" stroke-width="5"/><circle cx="375" cy="223" r="10" fill="#FFF"/>
+      <text x="300" y="323" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#8B6914" letter-spacing="1">MOCHILA</text>
+      <text x="404" y="398" text-anchor="middle" font-family="Nunito, Arial Rounded MT Bold, Arial, sans-serif" font-weight="900" font-size="82" fill="#FFF" letter-spacing="1">VIVA</text>
+    </svg>
+    <div class="footer-chips">
+      <span class="footer-chip">Alca 125cm</span>
+      <span class="footer-chip">Fivela abdominal</span>
+      <span class="footer-chip">Fita 2,5cm</span>
+      <span class="footer-chip">Manequim 34 ao 64</span>
+    </div>
+    <div class="footer-text"><span class="footer-brand">Mochila Viva</span> · Adm. Alexsander Machado CRA 20-22229 · Marco 2026</div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// SISTEMA DE IMAGENS — Lado a lado (Referencia SVG + Resultado)
+// ══════════════════════════════════════════════════════════════
+//
+// COMO USAR:
+// 1. Coloque as imagens na MESMA PASTA do HTML com estes nomes:
+//
+//    foto-01.jpg   (Foto real - Mochila montada)
+//    foto-02.jpg   (Foto real - Kit completo)
+//    foto-03.png   (Ilustracao - Guia medidas)
+//    foto-04.png   (Ilustracao - Vista explodida)
+//    foto-05.jpg   (Foto real - Haste + fixacao)
+//    foto-06.jpg   (Foto real - Discos PS)
+//    foto-07.png   (Ilustracao - Pesos)
+//    foto-08.png   (Ilustracao - Comparativo)
+//    foto-09.jpg   (Foto real - Uso real 1)
+//    foto-10.jpg   (Foto real - Uso real 2)
+//
+// 2. Recarregue a pagina — as imagens aparecem automaticamente
+//    ao lado do sketch de referencia.
+//
+// 3. Se a imagem nao existir, aparece placeholder "Pendente"
+//
+// ══════════════════════════════════════════════════════════════
+
+(function() {
+  const fotos = {
+    f1:  { file: 'foto-01.jpg', tipo: 'foto' },
+    f2:  { file: 'foto-02.jpg', tipo: 'foto' },
+    f3:  { file: 'foto-03.png', tipo: 'ilustracao' },
+    f4:  { file: 'foto-04.png', tipo: 'ilustracao' },
+    f5:  { file: 'foto-05.jpg', tipo: 'foto' },
+    f6:  { file: 'foto-06.jpg', tipo: 'foto' },
+    f7:  { file: 'foto-07.png', tipo: 'ilustracao' },
+    f8:  { file: 'foto-08.png', tipo: 'ilustracao' },
+    f9:  { file: 'foto-09.jpg', tipo: 'foto' },
+    f10: { file: 'foto-10.jpg', tipo: 'foto' }
+  };
+
+  document.querySelectorAll('.pc[id]').forEach(card => {
+    const id = card.id;
+    const config = fotos[id];
+    if (!config) return;
+
+    const sketch = card.querySelector('.pc-sketch');
+    if (!sketch) return;
+
+    // Criar container lado a lado
+    const visuals = document.createElement('div');
+    visuals.className = 'pc-visuals';
+
+    // Coluna 1: Sketch (referencia)
+    const colSketch = document.createElement('div');
+    colSketch.className = 'pc-visual-col';
+    const labelRef = document.createElement('div');
+    labelRef.className = 'pc-visual-label';
+    labelRef.textContent = 'Referencia';
+    colSketch.appendChild(labelRef);
+    // Mover sketch para dentro da coluna
+    colSketch.appendChild(sketch);
+
+    // Coluna 2: Imagem real (resultado)
+    const colImg = document.createElement('div');
+    colImg.className = 'pc-visual-col';
+    const labelRes = document.createElement('div');
+    labelRes.className = 'pc-visual-label';
+    labelRes.textContent = 'Resultado';
+    colImg.appendChild(labelRes);
+
+    const slot = document.createElement('div');
+    slot.className = 'pc-img-slot';
+
+    const img = new Image();
+    img.src = config.file;
+    img.alt = 'Foto ' + id.replace('f','');
+    img.loading = 'lazy';
+
+    img.onload = function() {
+      slot.classList.add('has-img');
+      slot.innerHTML = '';
+      slot.appendChild(img);
+    };
+
+    img.onerror = function() {
+      // Placeholder
+      const num = id.replace('f','').padStart(2,'0');
+      const tipoLabel = config.tipo === 'foto' ? 'FOTO REAL' : 'ILUSTRACAO';
+      const ext = config.tipo === 'foto' ? '.jpg' : '.png';
+      slot.innerHTML =
+        '<div class="pc-placeholder">' +
+          '<div class="pc-placeholder-icon">' +
+            (config.tipo === 'foto' ? '📷' : '🎨') +
+          '</div>' +
+          '<div class="pc-placeholder-text">Pendente<br>' + tipoLabel + '</div>' +
+          '<div class="pc-placeholder-file">foto-' + num + ext + '</div>' +
+        '</div>';
+    };
+
+    colImg.appendChild(slot);
+
+    visuals.appendChild(colSketch);
+    visuals.appendChild(colImg);
+
+    // Inserir no pc-top, no lugar do sketch original
+    const pcTop = card.querySelector('.pc-top');
+    if (pcTop) {
+      pcTop.appendChild(visuals);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

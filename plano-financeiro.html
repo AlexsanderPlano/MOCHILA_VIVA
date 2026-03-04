@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mochila Viva — Plano Financeiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f1f5f9; --card: #ffffff; --input-bg: #f8fafc;
+    --border: #e2e8f0; --border-light: #f1f5f9;
+    --title: #0f172a; --text: #334155; --text-light: #64748b; --text-muted: #94a3b8;
+    --teal: #0d9488; --teal-hover: #0f766e; --teal-light: #f0fdfa; --teal-bg: rgba(13,148,136,0.08);
+    --green: #22c55e; --green-dark: #16a34a; --green-bg: #f0fdf4;
+    --blue: #3b82f6; --blue-bg: #eff6ff;
+    --red: #ef4444; --red-bg: #fef2f2;
+    --purple: #8b5cf6; --purple-bg: #f5f3ff;
+    --yellow: #f59e0b; --yellow-bg: #fef9c3;
+    --orange: #ea580c; --orange-bg: #fff7ed;
+    --pink: #ec4899; --pink-bg: #fdf2f8;
+    --shadow: 0 2px 8px rgba(0,0,0,0.04); --shadow-hover: 0 4px 16px rgba(0,0,0,0.08);
+    --radius: 16px; --radius-sm: 12px; --radius-pill: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  /* HEADER */
+  .header { text-align: center; padding: 32px 20px 24px; }
+  .header h1 { font-size: 22px; font-weight: 800; color: var(--title); }
+  .header p { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 28px; }
+  .section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-muted);
+    padding: 0 4px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: color 0.2s; user-select: none;
+  }
+  .section-title:hover { color: var(--teal); }
+  .section-title .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 8px;
+    background: var(--teal); color: #fff; font-size: 11px; font-weight: 800;
+  }
+  .help-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--teal-bg); color: var(--teal);
+    font-size: 11px; font-weight: 800; transition: all 0.2s; cursor: pointer;
+  }
+  .section-title .help-icon { margin-left: auto; }
+  .section-title:hover .help-icon { background: var(--teal); color: #fff; }
+
+  /* METRICS */
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .metric { background: var(--card); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); }
+  .metric .metric-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 6px; }
+  .metric .metric-value { font-size: 28px; font-weight: 800; color: var(--title); font-variant-numeric: tabular-nums; }
+  .metric .metric-sub { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* TABLES */
+  .table-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  thead th {
+    background: var(--input-bg); padding: 5px 5px; text-align: left;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.3px; color: var(--text-muted);
+    border-bottom: 1px solid var(--border); white-space: nowrap;
+  }
+  tbody td { padding: 5px 5px; border-bottom: 1px solid var(--border-light); color: var(--text); white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--teal-light); }
+  .fw700 { font-weight: 700; }
+  .price { font-weight: 700; font-variant-numeric: tabular-nums; }
+  /* utility classes removed — black font default */
+  /* .price-green removed */
+  /* .price-red removed */
+  .small { font-size: 11px; color: var(--text-light); }
+
+  /* BADGES */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 700; }
+  .badge-teal { background: var(--teal-bg); color: var(--teal); }
+  .badge-green { background: var(--green-bg); color: var(--green-dark); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-orange { background: var(--orange-bg); color: var(--orange); }
+  .badge-pink { background: var(--pink-bg); color: var(--pink); }
+
+  /* SPEC GRID */
+  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .spec-box { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
+  .spec-box h3 { font-size: 13px; font-weight: 700; color: var(--title); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .spec-box ul { list-style: none; }
+  .spec-box li { display: flex; justify-content: space-between; font-size: 13px; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--border-light); }
+  .spec-box li:last-child { border-bottom: none; }
+  .lbl { color: var(--text-light); }
+  .val { font-weight: 700; text-align: right; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+  /* CHART NOTES */
+  .chart-note { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 12px; line-height: 1.6; }
+  .chart-note.success { background: var(--green-bg); color: var(--green-dark); }
+  .chart-note.warning { background: var(--yellow-bg); color: #92400e; }
+  .chart-note.danger { background: var(--red-bg); color: var(--red); }
+  .chart-note.info { background: var(--blue-bg); color: var(--blue); }
+
+  /* HIGHLIGHT ROWS */
+  .highlight-row { background: var(--teal-light) !important; }
+  .new-row { border-top: 2px solid var(--border) !important; }
+  .total-row { background: var(--input-bg) !important; font-weight: 700; }
+  .loss-row { background: var(--red-bg) !important; }
+  .profit-row { background: var(--green-bg) !important; }
+  td.right { text-align: right; }
+
+  /* DRE */
+  .dre-table td:first-child { padding-left: 12px; }
+  .dre-indent { padding-left: 28px !important; color: var(--text-light); }
+  .dre-total { border-top: 2px solid var(--border) !important; font-weight: 700; }
+  .dre-subtotal { border-top: 1px solid var(--border) !important; font-weight: 600; }
+
+  /* DISCOVERY */
+  .discovery { background: var(--purple-bg); border-radius: var(--radius); padding: 16px 20px; margin-top: 14px; }
+  .discovery h4 { font-size: 14px; font-weight: 700; color: var(--purple); margin-bottom: 6px; }
+  .discovery p { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+  /* SCENARIO CARDS */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .scenario-card { background: var(--card); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border-top: 4px solid var(--border); }
+  .scenario-card.conservative { border-top-color: var(--yellow); }
+  .scenario-card.moderate { border-top-color: var(--teal); }
+  .scenario-card.aggressive { border-top-color: var(--purple); }
+  .scenario-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+  .scenario-card .big-number { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+  .scenario-card ul { list-style: none; }
+  .scenario-card li { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--border-light); }
+  .scenario-card li:last-child { border-bottom: none; }
+
+  /* MODALS */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.active { opacity: 1; pointer-events: auto; }
+  .modal { background: var(--card); border-radius: var(--radius); padding: 32px; max-width: 640px; width: 90%; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-hover); }
+  .modal-close { position: absolute; top: 16px; right: 16px; border: none; background: var(--input-bg); width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+  .modal-close:hover { background: var(--red-bg); color: var(--red); }
+  .modal-badge { display: inline-block; padding: 2px 10px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+  .modal h2 { font-size: 18px; font-weight: 800; color: var(--title); margin-bottom: 16px; }
+  .modal h3 { font-size: 14px; font-weight: 700; color: var(--title); margin: 16px 0 8px; }
+  .modal p { font-size: 13px; color: var(--text); line-height: 1.8; margin-bottom: 10px; }
+  .modal ul { margin: 8px 0 12px 0; list-style: none; }
+  .modal li { padding: 6px 0 6px 16px; font-size: 13px; position: relative; }
+  .modal li::before { content: ""; position: absolute; left: 0; top: 13px; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+  .example-box { background: var(--teal-light); border-radius: var(--radius-sm); padding: 14px 18px; margin: 12px 0; }
+  .example-box strong { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--teal); }
+
+  /* INPUT REALIZADO */
+  .input-real { width: 52px; text-align: center; border: 1px solid var(--border); border-radius: 6px; padding: 4px 2px; font-family: 'Inter', sans-serif; font-size: 12px; background: var(--card); color: var(--title); transition: border-color .2s; }
+  .input-real:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 2px var(--teal-bg); }
+  .input-real::placeholder { color: var(--text-muted); font-size: 10px; }
+  .cell-real { background: #f0fdf4 !important; }
+  .btn-modo-ativo { background: var(--teal) !important; color: #fff !important; border-color: var(--teal) !important; }
+
+  /* CLICKABLE */
+  .clickable { cursor: pointer; border-bottom: 1px dotted var(--text-muted); }
+  .clickable:hover { color: var(--teal); border-bottom-color: var(--teal); }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 32px 20px; color: var(--text-muted); font-size: 12px; margin-top: 40px; }
+
+  @media (max-width: 768px) {
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .scenario-grid { grid-template-columns: 1fr; }
+    .spec-grid { grid-template-columns: 1fr; }
+    .metric .metric-value { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>Plano Financeiro — Mochila Viva</h1>
+    <p>Estrategia Agressiva R$ 159,90 · Canal Mercado Livre · Projecao 12 meses (Mar/2026 — Fev/2027)</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="metrics" style="margin-bottom:28px">
+    <div class="metric">
+      <div class="metric-label">Custo Fixo Mensal</div>
+      <div class="metric-value">R$ 2.500</div>
+      <div class="metric-sub">Administrativo</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Break-even</div>
+      <div class="metric-value clickable" onclick="openModal('modal-mix-volume')">25 ped/mes</div>
+      <div class="metric-sub">~65 unidades/mes</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Estoque Atual</div>
+      <div class="metric-value">50 un</div>
+      <div class="metric-sub">R$ 3.900 (capital de giro)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Ticket Medio</div>
+      <div class="metric-value">R$ 362</div>
+      <div class="metric-sub">Mix ponderado</div>
+    </div>
+  </div>
+
+  <!-- 1. ESTRUTURA DE CUSTOS -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-custos')">
+      <span class="num">1</span> Estrutura de Custos
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--red)"></span> Custos Fixos (R$ 2.500/mes)</h3>
+        <ul>
+          <li><span class="lbl">Administrativo</span><span class="val">R$ 2.500</span></li>
+          <li><span class="lbl">Total Fixo Anual</span><span class="val fw700">R$ 30.000</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--teal)"></span> Custos Variaveis (por pedido)</h3>
+        <ul>
+          <li><span class="lbl">Custo medio produto</span><span class="val">R$ 192</span></li>
+          <li><span class="lbl">Comissao ML 16%</span><span class="val">R$ 58</span></li>
+          <li><span class="lbl">Frete medio (Decola)</span><span class="val">R$ 8</span></li>
+          <li><span class="lbl">Total variavel/pedido</span><span class="val fw700">R$ 258</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead>
+          <tr><th>Produto</th><th>Preco</th><th>Custo Prod.</th><th>Comissao 16%</th><th>Frete</th><th>Lucro/Pedido</th><th>Lucro/Unid.</th><th>Margem</th></tr>
+        </thead>
+        <tbody>
+          <tr class="new-row">
+            <td><span class="badge badge-orange">Colete c/ haste</span></td>
+            <td class="price">R$ 109,90</td>
+            <td>R$ 54,00</td>
+            <td class="small">R$ 17,58</td>
+            <td>R$ 7,50</td>
+            <td class="price fw700">R$ 30,82</td>
+            <td class="price">R$ 30,82</td>
+            <td>28,0%</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><span class="badge badge-teal">Unitario</span></td>
+            <td class="price fw700">R$ 159,90</td>
+            <td>R$ 78,00</td>
+            <td class="small">R$ 25,58</td>
+            <td>R$ 7,50</td>
+            <td class="price fw700">R$ 48,82</td>
+            <td class="price fw700">R$ 48,82</td>
+            <td class="fw700">30,5%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 2</span></td>
+            <td class="price">R$ 299,90</td>
+            <td>R$ 151,00</td>
+            <td class="small">R$ 47,98</td>
+            <td>R$ 7,50</td>
+            <td class="price fw700">R$ 93,42</td>
+            <td class="price">R$ 46,71</td>
+            <td>31,2%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-purple">Kit 3</span></td>
+            <td class="price">R$ 419,70</td>
+            <td>R$ 224,00</td>
+            <td class="small">R$ 67,15</td>
+            <td>R$ 7,50</td>
+            <td class="price fw700">R$ 121,05</td>
+            <td class="price">R$ 40,35</td>
+            <td>28,8%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 5</span></td>
+            <td class="price">R$ 679,50</td>
+            <td>R$ 370,00</td>
+            <td class="small">R$ 108,72</td>
+            <td>R$ 7,50</td>
+            <td class="price fw700">R$ 193,28</td>
+            <td class="price">R$ 38,66</td>
+            <td>28,4%</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 10</span></td>
+            <td class="price">R$ 1.299,00</td>
+            <td>R$ 735,00</td>
+            <td class="small">R$ 207,84</td>
+            <td>R$ 15,00</td>
+            <td class="price fw700">R$ 341,16</td>
+            <td class="price">R$ 34,12</td>
+            <td>26,3%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 2. MIX DE VENDAS -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-mix')">
+      <span class="num">2</span> Mix de Vendas Estimado
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr><th>Produto</th><th>% Pedidos</th><th>Un/Pedido</th><th>Ped/Mes</th><th>Total Qtd (un/mes)</th><th>Ticket</th><th>Lucro/Ped.</th><th>Contribuicao p/ Mix</th></tr>
+        </thead>
+        <tbody>
+          <tr class="new-row">
+            <td><span class="badge badge-orange">Colete c/ haste</span></td>
+            <td>10%</td><td>1</td>
+            <td>3</td><td class="fw700">3</td>
+            <td class="price">R$ 109,90</td>
+            <td class="price">R$ 30,82</td>
+            <td class="small">R$ 3,08/pedido medio</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><span class="badge badge-teal">Unitario</span></td>
+            <td class="fw700">40%</td><td>1</td>
+            <td class="fw700">12</td><td class="fw700">12</td>
+            <td class="price">R$ 159,90</td>
+            <td class="price">R$ 48,82</td>
+            <td class="small fw700">R$ 19,53/pedido medio</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 2</span></td>
+            <td>20%</td><td>2</td>
+            <td>6</td><td class="fw700">12</td>
+            <td class="price">R$ 299,90</td>
+            <td class="price">R$ 93,42</td>
+            <td class="small">R$ 18,68/pedido medio</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-purple">Kit 3</span></td>
+            <td>10%</td><td>3</td>
+            <td>3</td><td class="fw700">9</td>
+            <td class="price">R$ 419,70</td>
+            <td class="price">R$ 121,05</td>
+            <td class="small">R$ 12,11/pedido medio</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 5</span></td>
+            <td>12%</td><td>5</td>
+            <td>4</td><td class="fw700">19</td>
+            <td class="price">R$ 679,50</td>
+            <td class="price">R$ 193,28</td>
+            <td class="small">R$ 23,19/pedido medio</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Kit 10</span></td>
+            <td>8%</td><td>10</td>
+            <td>2</td><td class="fw700">25</td>
+            <td class="price">R$ 1.299,00</td>
+            <td class="price">R$ 341,16</td>
+            <td class="small">R$ 27,29/pedido medio</td>
+          </tr>
+          <tr class="total-row">
+            <td class="fw700">MEDIA PONDERADA</td>
+            <td class="fw700">100%</td><td class="fw700">2,6</td>
+            <td class="fw700">31</td><td class="fw700">81</td>
+            <td class="price fw700">R$ 362</td>
+            <td class="price fw700">R$ 104</td>
+            <td class="small fw700">R$ 103,89 lucro medio/pedido</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note info" style="margin-top:12px">
+      <b>Premissa:</b> Mix estimado com base no mercado — 40% unitarios (maior demanda), 20% Kit 2 (corporativo pequeno), kits maiores somam 30%, colete c/ haste 10% (entrada). O mix real sera ajustado conforme vendas.
+    </div>
+  </div>
+
+  <!-- 3. BREAK-EVEN -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-breakeven')">
+      <span class="num">3</span> Analise de Break-even
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--red)"></span> Break-even por Produto</h3>
+        <ul>
+          <li><span class="lbl">Colete c/ haste</span><span class="val">82 vendas/mes</span></li>
+          <li><span class="lbl">Unitario</span><span class="val">52 vendas/mes</span></li>
+          <li><span class="lbl">Kit 2</span><span class="val">27 vendas/mes</span></li>
+          <li><span class="lbl">Kit 3</span><span class="val">21 vendas/mes</span></li>
+          <li><span class="lbl">Kit 5</span><span class="val">13 vendas/mes</span></li>
+          <li><span class="lbl">Kit 10</span><span class="val fw700">8 vendas/mes</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--teal)"></span> Break-even pelo Mix</h3>
+        <ul>
+          <li><span class="lbl">Lucro medio/pedido</span><span class="val">R$ 103,89</span></li>
+          <li><span class="lbl">Custo fixo mensal</span><span class="val">R$ 2.500</span></li>
+          <li><span class="lbl">Break-even (mix)</span><span class="val fw700">25 pedidos/mes</span></li>
+          <li><span class="lbl">= unidades consumidas</span><span class="val">~65 unidades/mes</span></li>
+          <li><span class="lbl">= receita minima</span><span class="val">~R$ 9.059/mes</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart-note danger" style="margin-top:12px">
+      <b>Alerta:</b> Com custo fixo de R$2.500/mes, o negocio precisa de no minimo 25 pedidos/mes para nao dar prejuizo. Abaixo disso, cada mes acumula perda. Este e o numero critico a atingir nos primeiros 3-4 meses.
+    </div>
+  </div>
+
+  <!-- 4. TRES CENARIOS -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-cenarios')">
+      <span class="num">4</span> Tres Cenarios — Resumo Anual (12 meses)
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="scenario-grid">
+      <div class="scenario-card conservative">
+        <h3>CONSERVADOR</h3>
+        <div class="big-number">R$ 0</div>
+        <p class="small" style="font-weight:700">PONTO DE EQUILIBRIO</p>
+        <ul>
+          <li><span class="lbl">Pedidos/ano</span><span class="val">300</span></li>
+          <li><span class="lbl">Media/mes</span><span class="val clickable" onclick="openModal('modal-mix-volume')">~25 ped (~65 un)</span></li>
+          <li><span class="lbl">Receita anual</span><span class="val">R$ 108.696</span></li>
+          <li><span class="lbl">Lucro bruto</span><span class="val">R$ 30.000</span></li>
+          <li><span class="lbl">(-) Custo fixo</span><span class="val">-R$ 30.000</span></li>
+          <li><span class="lbl">Unidades/ano</span><span class="val">780</span></li>
+          <li><span class="lbl">Break-even</span><span class="val fw700">Exato</span></li>
+        </ul>
+      </div>
+      <div class="scenario-card moderate" style="border-top-width:6px">
+        <h3>MODERADO</h3>
+        <div class="big-number">R$ 9.997</div>
+        <p class="small" style="font-weight:700">LUCRO ANUAL</p>
+        <ul>
+          <li><span class="lbl">Pedidos/ano</span><span class="val fw700">385</span></li>
+          <li><span class="lbl">Media/mes</span><span class="val fw700 clickable" onclick="openModal('modal-mix-volume')">~32 ped (~83 un)</span></li>
+          <li><span class="lbl">Receita anual</span><span class="val fw700">R$ 139.493</span></li>
+          <li><span class="lbl">Lucro bruto</span><span class="val">R$ 39.997</span></li>
+          <li><span class="lbl">(-) Custo fixo</span><span class="val">-R$ 30.000</span></li>
+          <li><span class="lbl">Unidades/ano</span><span class="val">1.001</span></li>
+          <li><span class="lbl">Break-even</span><span class="val fw700">Mes 1 (Mar)</span></li>
+        </ul>
+      </div>
+      <div class="scenario-card aggressive">
+        <h3>AGRESSIVO</h3>
+        <div class="big-number">R$ 30.777</div>
+        <p class="small" style="font-weight:700">LUCRO ANUAL</p>
+        <ul>
+          <li><span class="lbl">Pedidos/ano</span><span class="val">585</span></li>
+          <li><span class="lbl">Media/mes</span><span class="val clickable" onclick="openModal('modal-mix-volume')">~49 ped (~127 un)</span></li>
+          <li><span class="lbl">Receita anual</span><span class="val">R$ 211.981</span></li>
+          <li><span class="lbl">Lucro bruto</span><span class="val">R$ 60.776</span></li>
+          <li><span class="lbl">(-) Custo fixo</span><span class="val">-R$ 30.000</span></li>
+          <li><span class="lbl">Unidades/ano</span><span class="val">1.521</span></li>
+          <li><span class="lbl">Break-even</span><span class="val fw700">Mes 1 (Mar)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart-note warning" style="margin-top:12px">
+      <b>Conservador = ponto de equilibrio.</b> Com 25 pedidos/mes, o lucro bruto cobre exatamente o custo fixo de R$2.500. O cenario moderado (32 ped/mes) gera lucro de R$9.997/ano. O agressivo (49 ped/mes) gera R$30.777.
+    </div>
+  </div>
+
+  <!-- 5. PROJECAO 12 MESES (MODERADO) + REALIZADO -->
+  <div class="section">
+    <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span><span class="num">5</span> Projecao Mensal — Cenario Moderado</span>
+      <button id="btn-modo" onclick="toggleModo()" style="font-size:11px;font-weight:600;padding:5px 14px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;transition:all .2s">Modo Acompanhamento</button>
+    </div>
+
+    <div class="table-card" style="overflow-x:auto">
+      <table id="tabela-projecao" style="font-size:11px">
+        <thead id="thead-projecao"></thead>
+        <tbody id="tbody-projecao"></tbody>
+      </table>
+    </div>
+
+    <div id="variacao-box" style="display:none;margin-top:12px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="chart-note info" style="flex:1;min-width:200px">
+          <b>Realizado acumulado:</b> <span id="var-acum-real">—</span>
+        </div>
+        <div class="chart-note" style="flex:1;min-width:200px;background:var(--input-bg);color:var(--text)">
+          <b>Projetado acumulado:</b> <span id="var-acum-proj">—</span>
+        </div>
+        <div id="var-badge-box" class="chart-note" style="flex:1;min-width:200px;background:var(--input-bg)">
+          <b>Variacao:</b> <span id="var-badge">—</span>
+        </div>
+      </div>
+      <div style="margin-top:8px;text-align:right">
+        <button onclick="limparRealizado()" style="font-size:11px;padding:4px 12px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--card);color:var(--text-light);cursor:pointer">Limpar Realizado</button>
+      </div>
+    </div>
+
+    <div class="discovery" style="margin-top:14px">
+      <h4>Todos os meses positivos</h4>
+      <p>Com minimo de 25 pedidos/mes (break-even), nenhum mes fecha negativo. Os meses de pico (Copa, Eleicoes, Black Friday) aceleram o acumulado. Lucro anual moderado: <b>R$ 9.997</b>.</p>
+    </div>
+  </div>
+
+  <!-- 6. DRE PROJETADA -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-dre')">
+      <span class="num">6</span> DRE Projetada — Cenario Moderado
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="table-card">
+      <table class="dre-table">
+        <thead>
+          <tr><th style="width:34%">Conta</th><th class="clickable" onclick="openModal('modal-mix-volume')">Mes Baixo<br>25 ped / 65 un</th><th class="clickable" onclick="openModal('modal-mix-volume')">Mes Tipico<br>32 ped / 83 un</th><th class="clickable" onclick="openModal('modal-mix-volume')">Mes Pico<br>48 ped / 125 un</th><th class="clickable" onclick="openModal('modal-mix-volume')">Anual<br>385 ped / 1.001 un</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fw700">RECEITA BRUTA</td>
+            <td class="price fw700">R$ 9.058</td>
+            <td class="price fw700">R$ 11.594</td>
+            <td class="price fw700">R$ 17.391</td>
+            <td class="price fw700">R$ 139.493</td>
+          </tr>
+          <tr>
+            <td class="dre-indent">(-) Comissao ML 16%</td>
+            <td class="small">-R$ 1.449</td>
+            <td class="small">-R$ 1.855</td>
+            <td class="small">-R$ 2.783</td>
+            <td class="small">-R$ 22.319</td>
+          </tr>
+          <tr>
+            <td class="dre-indent">(-) Frete Decola</td>
+            <td class="small">-R$ 202</td>
+            <td class="small">-R$ 259</td>
+            <td class="small">-R$ 388</td>
+            <td class="small">-R$ 3.115</td>
+          </tr>
+          <tr class="dre-subtotal">
+            <td class="fw700">= RECEITA LIQUIDA</td>
+            <td class="price">R$ 7.407</td>
+            <td class="price">R$ 9.480</td>
+            <td class="price">R$ 14.220</td>
+            <td class="price">R$ 114.059</td>
+          </tr>
+          <tr>
+            <td class="dre-indent">(-) CMV (custo produtos)</td>
+            <td class="small">-R$ 4.809</td>
+            <td class="small">-R$ 6.156</td>
+            <td class="small">-R$ 9.234</td>
+            <td class="small">-R$ 74.062</td>
+          </tr>
+          <tr class="dre-total">
+            <td class="fw700">= LUCRO BRUTO</td>
+            <td class="price fw700">R$ 2.598</td>
+            <td class="price fw700">R$ 3.324</td>
+            <td class="price fw700">R$ 4.986</td>
+            <td class="price fw700">R$ 39.997</td>
+          </tr>
+          <tr>
+            <td class="small" style="padding-left:28px">Margem bruta</td>
+            <td class="small">28,7%</td>
+            <td class="small">28,7%</td>
+            <td class="small">28,7%</td>
+            <td class="small">28,7%</td>
+          </tr>
+          <tr>
+            <td class="dre-indent">(-) Custos Administrativos</td>
+            <td class="small">-R$ 2.500</td>
+            <td class="small">-R$ 2.500</td>
+            <td class="small">-R$ 2.500</td>
+            <td class="small">-R$ 30.000</td>
+          </tr>
+          <tr class="dre-total">
+            <td class="fw700">= LUCRO OPERACIONAL</td>
+            <td class="fw700">R$ 98</td>
+            <td class="fw700">R$ 824</td>
+            <td class="fw700">R$ 2.486</td>
+            <td class="fw700">R$ 9.997</td>
+          </tr>
+          <tr>
+            <td class="small" style="padding-left:28px">Margem operacional</td>
+            <td class="small">1,1%</td>
+            <td class="small">7,1%</td>
+            <td class="small">14,3%</td>
+            <td class="small">7,2%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note info" style="margin-top:12px">
+      <b>Nota:</b> DRE simplificada, excluindo impostos (regime tributario a definir — MEI, Simples ou LP). Margem bruta de 28,7% e constante pois custos variaveis sao proporcionais. A margem operacional cresce com volume porque o custo fixo se dilui.
+    </div>
+  </div>
+
+  <!-- 7. GESTAO DE ESTOQUE E CAPITAL DE GIRO -->
+  <div class="section">
+    <div class="section-title" onclick="openModal('modal-giro')">
+      <span class="num">7</span> Gestao de Estoque e Capital de Giro
+      <span class="help-icon">?</span>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--orange)"></span> Estoque Atual</h3>
+        <ul>
+          <li><span class="lbl">Unidades prontas</span><span class="val fw700">50</span></li>
+          <li><span class="lbl">Custo unitario</span><span class="val">R$ 78,00</span></li>
+          <li><span class="lbl">Valor em estoque</span><span class="val fw700">R$ 3.900</span></li>
+          <li><span class="lbl">Consumo mes 1 (moderado)</span><span class="val">65 unidades</span></li>
+          <li><span class="lbl">Estoque dura</span><span class="val fw700">~3 semanas</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--teal)"></span> Reposicao (Moderado)</h3>
+        <ul>
+          <li><span class="lbl">Consumo medio/mes</span><span class="val">83 unidades</span></li>
+          <li><span class="lbl">Lote recomendado</span><span class="val fw700">100 unidades</span></li>
+          <li><span class="lbl">Custo do lote</span><span class="val">R$ 7.300</span></li>
+          <li><span class="lbl">Frequencia</span><span class="val">A cada 5 semanas</span></li>
+          <li><span class="lbl">Ponto de reposicao</span><span class="val fw700">Quando chegar a 30 un</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Conservador</th><th>Moderado</th><th>Agressivo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fw700">Consumo mensal (unidades)</td>
+            <td>65</td>
+            <td class="fw700">83</td>
+            <td>127</td>
+          </tr>
+          <tr>
+            <td class="fw700">Consumo anual (unidades)</td>
+            <td>780</td>
+            <td class="fw700">1.001</td>
+            <td>1.521</td>
+          </tr>
+          <tr>
+            <td class="fw700">Custo estoque/mes (produto)</td>
+            <td>R$ 4.745</td>
+            <td class="fw700">R$ 6.059</td>
+            <td>R$ 9.271</td>
+          </tr>
+          <tr>
+            <td class="fw700">Ciclo de caixa ML (Decola)</td>
+            <td colspan="3" class="fw700">~20 dias (venda → dinheiro na conta)</td>
+          </tr>
+          <tr class="new-row">
+            <td class="fw700">Capital de giro (= estoque)</td>
+            <td colspan="3" class="fw700">R$ 3.900 (50 mochilas prontas)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-card" style="margin-top:14px">
+      <table>
+        <thead>
+          <tr><th>Etapa</th><th>Dias</th><th>Acumulado</th><th>Detalhe</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="fw700">Venda → despacho</td>
+            <td>0-1</td>
+            <td class="fw700">D+1</td>
+            <td class="small">Preparar, embalar, postar</td>
+          </tr>
+          <tr>
+            <td class="fw700">Transporte ate comprador</td>
+            <td>3-7</td>
+            <td class="fw700">D+8</td>
+            <td class="small">Correios/transportadora (Decola)</td>
+          </tr>
+          <tr class="highlight-row">
+            <td class="fw700">Retencao ML pos-entrega</td>
+            <td>+12</td>
+            <td class="fw700">D+20</td>
+            <td class="small">ML segura ate confirmar recebimento</td>
+          </tr>
+          <tr class="total-row">
+            <td class="fw700">Dinheiro na conta</td>
+            <td colspan="2" class="fw700">~20 dias por venda</td>
+            <td class="small">Fluxo continuo apos primeiras vendas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-note warning" style="margin-top:12px">
+      <b>Atencao ao fluxo de caixa:</b> Cada venda leva ~20 dias para virar dinheiro. Voce precisa comprar estoque ANTES de receber. Com 50 unidades atuais, o primeiro mes esta coberto, mas a reposicao para o mes 2 precisa ser encomendada na 3a semana do mes 1 — antes das primeiras vendas serem liberadas. Apos o 2o mes, o fluxo se estabiliza (vendas do mes anterior financiam o proximo).
+    </div>
+  </div>
+
+  <!-- 8. INDICADORES -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">8</span> Indicadores de Viabilidade
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--title)"></span> Retorno (Moderado)</h3>
+        <ul>
+          <li><span class="lbl">Capital investido (estoque)</span><span class="val fw700">R$ 3.900</span></li>
+          <li><span class="lbl">Lucro anual</span><span class="val fw700">R$ 9.997</span></li>
+          <li><span class="lbl">ROI anual</span><span class="val fw700">256%</span></li>
+          <li><span class="lbl">Payback acumulado</span><span class="val fw700">Mes 1 (Mar/26)</span></li>
+        </ul>
+      </div>
+      <div class="spec-box">
+        <h3><span class="dot" style="background:var(--title)"></span> Retorno (Agressivo)</h3>
+        <ul>
+          <li><span class="lbl">Capital investido (estoque)</span><span class="val fw700">R$ 3.900</span></li>
+          <li><span class="lbl">Lucro anual</span><span class="val fw700">R$ 30.777</span></li>
+          <li><span class="lbl">ROI anual</span><span class="val fw700">789%</span></li>
+          <li><span class="lbl">Payback acumulado</span><span class="val fw700">Mes 1 (Mar/26)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="discovery" style="margin-top:14px">
+      <h4>Conclusao: negocio viavel a partir de 25 pedidos/mes</h4>
+      <p>O cenario moderado (32 ped/mes medio) gera lucro de R$9.997/ano com ROI de 256%. O cenario agressivo (49 ped/mes) gera R$30.777 com ROI de 789%. <b>O risco principal nao e a margem — e o volume.</b> A comunicacao dos diferenciais tecnicos (E.V.A., VHB, aluminio, P-GG) e o fator que separa o cenario conservador (equilibrio) do agressivo (lucro de R$30k).</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Mochila Viva — Plano Financeiro · Estrategia Agressiva R$ 159,90</p>
+    <p>Projecao 12 meses · Custo fixo R$ 2.500/mes · Estoque 50 un · Canal ML (Decola)</p>
+    <p style="margin-top:6px">Adm. Alexsander Machado — CRA 20-22229 · 03/03/2026</p>
+  </div>
+
+</div>
+
+<!-- ========== MODAIS ========== -->
+
+<!-- Modal: Custos -->
+<div class="modal-overlay" id="modal-custos">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-custos')">&times;</button>
+    <span class="modal-badge" style="background:var(--red-bg);color:var(--red)">CONCEITO</span>
+    <h2>Estrutura de Custos</h2>
+    <p><b>Custos fixos</b> sao os que existem independente de vender ou nao. Mesmo com zero vendas, voce paga R$2.500/mes. Sao o "peso" que o negocio precisa carregar.</p>
+    <p><b>Custos variaveis</b> so existem quando ha venda. Quanto mais vende, mais gasta — mas tambem mais lucra. Sao proporcionais ao volume.</p>
+    <h3>Por que isso importa?</h3>
+    <p>A relacao entre custos fixos e variaveis define o <b>ponto de equilibrio</b>. Quanto maior o custo fixo, mais vendas sao necessarias para cobri-lo. Com R$2.500 fixo e R$104 de lucro medio por pedido, sao necessarios 25 pedidos/mes apenas para empatar.</p>
+    <div class="example-box">
+      <strong>Exemplo:</strong>
+      <p>Se o custo fixo fosse R$1.000 (em vez de R$2.500), o break-even cairia para 10 pedidos/mes — muito mais facil de atingir. Cada R$100 de reducao no custo fixo equivale a ~1 venda a menos necessaria por mes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Mix -->
+<div class="modal-overlay" id="modal-mix">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-mix')">&times;</button>
+    <span class="modal-badge" style="background:var(--purple-bg);color:var(--purple)">CONCEITO</span>
+    <h2>Mix de Vendas</h2>
+    <p>O mix define a <b>proporcao de cada produto nas vendas totais</b>. Ele impacta diretamente o ticket medio e o lucro medio por pedido.</p>
+    <h3>Por que o mix importa?</h3>
+    <p>Se 100% das vendas forem unitarias, o lucro medio e R$48,82/pedido. Se 100% forem Kit 10, e R$341,16/pedido. A realidade e um mix — e a proporcao define a saude financeira.</p>
+    <h3>Como melhorar o mix?</h3>
+    <ul>
+      <li>Promover kits maiores nas respostas a perguntas ("Kit 5 tem 15% de desconto")</li>
+      <li>Usar o Colete c/ haste como isca para upsell ("por R$50 a mais, leva com placa")</li>
+      <li>Anuncios de kit na frente dos unitarios na loja do vendedor</li>
+      <li>Desconto progressivo visivel no titulo/fotos</li>
+    </ul>
+    <div class="example-box">
+      <strong>Impacto do mix:</strong>
+      <p>Se o % de Kit 5 subir de 12% para 20% (e unitario cair de 40% para 32%), o lucro medio sobe de R$104 para R$115/pedido. Isso reduz o break-even de 25 para 22 pedidos/mes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Break-even -->
+<div class="modal-overlay" id="modal-breakeven">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-breakeven')">&times;</button>
+    <span class="modal-badge" style="background:var(--teal-bg);color:var(--teal)">CONCEITO</span>
+    <h2>Break-even (Ponto de Equilibrio)</h2>
+    <p>Break-even e o ponto onde <b>receita total = custos totais</b>. Abaixo dele, cada mes gera prejuizo. Acima, gera lucro.</p>
+    <h3>Calculo</h3>
+    <p><b>Break-even = Custos Fixos / Lucro Medio por Pedido</b></p>
+    <p>R$2.500 / R$103,89 = <b>24,06 → 25 pedidos/mes</b></p>
+    <h3>O que sao 25 pedidos/mes?</h3>
+    <ul>
+      <li>~1 pedido por dia (considerando 25 dias uteis)</li>
+      <li>~65 unidades consumidas do estoque</li>
+      <li>~R$9.059 de receita bruta</li>
+    </ul>
+    <div class="example-box">
+      <strong>Referencia de mercado:</strong>
+      <p>CLAUDINHO DO SOM faz ~264 vendas/mes com 10 anuncios (26/anuncio). Se a Mochila Viva atingir apenas 10% da performance do CLAUDINHO por anuncio, ja bate o break-even com 7 anuncios × 3,6 vendas/anuncio = 25 pedidos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Cenarios -->
+<div class="modal-overlay" id="modal-cenarios">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-cenarios')">&times;</button>
+    <span class="modal-badge" style="background:var(--yellow-bg);color:var(--yellow)">CONCEITO</span>
+    <h2>Tres Cenarios de Projecao</h2>
+    <p>Projecoes financeiras usam cenarios para mapear o <b>risco</b> (conservador), a <b>expectativa</b> (moderado) e o <b>potencial</b> (agressivo).</p>
+    <h3>Premissas de cada cenario</h3>
+    <ul>
+      <li><b>Conservador (media 25 ped/mes):</b> Exatamente no break-even. Cobre custos fixos, lucro zero. O minimo para o negocio se sustentar.</li>
+      <li><b>Moderado (media 32 ped/mes):</b> Crescimento gradual, reviews acumulando, ads moderado. Positivo desde o mes 1.</li>
+      <li><b>Agressivo (media 49 ped/mes):</b> Comunicacao forte, ads ativo, reviews rapidos. Lucrativo desde o mes 1.</li>
+    </ul>
+    <h3>Sazonalidade aplicada</h3>
+    <p>Todos os cenarios aplicam multiplicadores sazonais: <b>Copa 2026 (Jun) +20%</b>, <b>Eleicoes (Out) +20%</b>, <b>Black Friday (Nov) +50%</b>, <b>Carnaval (Fev) +0%</b> (baseline), <b>Janeiro -30%</b> (baixa).</p>
+    <div class="example-box">
+      <strong>A diferenca entre cenarios e a COMUNICACAO:</strong>
+      <p>O produto e o mesmo nos 3 cenarios. O preco e o mesmo. O que muda e a qualidade do anuncio, a velocidade de acumular reviews, e o investimento em ads. O cenario conservador e um anuncio generico. O agressivo e um anuncio que comunica os 5 diferenciais tecnicos com clareza.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: DRE -->
+<div class="modal-overlay" id="modal-dre">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-dre')">&times;</button>
+    <span class="modal-badge" style="background:var(--blue-bg);color:var(--blue)">CONCEITO</span>
+    <h2>DRE — Demonstracao do Resultado</h2>
+    <p>A DRE mostra <b>de onde vem e para onde vai o dinheiro</b> em cada periodo.</p>
+    <h3>Estrutura simplificada</h3>
+    <ul>
+      <li><b>Receita Bruta:</b> Total faturado (preco × quantidade)</li>
+      <li><b>(-) Deducoes:</b> Comissao ML + Frete (custos diretos da venda)</li>
+      <li><b>= Receita Liquida:</b> O que sobra apos pagar a plataforma</li>
+      <li><b>(-) CMV:</b> Custo da Mercadoria Vendida (produto + embalagem)</li>
+      <li><b>= Lucro Bruto:</b> Lucro gerado pela operacao de venda</li>
+      <li><b>(-) Custos Fixos:</b> Administrativo (R$2.500/mes)</li>
+      <li><b>= Lucro Operacional:</b> O que realmente sobra no bolso</li>
+    </ul>
+    <div class="example-box">
+      <strong>Leitura rapida da DRE:</strong>
+      <p><b>Margem bruta 28,7%</b> = a cada R$100 vendido, R$28,70 e lucro bruto. E constante porque os custos variaveis sao proporcionais.</p>
+      <p><b>Margem operacional 7,1%</b> (mes tipico) = a cada R$100 vendido, R$7,10 e lucro final. Cresce com volume porque o custo fixo se dilui.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Capital de Giro -->
+<div class="modal-overlay" id="modal-giro">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-giro')">&times;</button>
+    <span class="modal-badge" style="background:var(--orange-bg);color:var(--orange)">CONCEITO</span>
+    <h2>Capital de Giro</h2>
+    <p>Capital de giro e o <b>dinheiro necessario para manter a operacao funcionando</b> entre comprar o produto e receber o pagamento da venda.</p>
+    <h3>O descasamento de prazos</h3>
+    <ul>
+      <li><b>Compra de estoque:</b> Pagamento imediato ou em 7-14 dias</li>
+      <li><b>Recebimento ML (Decola):</b> ~20 dias (D+1 despacho + D+8 transporte + D+12 retencao)</li>
+      <li><b>Gap:</b> Voce precisa ter dinheiro para comprar o proximo lote ANTES de receber pelas vendas atuais</li>
+    </ul>
+    <div class="example-box">
+      <strong>Exemplo pratico (Moderado):</strong>
+      <p>Mes 1: Voce tem 50 unidades (R$3.900). Consome 49 no mes. No dia 20, precisa encomendar novo lote para o mes 2. Mas o ML ainda nao liberou o pagamento das vendas do mes 1.</p>
+      <p>Solucao: negociar prazo com o fornecedor, OU usar receita das primeiras vendas liberadas (~D+20) para financiar o proximo lote.</p>
+    </div>
+    <h3>Ponto de reposicao</h3>
+    <p>Recomendacao: encomendar novo lote quando o estoque chegar a <b>30 unidades</b> (~10 dias de vendas no cenario moderado). Isso da tempo para producao/entrega sem risco de ruptura.</p>
+  </div>
+</div>
+
+<!-- Modal: Mix por Volume -->
+<div class="modal-overlay" id="modal-mix-volume">
+  <div class="modal" style="max-width:720px">
+    <button class="modal-close" onclick="closeModal('modal-mix-volume')">&times;</button>
+    <span class="modal-badge" style="background:var(--teal-bg);color:var(--teal)">DETALHAMENTO</span>
+    <h2>Decomposicao do Mix — Pedidos e Unidades</h2>
+    <p>Cada cenario usa o mesmo mix de vendas. A tabela mostra quantos <b>pedidos</b> e quantas <b>unidades</b> cada produto representa por mes.</p>
+    <div style="overflow-x:auto;margin:16px 0">
+      <table style="width:100%;font-size:12px;border-collapse:collapse">
+        <thead>
+          <tr style="background:var(--input-bg)">
+            <th style="text-align:left;padding:8px;border-bottom:2px solid var(--border)">Produto</th>
+            <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border)">% Mix</th>
+            <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border)">Un/Ped</th>
+            <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border);color:var(--yellow)">Conserv. (B.E.)<br>25 ped/mes</th>
+            <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border);color:var(--teal)">Moderado<br>32 ped/mes</th>
+            <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border);color:var(--purple)">Agressivo<br>49 ped/mes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border-light)">
+            <td style="padding:6px 8px"><span class="badge badge-orange">Colete c/ haste</span></td>
+            <td style="text-align:center;padding:6px">10%</td>
+            <td style="text-align:center;padding:6px">1</td>
+            <td style="text-align:center;padding:6px">3 ped → <b>3 un</b></td>
+            <td style="text-align:center;padding:6px">3 ped → <b>3 un</b></td>
+            <td style="text-align:center;padding:6px">5 ped → <b>5 un</b></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-light);background:var(--teal-light)">
+            <td style="padding:6px 8px"><span class="badge badge-teal">Unitario</span></td>
+            <td style="text-align:center;padding:6px;font-weight:700">40%</td>
+            <td style="text-align:center;padding:6px">1</td>
+            <td style="text-align:center;padding:6px">10 ped → <b>10 un</b></td>
+            <td style="text-align:center;padding:6px">13 ped → <b>13 un</b></td>
+            <td style="text-align:center;padding:6px">20 ped → <b>20 un</b></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-light)">
+            <td style="padding:6px 8px"><span class="badge badge-blue">Kit 2</span></td>
+            <td style="text-align:center;padding:6px">20%</td>
+            <td style="text-align:center;padding:6px">2</td>
+            <td style="text-align:center;padding:6px">5 ped → <b>10 un</b></td>
+            <td style="text-align:center;padding:6px">6 ped → <b>12 un</b></td>
+            <td style="text-align:center;padding:6px">10 ped → <b>20 un</b></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-light)">
+            <td style="padding:6px 8px"><span class="badge badge-purple">Kit 3</span></td>
+            <td style="text-align:center;padding:6px">10%</td>
+            <td style="text-align:center;padding:6px">3</td>
+            <td style="text-align:center;padding:6px">3 ped → <b>9 un</b></td>
+            <td style="text-align:center;padding:6px">3 ped → <b>9 un</b></td>
+            <td style="text-align:center;padding:6px">5 ped → <b>15 un</b></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-light)">
+            <td style="padding:6px 8px"><span class="badge badge-blue">Kit 5</span></td>
+            <td style="text-align:center;padding:6px">12%</td>
+            <td style="text-align:center;padding:6px">5</td>
+            <td style="text-align:center;padding:6px">3 ped → <b>15 un</b></td>
+            <td style="text-align:center;padding:6px">4 ped → <b>20 un</b></td>
+            <td style="text-align:center;padding:6px">6 ped → <b>30 un</b></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border-light)">
+            <td style="padding:6px 8px"><span class="badge badge-blue">Kit 10</span></td>
+            <td style="text-align:center;padding:6px">8%</td>
+            <td style="text-align:center;padding:6px">10</td>
+            <td style="text-align:center;padding:6px">2 ped → <b>20 un</b></td>
+            <td style="text-align:center;padding:6px">3 ped → <b>30 un</b></td>
+            <td style="text-align:center;padding:6px">4 ped → <b>40 un</b></td>
+          </tr>
+          <tr style="background:var(--input-bg);border-top:2px solid var(--border)">
+            <td style="padding:8px;font-weight:700">TOTAL</td>
+            <td style="text-align:center;padding:8px;font-weight:700">100%</td>
+            <td style="text-align:center;padding:8px;font-weight:700">2,6</td>
+            <td style="text-align:center;padding:8px;font-weight:700">25 ped → 65 un</td>
+            <td style="text-align:center;padding:8px;font-weight:700">32 ped → 83 un</td>
+            <td style="text-align:center;padding:8px;font-weight:700">49 ped → 127 un</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="example-box">
+      <strong>Como ler:</strong>
+      <p>No cenario moderado (32 ped/mes), 13 pedidos sao unitarios (13 un), 6 sao Kit 2 (12 un), 4 sao Kit 5 (20 un), etc. O total de 32 pedidos consome ~83 unidades do estoque — media de 2,6 unidades por pedido.</p>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:4px">* Pedidos arredondados por produto; total usa media ponderada 2,6 un/ped.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Detalhe Mes (Realizado por produto) -->
+<div class="modal-overlay" id="modal-mes-detalhe">
+  <div class="modal" style="max-width:600px">
+    <button class="modal-close" onclick="closeModal('modal-mes-detalhe')">&times;</button>
+    <span class="modal-badge" style="background:var(--green-bg);color:var(--green-dark)" id="mes-badge">REALIZADO</span>
+    <h2 id="mes-titulo">—</h2>
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:14px">Preencha a quantidade real de pedidos de cada produto. A coluna <b>Mix Proj.</b> mostra a distribuicao projetada (10% Colete, 40% Unit, 20% Kit2, 10% Kit3, 12% Kit5, 8% Kit10).</p>
+    <table style="width:100%;font-size:12px;border-collapse:collapse" id="mes-tabela">
+      <thead>
+        <tr style="background:var(--input-bg)">
+          <th style="text-align:left;padding:8px;border-bottom:2px solid var(--border)">Produto</th>
+          <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border)">Ped. Proj.</th>
+          <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border)">Un. Proj.</th>
+          <th style="text-align:center;padding:8px;border-bottom:2px solid var(--border)">Qtd Real</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border)">Un. Real</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border)">Receita</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border)">Lucro</th>
+        </tr>
+      </thead>
+      <tbody id="mes-tbody"></tbody>
+      <tfoot>
+        <tr style="background:var(--input-bg);border-top:2px solid var(--border)">
+          <td style="padding:8px;font-weight:700">TOTAL</td>
+          <td style="text-align:center;padding:8px;font-weight:700" id="mes-tot-sug">—</td>
+          <td style="text-align:center;padding:8px;font-weight:700" id="mes-tot-unsug">—</td>
+          <td style="text-align:center;padding:8px;font-weight:700" id="mes-tot-real">—</td>
+          <td style="text-align:right;padding:8px;font-weight:700" id="mes-tot-un">—</td>
+          <td style="text-align:right;padding:8px;font-weight:700" id="mes-tot-rec">—</td>
+          <td style="text-align:right;padding:8px;font-weight:700" id="mes-tot-luc">—</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+      <button onclick="limparMes()" style="font-size:11px;padding:6px 14px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--card);color:var(--text-light);cursor:pointer">Limpar mes</button>
+      <button onclick="salvarMes()" style="font-size:12px;font-weight:700;padding:8px 24px;border-radius:var(--radius-pill);border:none;background:var(--teal);color:#fff;cursor:pointer">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// MODAIS
+// ============================================================
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+  });
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => {
+      m.classList.remove('active');
+    });
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// ============================================================
+// PROJECAO MENSAL — PLANEJADO x REALIZADO (por produto)
+// ============================================================
+
+// Dados por produto (valores reais do plano)
+const PRODUTOS = [
+  { nome:'Colete c/ haste', badge:'badge-orange', preco:109.90, lucro:30.82, un:1, pct:0.10 },
+  { nome:'Unitario',        badge:'badge-teal',   preco:159.90, lucro:48.82, un:1, pct:0.40 },
+  { nome:'Kit 2',           badge:'badge-blue',   preco:299.90, lucro:93.42, un:2, pct:0.20 },
+  { nome:'Kit 3',           badge:'badge-purple',  preco:419.70, lucro:121.05,un:3, pct:0.10 },
+  { nome:'Kit 5',           badge:'badge-blue',   preco:679.50, lucro:193.28,un:5, pct:0.12 },
+  { nome:'Kit 10',          badge:'badge-blue',   preco:1299.00,lucro:341.16,un:10,pct:0.08 },
+];
+
+const FIXO = 2500;
+
+// Mix medio (para calculo projetado por media)
+const MIX_TICKET = 362.32;
+const MIX_LUCRO = 103.89;
+const MIX_UN = 2.6;
+
+const PROJ = [
+  { mes:'Mar/26', evento:'Lancamento',  ped:25, badge:'' },
+  { mes:'Abr/26', evento:'Crescimento', ped:25, badge:'' },
+  { mes:'Mai/26', evento:'Estavel',     ped:26, badge:'' },
+  { mes:'Jun/26', evento:'COPA',        ped:38, badge:'badge-green' },
+  { mes:'Jul/26', evento:'Pos-Copa',    ped:32, badge:'' },
+  { mes:'Ago/26', evento:'Baixa',       ped:26, badge:'' },
+  { mes:'Set/26', evento:'Retomada',    ped:32, badge:'' },
+  { mes:'Out/26', evento:'ELEICOES',    ped:38, badge:'badge-purple' },
+  { mes:'Nov/26', evento:'BLACK FRI',   ped:48, badge:'badge-red' },
+  { mes:'Dez/26', evento:'Fim de ano',  ped:38, badge:'' },
+  { mes:'Jan/27', evento:'Baixa',       ped:25, badge:'' },
+  { mes:'Fev/27', evento:'CARNAVAL',    ped:32, badge:'badge-pink' },
+];
+
+const LS_KEY = 'mochila_viva_realizado';
+const LS_MODE = 'mochila_viva_modo';
+
+let modoAcomp = localStorage.getItem(LS_MODE) === 'true';
+// dadosReais[mesIdx] = { 0: qtd, 1: qtd, ... } (indice do PRODUTOS)
+let dadosReais = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
+
+let mesEditando = null; // indice do mes sendo editado no modal
+
+function fmt(v) {
+  if (v === 0) return 'R$ 0';
+  const abs = Math.abs(Math.round(v));
+  const s = abs.toLocaleString('pt-BR');
+  return (v < 0 ? '-' : '') + 'R$ ' + s;
+}
+
+// Calcular mix sugerido para N pedidos
+function mixSugerido(totalPed) {
+  return PRODUTOS.map(p => Math.round(totalPed * p.pct));
+}
+
+// Calcular financeiro a partir de quantidades por produto
+function calcPorProduto(qtds) {
+  let ped = 0, un = 0, receita = 0, lucro = 0;
+  PRODUTOS.forEach((p, i) => {
+    const q = qtds[i] || 0;
+    ped += q;
+    un += q * p.un;
+    receita += q * p.preco;
+    lucro += q * p.lucro;
+  });
+  return { ped, un, receita: Math.round(receita), lucro: Math.round(lucro), resultado: Math.round(lucro) - FIXO };
+}
+
+// Calcular financeiro projetado (media)
+function calcProj(ped) {
+  const un = Math.round(ped * MIX_UN);
+  const receita = Math.round(ped * MIX_TICKET);
+  const lucro = Math.round(ped * MIX_LUCRO);
+  return { ped, un, receita, lucro, resultado: lucro - FIXO };
+}
+
+// Verificar se um mes tem dados reais
+function temDadosReais(mesIdx) {
+  const d = dadosReais[mesIdx];
+  if (!d) return false;
+  return PRODUTOS.some((_, i) => (d[i] || 0) > 0);
+}
+
+// Calcular dados efetivos de um mes (real se preenchido, projetado se nao)
+function calcMes(mesIdx) {
+  if (temDadosReais(mesIdx)) {
+    const qtds = PRODUTOS.map((_, i) => dadosReais[mesIdx][i] || 0);
+    return calcPorProduto(qtds);
+  }
+  return calcProj(PROJ[mesIdx].ped);
+}
+
+// ============================================================
+// RENDER TABELA PRINCIPAL
+// ============================================================
+function renderTabela() {
+  const thead = document.getElementById('thead-projecao');
+  const tbody = document.getElementById('tbody-projecao');
+  const btn = document.getElementById('btn-modo');
+  const varBox = document.getElementById('variacao-box');
+
+  btn.classList.toggle('btn-modo-ativo', modoAcomp);
+  btn.textContent = modoAcomp ? 'Modo Acompanhamento ✓' : 'Modo Acompanhamento';
+  varBox.style.display = modoAcomp ? 'block' : 'none';
+
+  // Header
+  let h = '<tr><th>Mes</th><th>Evento</th><th>Ped. Proj.</th>';
+  if (modoAcomp) h += '<th>Ped. Real</th>';
+  h += '<th>Unidades</th><th>Receita</th><th>Lucro Bruto</th><th>(-) Fixo</th><th>Resultado</th><th>Acumulado</th></tr>';
+  thead.innerHTML = h;
+
+  let html = '';
+  let acumProj = 0, acumEfet = 0;
+  let totPedProj = 0, totPedEfet = 0, totUnEfet = 0, totRecEfet = 0, totLucEfet = 0, totResEfet = 0;
+  let temAlgumReal = false;
+
+  PROJ.forEach((p, i) => {
+    const proj = calcProj(p.ped);
+    acumProj += proj.resultado;
+
+    const isReal = temDadosReais(i);
+    if (isReal) temAlgumReal = true;
+    const efet = calcMes(i);
+    acumEfet += efet.resultado;
+
+    totPedProj += p.ped;
+    totPedEfet += efet.ped;
+    totUnEfet += efet.un;
+    totRecEfet += efet.receita;
+    totLucEfet += efet.lucro;
+    totResEfet += efet.resultado;
+
+    // Row class
+    let cls = '';
+    if (isReal) cls = 'cell-real';
+
+    const evtHtml = p.badge
+      ? '<span class="badge ' + p.badge + '">' + p.evento + '</span>'
+      : '<span class="small">' + p.evento + '</span>';
+
+    html += '<tr class="' + cls + '">';
+    html += '<td class="fw700">' + p.mes + '</td>';
+    html += '<td>' + evtHtml + '</td>';
+    html += '<td' + (isReal ? ' style="text-decoration:line-through"' : '') + '>' + p.ped + '</td>';
+
+    if (modoAcomp) {
+      const realTxt = isReal ? efet.ped : '—';
+      html += '<td style="text-align:center;cursor:pointer;font-weight:' + (isReal ? '700' : '400') + '" onclick="abrirMesDetalhe(' + i + ')">' + realTxt + '</td>';
+    }
+
+    html += '<td>' + efet.un + '</td>';
+    html += '<td>' + fmt(efet.receita) + '</td>';
+    html += '<td>' + fmt(efet.lucro) + '</td>';
+    html += '<td class="small">-R$ 2.500</td>';
+    html += '<td class="fw700">' + fmt(efet.resultado) + '</td>';
+    html += '<td class="' + (acumEfet < 0 ? 'small' : 'fw700') + '">' + fmt(acumEfet) + '</td>';
+    html += '</tr>';
+  });
+
+  // Total
+  html += '<tr class="total-row">';
+  html += '<td class="fw700" colspan="2">TOTAL 12 MESES</td>';
+  if (modoAcomp && temAlgumReal) {
+    html += '<td style="text-decoration:line-through">' + totPedProj + '</td>';
+    html += '<td class="fw700">' + totPedEfet + '</td>';
+  } else if (modoAcomp) {
+    html += '<td class="fw700">' + totPedProj + '</td>';
+    html += '<td style="background:var(--green-bg)">—</td>';
+  } else {
+    html += '<td class="fw700">' + totPedProj + '</td>';
+  }
+  html += '<td class="fw700">' + totUnEfet + '</td>';
+  html += '<td class="fw700">' + fmt(totRecEfet) + '</td>';
+  html += '<td class="fw700">' + fmt(totLucEfet) + '</td>';
+  html += '<td class="fw700">-R$ 30.000</td>';
+  html += '<td class="fw700">' + fmt(totResEfet) + '</td>';
+  html += '<td></td>';
+  html += '</tr>';
+
+  tbody.innerHTML = html;
+
+  // Variacao
+  if (modoAcomp) {
+    document.getElementById('var-acum-real').textContent = fmt(acumEfet);
+    document.getElementById('var-acum-proj').textContent = fmt(acumProj);
+    if (temAlgumReal && acumProj !== 0) {
+      const pct = ((acumEfet - acumProj) / Math.abs(acumProj) * 100).toFixed(1);
+      const pos = acumEfet >= acumProj;
+      document.getElementById('var-badge').innerHTML =
+        '<span style="font-weight:700;color:' + (pos ? 'var(--green-dark)' : 'var(--red)') + '">' +
+        (pos ? '+' : '') + pct + '%</span>';
+      document.getElementById('var-badge-box').style.background = pos ? 'var(--green-bg)' : 'var(--red-bg)';
+    } else {
+      document.getElementById('var-badge').textContent = '—';
+      document.getElementById('var-badge-box').style.background = 'var(--input-bg)';
+    }
+  }
+}
+
+// ============================================================
+// MODAL DETALHE MES (input por produto)
+// ============================================================
+function abrirMesDetalhe(mesIdx) {
+  mesEditando = mesIdx;
+  const p = PROJ[mesIdx];
+  document.getElementById('mes-titulo').textContent = p.mes + ' — ' + p.evento;
+  document.getElementById('mes-badge').textContent = 'REALIZADO ' + p.mes;
+
+  const sug = mixSugerido(p.ped);
+  const reais = dadosReais[mesIdx] || {};
+
+  let html = '';
+  PRODUTOS.forEach((prod, i) => {
+    const q = reais[i] !== undefined ? reais[i] : '';
+    const qEfet = q !== '' ? parseInt(q) || 0 : 0;
+    html += '<tr style="border-bottom:1px solid var(--border-light)">';
+    html += '<td style="padding:6px 8px"><span class="badge ' + prod.badge + '">' + prod.nome + '</span></td>';
+    html += '<td style="text-align:center;padding:6px">' + sug[i] + '</td>';
+    html += '<td style="text-align:center;padding:6px">' + (sug[i] * prod.un) + '</td>';
+    html += '<td style="text-align:center;padding:3px"><input class="input-real" type="number" min="0" max="999" placeholder="' + sug[i] + '" data-prod="' + i + '" value="' + q + '" oninput="atualizarTotaisMes()"></td>';
+    html += '<td style="text-align:right;padding:6px" id="mes-un-' + i + '">' + (q !== '' ? qEfet * prod.un : '') + '</td>';
+    html += '<td style="text-align:right;padding:6px" id="mes-rec-' + i + '">' + (q !== '' ? fmt(qEfet * prod.preco) : '') + '</td>';
+    html += '<td style="text-align:right;padding:6px" id="mes-luc-' + i + '">' + (q !== '' ? fmt(qEfet * prod.lucro) : '') + '</td>';
+    html += '</tr>';
+  });
+
+  document.getElementById('mes-tbody').innerHTML = html;
+  atualizarTotaisMes();
+  openModal('modal-mes-detalhe');
+}
+
+function atualizarTotaisMes() {
+  let totSug = 0, totUnSug = 0, totReal = 0, totUn = 0, totRec = 0, totLuc = 0;
+  const sug = mixSugerido(PROJ[mesEditando].ped);
+  let temAlgum = false;
+
+  PRODUTOS.forEach((prod, i) => {
+    totSug += sug[i];
+    totUnSug += sug[i] * prod.un;
+    const input = document.querySelector('#modal-mes-detalhe .input-real[data-prod="' + i + '"]');
+    const val = input ? input.value.trim() : '';
+    const q = val !== '' ? (parseInt(val) || 0) : 0;
+    if (val !== '') {
+      temAlgum = true;
+      totReal += q;
+      totUn += q * prod.un;
+      totRec += q * prod.preco;
+      totLuc += q * prod.lucro;
+      document.getElementById('mes-un-' + i).textContent = q * prod.un;
+      document.getElementById('mes-rec-' + i).textContent = fmt(q * prod.preco);
+      document.getElementById('mes-luc-' + i).textContent = fmt(q * prod.lucro);
+    } else {
+      document.getElementById('mes-un-' + i).textContent = '';
+      document.getElementById('mes-rec-' + i).textContent = '';
+      document.getElementById('mes-luc-' + i).textContent = '';
+    }
+  });
+
+  document.getElementById('mes-tot-sug').textContent = totSug;
+  document.getElementById('mes-tot-unsug').textContent = totUnSug;
+  document.getElementById('mes-tot-real').textContent = temAlgum ? totReal : '—';
+  document.getElementById('mes-tot-un').textContent = temAlgum ? totUn : '—';
+  document.getElementById('mes-tot-rec').textContent = temAlgum ? fmt(totRec) : '—';
+  document.getElementById('mes-tot-luc').textContent = temAlgum ? fmt(totLuc) : '—';
+}
+
+function salvarMes() {
+  const dados = {};
+  let temAlgum = false;
+  PRODUTOS.forEach((_, i) => {
+    const input = document.querySelector('#modal-mes-detalhe .input-real[data-prod="' + i + '"]');
+    const val = input ? input.value.trim() : '';
+    if (val !== '') {
+      dados[i] = parseInt(val) || 0;
+      temAlgum = true;
+    }
+  });
+
+  if (temAlgum) {
+    dadosReais[mesEditando] = dados;
+  } else {
+    delete dadosReais[mesEditando];
+  }
+
+  localStorage.setItem(LS_KEY, JSON.stringify(dadosReais));
+  closeModal('modal-mes-detalhe');
+  renderTabela();
+}
+
+function limparMes() {
+  PRODUTOS.forEach((_, i) => {
+    const input = document.querySelector('#modal-mes-detalhe .input-real[data-prod="' + i + '"]');
+    if (input) input.value = '';
+  });
+  atualizarTotaisMes();
+}
+
+function toggleModo() {
+  modoAcomp = !modoAcomp;
+  localStorage.setItem(LS_MODE, modoAcomp);
+  renderTabela();
+}
+
+function limparRealizado() {
+  dadosReais = {};
+  localStorage.removeItem(LS_KEY);
+  renderTabela();
+}
+
+// Render inicial
+renderTabela();
+</script>
+</body>
+</html>
