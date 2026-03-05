@@ -10,13 +10,13 @@
   :root {
     --amber: #F5A623;
     --brown: #8B6914;
-    --brown-dark: #5D4420;
-    --brown-light: #7B5B2A;
-    --bg: #0f0f1a;
-    --card: #1a1a2e;
-    --border: #2a2a3e;
-    --text: #e8e8f0;
-    --muted: #8888a0;
+    --brown-dark: #3B2312;
+    --brown-light: #5C3A1E;
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
     --green: #10b981;
     --red: #ef4444;
     --blue: #3b82f6;
@@ -24,10 +24,11 @@
     --cyan: #06b6d4;
     --pink: #ec4899;
     --orange: #f59e0b;
+    --sidebar-w: 220px;
   }
-  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, Helvetica, sans-serif; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family: Futura, Arial, sans-serif; }
   body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -36,11 +37,37 @@
   /* ── HEADER ── */
   .header {
     background: linear-gradient(135deg, var(--brown-dark), var(--brown-light));
-    padding: 16px 24px;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
     gap: 16px;
     border-bottom: 3px solid var(--amber);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: margin-left 0.3s ease;
+  }
+  .hamburger {
+    width: 40px; height: 40px;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .hamburger:hover { background: rgba(255,255,255,0.25); }
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
   }
   .header svg { flex-shrink:0; }
   .header-text h1 {
@@ -53,34 +80,85 @@
     color: rgba(255,255,255,0.6);
   }
 
-  /* ── TABS ── */
-  .tabs {
-    display: flex;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
+  /* ── PAGE WRAP (empurra com sidebar) ── */
+  .page-wrap {
+    transition: margin-left 0.3s ease;
+    margin-left: 0;
   }
-  .tab {
-    padding: 12px 18px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    white-space: nowrap;
-    transition: all 0.2s;
+  .page-wrap.shifted { margin-left: var(--sidebar-w); }
+
+  /* ── NAV SIDEBAR ── */
+  .nav-sidebar {
+    position: fixed;
+    top: 0;
+    left: calc(-1 * var(--sidebar-w));
+    width: var(--sidebar-w);
+    height: 100vh;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    z-index: 300;
+    transition: left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    box-shadow: 4px 0 16px rgba(0,0,0,0.06);
+  }
+  .nav-sidebar.active { left: 0; }
+
+  .nav-sidebar-header {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    min-height: 68px;
   }
-  .tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
-  .tab.active {
-    color: var(--amber);
-    border-bottom-color: var(--amber);
-    background: rgba(245,166,35,0.05);
+  .nav-sidebar-header h2 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
   }
-  .tab-num {
-    width: 24px; height: 24px;
+  .nav-sidebar-close {
+    width: 28px; height: 28px;
+    border: none;
+    background: rgba(0,0,0,0.08);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-sidebar-close:hover { background: rgba(0,0,0,0.15); color: var(--text); }
+
+  .nav-sidebar-section {
+    padding: 10px 8px 4px;
+  }
+  .nav-sidebar-section-label {
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0 8px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 1px;
+  }
+  .nav-item:hover { background: rgba(0,0,0,0.04); }
+  .nav-item.active { background: rgba(245,166,35,0.15); }
+
+  .nav-item-num {
+    width: 28px; height: 28px;
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -88,17 +166,35 @@
     font-size: 11px;
     font-weight: 900;
     color: #fff;
+    flex-shrink: 0;
   }
-  .tab-type {
-    font-size: 9px;
+  .nav-item-text {
+    flex: 1;
+  }
+  .nav-item-name {
+    font-size: 13px;
     font-weight: 700;
-    padding: 2px 7px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .nav-item-type {
+    font-size: 8px;
+    font-weight: 700;
+    padding: 1px 6px;
     border-radius: 3px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-top: 3px;
+    display: inline-block;
   }
-  .tab-type.foto { background: var(--green); color: #fff; }
-  .tab-type.ilustra { background: var(--purple); color: #fff; }
+  .nav-item-type.foto { background: var(--green); color: #fff; }
+  .nav-item-type.ilustra { background: var(--purple); color: #fff; }
+
+  .nav-sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 14px;
+  }
 
   /* ── PANEL ── */
   .panel { display: none; padding: 20px; }
@@ -181,7 +277,7 @@
   .sidebar .checklist {
     list-style: none;
     font-size: 13px;
-    color: #fff;
+    color: var(--text);
     line-height: 2;
   }
   .sidebar .checklist li::before {
@@ -230,12 +326,51 @@
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     letter-spacing: 1px;
     transition: transform 0.15s;
   }
   .btn-export:hover { transform: scale(1.04); }
   .btn-export:active { transform: scale(0.97); }
+  .btn-salvar {
+    padding: 8px 16px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: Futura, Arial, sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .btn-salvar:hover { background: #2563eb; transform: scale(1.04); }
+  .btn-salvar:active { transform: scale(0.97); }
+  .btn-finalizar {
+    padding: 8px 20px;
+    background: #10b981;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: Futura, Arial, sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    margin-left: auto;
+  }
+  .btn-finalizar:hover { background: #059669; transform: scale(1.04); }
+  .btn-finalizar:active { transform: scale(0.97); }
+  .nav-saved-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+    display: none;
+  }
+  .nav-saved-dot.visible { display: block; }
   .btn-refresh {
     padding: 8px 16px;
     background: #3b82f6;
@@ -245,7 +380,7 @@
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     transition: all 0.2s;
     letter-spacing: 0.5px;
   }
@@ -279,6 +414,7 @@
     border-radius: 12px;
     border: 1px solid var(--border);
     padding: 16px;
+    overflow: auto;
   }
   .dropzone {
     width: 100%;
@@ -345,13 +481,72 @@
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
   }
   .btn-small:hover { border-color: var(--amber); color: var(--amber); }
 
+  /* ── TEXT OVERLAY (legendas/titulos sobre fotos) ── */
+  .text-overlay {
+    position: absolute;
+    cursor: move;
+    padding: 6px 12px;
+    font-family: Futura, Arial, sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(0,0,0,0.5);
+    border-radius: 4px;
+    white-space: nowrap;
+    user-select: none;
+    z-index: 10;
+    min-width: 40px;
+  }
+  .text-overlay:hover { outline: 2px dashed var(--amber); }
+  .text-overlay.editing { outline: 2px solid var(--amber); cursor: text; }
+  .text-overlay.selected { outline: 2px solid var(--blue); }
+
+  .text-toolbar {
+    position: absolute;
+    top: -48px; left: 0;
+    display: flex; gap: 6px; align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 20;
+    white-space: nowrap;
+  }
+  .text-toolbar input[type="number"] { width: 50px; }
+  .text-toolbar input[type="color"] { width: 28px; height: 28px; border: none; cursor: pointer; }
+  .text-toolbar select, .text-toolbar input[type="number"] {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 2px 4px; font-size: 11px; color: var(--text);
+  }
+  .text-toolbar button {
+    padding: 4px 8px; border: 1px solid var(--border); background: var(--card);
+    border-radius: 4px; font-size: 11px; cursor: pointer; color: var(--text);
+  }
+  .text-toolbar button:hover { border-color: var(--amber); color: var(--amber); }
+  .text-toolbar .btn-del { color: var(--red); }
+  .text-toolbar .btn-del:hover { background: rgba(239,68,68,0.1); border-color: var(--red); }
+
+  .btn-text {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-text:hover { border-color: var(--amber); color: var(--amber); }
+
   /* ── ILUSTRACAO 03 — GUIA DE MEDIDAS ── */
   .ilustra-03 {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     color: #1e1e1e;
     padding: 0;
   }
@@ -360,13 +555,14 @@
   }
   .ilustra-03 .i-header {
     background: linear-gradient(135deg, #3B2312, #5C3A1E);
-    padding: 48px 56px 16px;
+    padding: 0 40px;
+    height: 130px;
     display: flex;
     align-items: center;
-    gap: 24px;
+    justify-content: center;
     position: relative;
   }
-  .ilustra-03 .i-header-logo { width: 80px; height: 80px; flex-shrink: 0; }
+  .ilustra-03 .i-header-logo { display: none; }
   .ilustra-03 .i-selo {
     position: absolute;
     right: 40px;
@@ -384,11 +580,11 @@
     transform: rotate(-15deg);
   }
   .ilustra-03 .i-header h1 {
-    font-size: 42px;
+    font-size: 30px;
     font-weight: 900;
     color: #fff;
-    line-height: 1;
-    text-align: left;
+    line-height: 1.2;
+    text-align: center;
   }
   .ilustra-03 .i-header h1 span { color: var(--amber); }
   .ilustra-03 .i-header-sub {
@@ -685,7 +881,7 @@
     align-items: center;
     gap: 6px;
     margin-left: 12px;
-    background: rgba(255,255,255,0.05);
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 4px 8px;
@@ -736,7 +932,7 @@
     stroke-width: 1;
   }
   .grid-overlay .grid-label {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     font-size: 14px;
     font-weight: 800;
     fill: rgba(255, 0, 100, 0.55);
@@ -745,7 +941,7 @@
     fill: rgba(255, 255, 255, 0.85);
   }
   .grid-overlay .grid-coord {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     font-size: 10px;
     font-weight: 700;
     fill: rgba(255, 0, 100, 0.35);
@@ -760,7 +956,7 @@
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -779,7 +975,7 @@
     border-radius: 6px;
     padding: 4px 8px;
     font-size: 11px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     cursor: pointer;
   }
 
@@ -838,7 +1034,7 @@
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -886,7 +1082,7 @@
     font-size: 12px;
     font-weight: 800;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -903,17 +1099,17 @@
     position: fixed;
     inset: 0;
     z-index: 9500;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.3);
     display: none;
     align-items: center;
     justify-content: center;
   }
   .img-analysis-overlay.active { display: flex; }
   .img-analysis-modal {
-    background: #1a1a2e;
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 14px;
-    box-shadow: 0 12px 48px rgba(0,0,0,0.7);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
     width: 720px;
     max-width: 95vw;
     max-height: 85vh;
@@ -936,7 +1132,7 @@
   .img-anal-header h3 {
     font-size: 14px;
     font-weight: 800;
-    color: #a78bfa;
+    color: #7c3aed;
     margin: 0;
   }
   .img-anal-close {
@@ -1059,7 +1255,7 @@
   }
   .img-anal-col-real .img-anal-col-header {
     background: rgba(124, 58, 237, 0.1);
-    color: #a78bfa;
+    color: #7c3aed;
     border-color: #7c3aed;
   }
   .img-anal-col-body {
@@ -1074,7 +1270,7 @@
     align-items: center;
     padding: 6px 0;
     font-size: 14px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid var(--border);
   }
   .img-anal-compare-row:last-child { border-bottom: none; }
   .img-anal-compare-label {
@@ -1113,10 +1309,10 @@
     transform: translateY(-50%);
     width: 320px;
     max-height: 80vh;
-    background: #1a1a2e;
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 14px;
-    box-shadow: 0 12px 48px rgba(0,0,0,0.7);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.15);
     overflow: hidden;
     display: none;
     z-index: 9001;
@@ -1165,7 +1361,7 @@
     font-size: 11px;
     font-weight: 700;
     cursor: pointer;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     transition: all 0.2s;
   }
   .insp-copy-btn:hover { background: #059669; border-color: #059669; color: #fff; }
@@ -1229,7 +1425,7 @@
     padding: 4px 8px;
     border-radius: 5px;
     font-size: 11px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     flex: 1;
     min-width: 60px;
   }
@@ -1252,7 +1448,7 @@
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 12px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     width: 100%;
     resize: vertical;
     min-height: 32px;
@@ -1263,13 +1459,13 @@
   .ctx-menu {
     position: fixed;
     z-index: 10000;
-    background: #1e1e2e;
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 6px 0;
     min-width: 230px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-    font-family: Arial, Helvetica, sans-serif;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    font-family: Futura, Arial, sans-serif;
     display: none;
     animation: ctxFadeIn 0.12s ease;
   }
@@ -1305,7 +1501,7 @@
   }
   .ctx-item:hover {
     background: rgba(245,166,35,0.12);
-    color: #fff;
+    color: var(--text);
   }
   .ctx-item-icon {
     font-size: 13px;
@@ -1339,7 +1535,7 @@
     border-radius: 8px;
     font-size: 12px;
     font-weight: 700;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Futura, Arial, sans-serif;
     z-index: 10001;
     box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     animation: toastIn 0.2s ease, toastOut 0.3s ease 1.5s forwards;
@@ -1347,13 +1543,165 @@
   }
   @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(10px); } }
   @keyframes toastOut { to { opacity:0; transform: translateX(-50%) translateY(-10px); } }
+
+  /* ── ILUSTRACAO 02 — KIT COMPLETO ── */
+  .ilustra-02 { font-family: Futura, Arial, sans-serif; color: #1e1e1e; padding: 0; }
+  .ilustra-02 * { font-family: inherit; }
+  .ilustra-02 .kit-header {
+    position: absolute; top: 0; left: 0; right: 0; height: 130px;
+    background: linear-gradient(135deg, #3B2312, #5C3A1E);
+    display: flex; align-items: center; justify-content: center; padding: 0 40px;
+    font-family: Futura, Arial, sans-serif;
+  }
+  .ilustra-02 .kit-header h1 {
+    font-family: Futura, Arial, sans-serif;
+    font-size: 30px; font-weight: 900; color: #fff; line-height: 1.2; margin: 0; text-align: center;
+  }
+  .ilustra-02 .kit-header h1 span { color: #F5A623; }
+  .ilustra-02 .kit-header-sub {
+    font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 4px;
+  }
+  .ilustra-02 .kit-callout {
+    position: absolute; width: 270px; z-index: 3;
+  }
+  .ilustra-02 .kit-mini-dz {
+    width: 270px; height: 150px;
+    border: 2.5px dashed #F5A623; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s;
+    background: #fefcf7; overflow: hidden; position: relative;
+  }
+  .ilustra-02 .kit-mini-dz:hover { background: rgba(245,166,35,0.08); }
+  .ilustra-02 .kit-mini-dz.has-image { border-style: solid; cursor: default; }
+  .ilustra-02 .kit-mini-dz img {
+    width: 100%; height: 100%; object-fit: cover;
+    position: absolute; top: 0; left: 0;
+  }
+  .ilustra-02 .kit-mini-dz-placeholder { font-size: 32px; opacity: 0.3; }
+  .ilustra-02 .kit-label {
+    background: #3B2312; color: #fff;
+    padding: 8px 12px 6px; border-radius: 0 0 10px 10px; text-align: center;
+  }
+  .ilustra-02 .kit-label strong {
+    font-size: 14px; font-weight: 800; display: block; color: #fff;
+  }
+  .ilustra-02 .kit-label small {
+    font-size: 11px; color: rgba(255,255,255,0.6); display: block; margin-top: 2px;
+  }
+  .ilustra-02 .kit-photo-main {
+    position: absolute; left: 330px; top: 310px; width: 540px; height: 420px;
+    border: 3px solid #F5A623; border-radius: 14px;
+    overflow: hidden; background: #fefcf7;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 3;
+  }
+  .ilustra-02 .kit-photo-main.has-image { cursor: default; }
+  .ilustra-02 .kit-photo-main img { width: 100%; height: 100%; object-fit: cover; }
+  .ilustra-02 .kit-photo-main .kit-mini-dz-placeholder { font-size: 56px; }
+  .ilustra-02 .kit-lines {
+    position: absolute; top: 0; left: 0; width: 1200px; height: 1200px;
+    pointer-events: none; z-index: 2;
+  }
+  .ilustra-02 .kit-footer {
+    position: absolute; bottom: 20px; left: 30px; right: 30px; height: 80px;
+    background: #0E1117; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 24px; padding: 0 24px;
+  }
+  .ilustra-02 .kit-footer-spec {
+    font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: 0.5px;
+  }
+  .ilustra-02 .kit-footer-dot {
+    width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.3);
+  }
+  .ilustra-02 .kit-dz-hint {
+    display: block; font-size: 11px; font-weight: 700; color: #b8860b;
+    margin-top: 4px; pointer-events: none;
+  }
+  .ilustra-02 .kit-mini-dz.has-image .kit-dz-hint,
+  .ilustra-02 .kit-photo-main.has-image .kit-dz-hint { display: none; }
+  .ilustra-02 .kit-mini-dz.has-image .kit-mini-dz-placeholder,
+  .ilustra-02 .kit-photo-main.has-image .kit-mini-dz-placeholder { display: none; }
+  .btn-kit-load {
+    padding: 6px 14px; border: 1px solid var(--amber); background: rgba(245,166,35,0.1);
+    color: var(--brown); border-radius: 8px; font-size: 11px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; font-family: Futura, Arial, sans-serif;
+  }
+  .btn-kit-load:hover { background: rgba(245,166,35,0.25); transform: scale(1.04); }
+  .ilustra-02 .kit-btn-remove {
+    position: absolute; top: 6px; right: 6px; z-index: 5;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(0,0,0,0.55); color: #fff; border: none;
+    font-size: 14px; cursor: pointer; display: none;
+    align-items: center; justify-content: center; line-height: 1;
+  }
+  .ilustra-02 .kit-mini-dz.has-image .kit-btn-remove,
+  .ilustra-02 .kit-photo-main.has-image .kit-btn-remove { display: flex; }
+  .ilustra-02 .kit-btn-remove:hover { background: rgba(239,68,68,0.8); }
+  .ilustra-02 .kit-btn-done {
+    position: absolute; top: 6px; right: 34px; z-index: 5;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(0,0,0,0.55); color: #fff; border: none;
+    font-size: 16px; cursor: pointer; display: none;
+    align-items: center; justify-content: center; line-height: 1;
+  }
+  .ilustra-02 .kit-mini-dz.has-image .kit-btn-done,
+  .ilustra-02 .kit-photo-main.has-image .kit-btn-done { display: flex; }
+  .ilustra-02 .kit-btn-done:hover { background: rgba(16,185,129,0.85); }
+  .ilustra-02 .kit-mini-dz.finalized,
+  .ilustra-02 .kit-photo-main.finalized { border: 3px solid #10b981; }
+  .ilustra-02 .kit-mini-dz.finalized .kit-btn-done,
+  .ilustra-02 .kit-photo-main.finalized .kit-btn-done {
+    background: #10b981;
+  }
+  .ilustra-02 .kit-seal-ok {
+    position: absolute; bottom: 6px; left: 6px; z-index: 5;
+    background: #10b981; color: #fff; font-size: 9px; font-weight: 800;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px;
+    text-transform: uppercase; display: none; pointer-events: none;
+  }
+  .ilustra-02 .kit-mini-dz.finalized .kit-seal-ok,
+  .ilustra-02 .kit-photo-main.finalized .kit-seal-ok { display: block; }
 </style>
 </head>
 <body>
 
+<!-- ══════ NAV SIDEBAR ══════ -->
+<div class="nav-sidebar" id="navSidebar">
+  <div class="nav-sidebar-header">
+    <h2>10 Fotos ML</h2>
+    <button class="nav-sidebar-close" onclick="toggleNavSidebar()">&#10005;</button>
+  </div>
+
+  <div class="nav-sidebar-section">
+    <div class="nav-sidebar-section-label">Fotos</div>
+    <div class="nav-item" data-panel="p01" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--green)">01</div><div class="nav-item-text"><div class="nav-item-name">Capa</div></div><div class="nav-saved-dot" data-dot="p01"></div></div>
+    <div class="nav-item" data-panel="p02" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--blue)">02</div><div class="nav-item-text"><div class="nav-item-name">Kit</div></div><div class="nav-saved-dot" data-dot="p02"></div></div>
+    <div class="nav-item" data-panel="p05" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--purple)">05</div><div class="nav-item-text"><div class="nav-item-name">Haste</div></div><div class="nav-saved-dot" data-dot="p05"></div></div>
+    <div class="nav-item" data-panel="p06" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--pink)">06</div><div class="nav-item-text"><div class="nav-item-name">Discos</div></div><div class="nav-saved-dot" data-dot="p06"></div></div>
+    <div class="nav-item" data-panel="p09" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--blue)">09</div><div class="nav-item-text"><div class="nav-item-name">Uso Real 1</div></div><div class="nav-saved-dot" data-dot="p09"></div></div>
+    <div class="nav-item" data-panel="p10" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--cyan)">10</div><div class="nav-item-text"><div class="nav-item-name">Uso Real 2</div></div><div class="nav-saved-dot" data-dot="p10"></div></div>
+  </div>
+
+  <div class="nav-sidebar-divider"></div>
+
+  <div class="nav-sidebar-section">
+    <div class="nav-sidebar-section-label">Ilustracoes</div>
+    <div class="nav-item" data-panel="p03" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--red)">03</div><div class="nav-item-text"><div class="nav-item-name">Medidas</div></div><div class="nav-saved-dot" data-dot="p03"></div></div>
+    <div class="nav-item" data-panel="p04" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--cyan)">04</div><div class="nav-item-text"><div class="nav-item-name">Explodida</div></div><div class="nav-saved-dot" data-dot="p04"></div></div>
+    <div class="nav-item" data-panel="p07" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--orange)">07</div><div class="nav-item-text"><div class="nav-item-name">Pesos</div></div><div class="nav-saved-dot" data-dot="p07"></div></div>
+    <div class="nav-item" data-panel="p08" onclick="navegarItem(this)"><div class="nav-item-num" style="background:var(--green)">08</div><div class="nav-item-text"><div class="nav-item-name">Comparativo</div></div><div class="nav-saved-dot" data-dot="p08"></div></div>
+  </div>
+</div>
+
+<div class="page-wrap" id="pageWrap">
+
 <!-- ══════ HEADER ══════ -->
 <div class="header">
-  <svg viewBox="0 0 600 600" width="44" height="44">
+  <button class="hamburger" onclick="toggleNavSidebar()">
+    <span></span><span></span><span></span>
+  </button>
+  <svg viewBox="0 0 600 600" width="40" height="40">
     <circle cx="300" cy="300" r="280" fill="#8B6914"/>
     <circle cx="300" cy="300" r="268" fill="#F5A623"/>
     <circle cx="375" cy="223" r="22" fill="none" stroke="#FFF" stroke-width="5"/>
@@ -1365,27 +1713,162 @@
     <h1>Workbench — 10 Fotos ML</h1>
     <p>Arraste fotos reais · Construa ilustracoes · Exporte 1200x1200</p>
   </div>
-</div>
-
-<!-- ══════ TABS ══════ -->
-<div class="tabs" id="tabs">
-  <div class="tab" data-panel="p01"><div class="tab-num" style="background:var(--green)">01</div>Capa<span class="tab-type foto">Foto</span></div>
-  <div class="tab" data-panel="p02"><div class="tab-num" style="background:var(--blue)">02</div>Kit<span class="tab-type foto">Foto</span></div>
-  <div class="tab" data-panel="p03"><div class="tab-num" style="background:var(--red)">03</div>Medidas<span class="tab-type ilustra">Ilustra</span></div>
-  <div class="tab" data-panel="p04"><div class="tab-num" style="background:var(--cyan)">04</div>Explodida<span class="tab-type ilustra">Ilustra</span></div>
-  <div class="tab" data-panel="p05"><div class="tab-num" style="background:var(--purple)">05</div>Haste<span class="tab-type foto">Foto</span></div>
-  <div class="tab" data-panel="p06"><div class="tab-num" style="background:var(--pink)">06</div>Discos<span class="tab-type foto">Foto</span></div>
-  <div class="tab" data-panel="p07"><div class="tab-num" style="background:var(--orange)">07</div>Pesos<span class="tab-type ilustra">Ilustra</span></div>
-  <div class="tab" data-panel="p08"><div class="tab-num" style="background:var(--green)">08</div>Comparativo<span class="tab-type ilustra">Ilustra</span></div>
-  <div class="tab" data-panel="p09"><div class="tab-num" style="background:var(--blue)">09</div>Uso Real 1<span class="tab-type foto">Foto</span></div>
-  <div class="tab" data-panel="p10"><div class="tab-num" style="background:var(--cyan)">10</div>Uso Real 2<span class="tab-type foto">Foto</span></div>
+  <button class="btn-finalizar" onclick="finalizarTudo()">FINALIZAR TUDO</button>
 </div>
 
 <!-- ══════ PANELS — FOTOS REAIS (drag & drop) ══════ -->
 
-<div class="panel" id="p01"><div class="panel-strip"><span class="panel-strip-num">01</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 01</div><div class="sketch-preview" id="sk01"></div><ul class="checklist"><li>Fundo branco puro RGB 255,255,255</li><li>Mochila montada com haste + placa</li><li>Centralizada ~95% do enquadramento</li><li>Leve inclinacao 15°</li><li>Zero texto, logo ou borda</li><li>1200x1200 JPG</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-export" onclick="exportCanvas('p01')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="dropzone" data-name="foto-01.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-01.jpg</div></div></div></div></div>
+<div class="panel" id="p01"><div class="panel-strip"><span class="panel-strip-num">01</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 01</div><div class="sketch-preview" id="sk01"></div><ul class="checklist"><li>Fundo branco puro RGB 255,255,255</li><li>Mochila montada com haste + placa</li><li>Centralizada ~95% do enquadramento</li><li>Leve inclinacao 15°</li><li>Zero texto, logo ou borda</li><li>1200x1200 JPG</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-salvar" onclick="salvarPainel('p01')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p01')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button><button class="btn-text" onclick="addTextOverlay(this)">T TEXTO</button><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoomDropzone(this,-1)">−</button><span class="zoom-level">100%</span><button class="zoom-btn" onclick="zoomDropzone(this,1)">+</button></div></div><div class="dropzone" data-name="foto-01.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-01.jpg</div></div></div></div></div>
 
-<div class="panel" id="p02"><div class="panel-strip"><span class="panel-strip-num">02</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 02</div><ul class="checklist"><li>Flat lay vista de cima</li><li>Todos os componentes separados</li><li>Legendas em cada item</li><li>Fundo branco ou cinza claro</li><li>1200x1200 JPG</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-export" onclick="exportCanvas('p02')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="dropzone" data-name="foto-02.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-02.jpg</div></div></div></div></div>
+<!-- ══════ PANEL 02 — ILUSTRACAO KIT COMPLETO ══════ -->
+<div class="panel" id="p02">
+  <div class="panel-strip"><span class="panel-strip-num">02</span></div>
+  <div class="workspace">
+    <div class="sidebar">
+      <div class="sidebar-title">Referencia — Ilustracao 02</div>
+      <ul class="checklist">
+        <li>Foto principal do kit (central)</li>
+        <li>Reguladores de Alca</li>
+        <li>2 Placas PS 40cm</li>
+        <li>E.V.A. 8mm</li>
+        <li>Bolsos Laterais</li>
+        <li>Fivela Abdominal</li>
+        <li>VHB 3M — 40cm</li>
+        <li>Haste Aluminio 85cm</li>
+        <li>Guia da Haste</li>
+      </ul>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-toolbar">
+        <span class="badge" style="background:var(--purple);color:#fff">ILUSTRACAO</span>
+        <span class="size">1200 x 1200 · PNG</span>
+        <button class="btn-grid" onclick="toggleGridPanel('p02')"><span>&#9638;</span> Grade</button>
+        <select class="grid-size-select" data-panel="p02" onchange="updateGridPanel('p02',this.value)">
+          <option value="6">6x6 (A-F)</option>
+          <option value="8">8x8 (A-H)</option>
+          <option value="12" selected>12x12 (A-L)</option>
+        </select>
+        <span class="coord-display" data-panel="p02">—</span>
+        <div class="zoom-controls">
+          <span class="zoom-label">Zoom</span>
+          <button class="zoom-btn" onclick="zoom(-1)">&#8722;</button>
+          <span class="zoom-level" id="zoomLevel02">100%</span>
+          <button class="zoom-btn" onclick="zoom(1)">+</button>
+        </div>
+        <button class="btn-salvar" onclick="salvarPainel('p02')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p02')">Exportar PNG</button>
+        <button class="btn-refresh" onclick="reloadKeepTab()">&#8635; ATUALIZAR</button>
+        <button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button>
+        <button class="btn-analyze" onclick="toggleImgAnalysis(this)">&#128269; ANALISAR</button>
+        <button class="btn-kit-load" onclick="loadKitApproved()">&#128193; CARREGAR APROVADAS</button>
+      </div>
+      <div class="canvas-frame">
+        <div class="canvas ilustra-02" id="canvas02" style="transform:scale(1);transform-origin:top left;">
+
+          <!-- GRID OVERLAY -->
+          <svg class="grid-overlay" data-panel="p02" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"></svg>
+
+          <!-- HEADER -->
+          <div class="kit-header">
+            <div>
+              <h1>Conhe&ccedil;a todos os itens que garantem a qualidade da <span>Mochila Viva</span></h1>
+            </div>
+          </div>
+
+          <!-- SVG LINHAS CONECTORAS -->
+          <svg class="kit-lines" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
+            <!-- E1 → Centro -->
+            <line x1="300" y1="225" x2="330" y2="394" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="300" cy="225" r="4" fill="#F5A623"/><circle cx="330" cy="394" r="4" fill="#F5A623"/>
+            <!-- E2 → Centro -->
+            <line x1="300" y1="460" x2="330" y2="478" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="300" cy="460" r="4" fill="#F5A623"/><circle cx="330" cy="478" r="4" fill="#F5A623"/>
+            <!-- E3 → Centro -->
+            <line x1="300" y1="695" x2="330" y2="562" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="300" cy="695" r="4" fill="#F5A623"/><circle cx="330" cy="562" r="4" fill="#F5A623"/>
+            <!-- E4 → Centro -->
+            <line x1="300" y1="930" x2="330" y2="646" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="300" cy="930" r="4" fill="#F5A623"/><circle cx="330" cy="646" r="4" fill="#F5A623"/>
+            <!-- D1 → Centro -->
+            <line x1="900" y1="225" x2="870" y2="394" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="900" cy="225" r="4" fill="#F5A623"/><circle cx="870" cy="394" r="4" fill="#F5A623"/>
+            <!-- D2 → Centro -->
+            <line x1="900" y1="460" x2="870" y2="478" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="900" cy="460" r="4" fill="#F5A623"/><circle cx="870" cy="478" r="4" fill="#F5A623"/>
+            <!-- D3 → Centro -->
+            <line x1="900" y1="695" x2="870" y2="562" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="900" cy="695" r="4" fill="#F5A623"/><circle cx="870" cy="562" r="4" fill="#F5A623"/>
+            <!-- D4 → Centro -->
+            <line x1="900" y1="930" x2="870" y2="646" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+            <circle cx="900" cy="930" r="4" fill="#F5A623"/><circle cx="870" cy="646" r="4" fill="#F5A623"/>
+          </svg>
+
+          <!-- COLUNA ESQUERDA — 4 callouts -->
+          <div class="kit-callout" style="left:30px;top:150px;">
+            <div class="kit-mini-dz" data-kit-slot="e1"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>Reguladores de Alca</strong><small>Ajuste de ombro</small></div>
+          </div>
+          <div class="kit-callout" style="left:30px;top:385px;">
+            <div class="kit-mini-dz" data-kit-slot="e2"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>2 Placas PS 40cm</strong><small>Dupla face</small></div>
+          </div>
+          <div class="kit-callout" style="left:30px;top:620px;">
+            <div class="kit-mini-dz" data-kit-slot="e3"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>E.V.A. 8mm</strong><small>Amortecimento</small></div>
+          </div>
+          <div class="kit-callout" style="left:30px;top:855px;">
+            <div class="kit-mini-dz" data-kit-slot="e4"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>Bolsos Laterais</strong><small>Acesso rapido</small></div>
+          </div>
+
+          <!-- FOTO PRINCIPAL CENTRAL -->
+          <div class="kit-photo-main" data-kit-slot="main">
+            <button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button>
+            <button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button>
+            <span class="kit-seal-ok">OK</span>
+            <span class="kit-mini-dz-placeholder">&#128247;</span>
+            <span class="kit-dz-hint">Carregar foto principal</span>
+          </div>
+
+          <!-- COLUNA DIREITA — 4 callouts -->
+          <div class="kit-callout" style="left:900px;top:150px;">
+            <div class="kit-mini-dz" data-kit-slot="d1"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>Fivela Abdominal</strong><small>Regulagem P – GG</small></div>
+          </div>
+          <div class="kit-callout" style="left:900px;top:385px;">
+            <div class="kit-mini-dz" data-kit-slot="d2"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>VHB 3M — 40cm</strong><small>4–8x mais adesao</small></div>
+          </div>
+          <div class="kit-callout" style="left:900px;top:620px;">
+            <div class="kit-mini-dz" data-kit-slot="d3"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>Haste Aluminio 85cm</strong><small>220g · leve e rigida</small></div>
+          </div>
+          <div class="kit-callout" style="left:900px;top:855px;">
+            <div class="kit-mini-dz" data-kit-slot="d4"><button class="kit-btn-done" onclick="toggleKitDone(this)" title="Finalizar foto">&#10003;</button><button class="kit-btn-remove" onclick="removeKitPhoto(this)">&times;</button><span class="kit-seal-ok">OK</span><span class="kit-mini-dz-placeholder">&#128247;</span><span class="kit-dz-hint">Carregar foto</span></div>
+            <div class="kit-label"><strong>Guia da Haste</strong><small>Encaixe preciso</small></div>
+          </div>
+
+          <!-- FOOTER -->
+          <div class="kit-footer">
+            <span class="kit-footer-spec">Aluminio 85cm</span>
+            <span class="kit-footer-dot"></span>
+            <span class="kit-footer-spec">E.V.A. 8mm</span>
+            <span class="kit-footer-dot"></span>
+            <span class="kit-footer-spec">VHB 3M 40cm</span>
+            <span class="kit-footer-dot"></span>
+            <span class="kit-footer-spec">Fivela P–GG</span>
+            <span class="kit-footer-dot"></span>
+            <span class="kit-footer-spec">Bolsos Laterais</span>
+            <span class="kit-footer-dot"></span>
+            <span class="kit-footer-spec">Guia da Haste</span>
+            <span class="kit-footer-dot"></span>
+            <span class="kit-footer-spec">8 itens · Kit Completo</span>
+          </div>
+
+        </div><!-- /canvas -->
+      </div><!-- /canvas-frame -->
+    </div><!-- /canvas-wrap -->
+  </div><!-- /workspace -->
+</div><!-- /panel 02 -->
 
 <!-- ══════ PANEL 03 — ILUSTRACAO GUIA DE MEDIDAS ══════ -->
 <div class="panel" id="p03">
@@ -1428,7 +1911,7 @@
           <span class="zoom-level" id="zoomLevel">100%</span>
           <button class="zoom-btn" onclick="zoom(1)">+</button>
         </div>
-        <button class="btn-export" onclick="exportCanvas('p03')">Exportar PNG</button>
+        <button class="btn-salvar" onclick="salvarPainel('p03')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p03')">Exportar PNG</button>
         <button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button>
       </div>
       <div class="canvas-frame">
@@ -1447,12 +1930,12 @@
             </svg>
             <div>
               <h1>Guia de Medidas <span>Cinta Abdominal</span></h1>
-              <div class="i-norma">📐 Medidas baseadas na norma brasileira ABNT NBR 16060</div>
             </div>
           </div>
 
           <!-- Box exclusivo + chips -->
           <div class="i-exclusivo">
+            <div class="i-norma">📐 Medidas baseadas na norma brasileira ABNT NBR 16060</div>
             <div class="i-exclusivo-top">
               <h3>TAMANHO UNICO COM REGULAGEM</h3>
               <span class="i-chip-ex">📐 Alça 130cm</span>
@@ -1615,7 +2098,7 @@
         <span class="zoom-level" id="zoomLevel04">100%</span>
         <button class="zoom-btn" onclick="zoom(1)">+</button>
       </div>
-      <button class="btn-export" onclick="exportCanvas('p04')">Exportar PNG</button>
+      <button class="btn-salvar" onclick="salvarPainel('p04')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p04')">Exportar PNG</button>
       <button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button>
       <button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button>
       <button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button>
@@ -1627,9 +2110,8 @@
         <svg class="grid-overlay" data-panel="p04" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"></svg>
 
         <!-- HEADER -->
-        <div style="text-align:center;padding:60px 40px 30px;">
-          <h1 style="font-size:38px;font-weight:900;color:#0E1117;line-height:1.15;margin-bottom:8px;">Estrutura do Costado</h1>
-          <p style="font-size:16px;color:#94A3B8;font-style:italic;">Construcao interna do costado da Mochila Viva · Materiais reforcados</p>
+        <div style="background:linear-gradient(135deg,#3B2312,#5C3A1E);height:130px;display:flex;align-items:center;justify-content:center;padding:0 40px;font-family:Futura,Arial,sans-serif;">
+          <h1 style="font-size:30px;font-weight:900;color:#fff;line-height:1.2;text-align:center;margin:0;">Estrutura do Costado <span style="color:#F5A623;">Mochila Viva</span></h1>
         </div>
 
         <!-- DIAGRAMA SVG -->
@@ -1763,20 +2245,20 @@
 </div><!-- /panel 04 -->
 
 <!-- ══════ PANELS 05, 06 — FOTOS REAIS ══════ -->
-<div class="panel" id="p05"><div class="panel-strip"><span class="panel-strip-num">05</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 05</div><ul class="checklist"><li>Haste aluminio desmontada e montada</li><li>Detalhe macro fita VHB 3M</li><li>Angulo que mostre espessura</li><li>Fundo branco ou cinza claro</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-export" onclick="exportCanvas('p05')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="dropzone" data-name="foto-05.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-05.jpg</div></div></div></div></div>
+<div class="panel" id="p05"><div class="panel-strip"><span class="panel-strip-num">05</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 05</div><ul class="checklist"><li>Haste aluminio desmontada e montada</li><li>Detalhe macro fita VHB 3M</li><li>Angulo que mostre espessura</li><li>Fundo branco ou cinza claro</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-salvar" onclick="salvarPainel('p05')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p05')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button><button class="btn-text" onclick="addTextOverlay(this)">T TEXTO</button><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoomDropzone(this,-1)">−</button><span class="zoom-level">100%</span><button class="zoom-btn" onclick="zoomDropzone(this,1)">+</button></div></div><div class="dropzone" data-name="foto-05.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-05.jpg</div></div></div></div></div>
 
-<div class="panel" id="p06"><div class="panel-strip"><span class="panel-strip-num">06</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 06</div><ul class="checklist"><li>Discos/placas PS disponiveis</li><li>Variedade de artes impressas</li><li>Qualidade de impressao visivel</li><li>Flat lay ou leque sobre fundo limpo</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-export" onclick="exportCanvas('p06')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="dropzone" data-name="foto-06.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-06.jpg</div></div></div></div></div>
+<div class="panel" id="p06"><div class="panel-strip"><span class="panel-strip-num">06</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 06</div><ul class="checklist"><li>Discos/placas PS disponiveis</li><li>Variedade de artes impressas</li><li>Qualidade de impressao visivel</li><li>Flat lay ou leque sobre fundo limpo</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-salvar" onclick="salvarPainel('p06')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p06')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button><button class="btn-text" onclick="addTextOverlay(this)">T TEXTO</button><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoomDropzone(this,-1)">−</button><span class="zoom-level">100%</span><button class="zoom-btn" onclick="zoomDropzone(this,1)">+</button></div></div><div class="dropzone" data-name="foto-06.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-06.jpg</div></div></div></div></div>
 
 <!-- ══════ PANEL 07 — ILUSTRACAO PESOS (placeholder) ══════ -->
-<div class="panel" id="p07"><div class="panel-strip"><span class="panel-strip-num">07</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Ilustracao 07</div><ul class="checklist"><li>Peso de cada componente</li><li>Peso total montado: 610g</li><li>Comparativo vs concorrentes ~850g</li><li>Barra visual de comparacao</li></ul></div><div class="canvas-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--purple);color:#fff">ILUSTRACAO</span><span class="size">1200 x 1200 · PNG</span><button class="btn-grid" onclick="toggleGridPanel('p07')"><span>▦</span> Grade</button><select class="grid-size-select" data-panel="p07" onchange="updateGridPanel('p07',this.value)"><option value="6">6x6 (A-F)</option><option value="8">8x8 (A-H)</option><option value="12" selected>12x12 (A-L)</option></select><span class="coord-display" data-panel="p07">—</span><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoom(-1)">−</button><span class="zoom-level" id="zoomLevel07">100%</span><button class="zoom-btn" onclick="zoom(1)">+</button></div><button class="btn-export" onclick="exportCanvas('p07')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="canvas-frame"><div class="canvas" id="canvas07" style="display:flex;align-items:center;justify-content:center;transform:scale(1);transform-origin:top left;"><svg class="grid-overlay" data-panel="p07" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"></svg><div style="text-align:center;color:#9ca3af;"><div style="font-size:48px;margin-bottom:16px;">⚖️</div><div style="font-size:20px;font-weight:700;">Em construcao</div><div style="font-size:14px;margin-top:8px;">Ilustracao 07 — Pesos</div></div></div></div></div></div></div>
+<div class="panel" id="p07"><div class="panel-strip"><span class="panel-strip-num">07</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Ilustracao 07</div><ul class="checklist"><li>Peso de cada componente</li><li>Peso total montado: 610g</li><li>Comparativo vs concorrentes ~850g</li><li>Barra visual de comparacao</li></ul></div><div class="canvas-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--purple);color:#fff">ILUSTRACAO</span><span class="size">1200 x 1200 · PNG</span><button class="btn-grid" onclick="toggleGridPanel('p07')"><span>▦</span> Grade</button><select class="grid-size-select" data-panel="p07" onchange="updateGridPanel('p07',this.value)"><option value="6">6x6 (A-F)</option><option value="8">8x8 (A-H)</option><option value="12" selected>12x12 (A-L)</option></select><span class="coord-display" data-panel="p07">—</span><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoom(-1)">−</button><span class="zoom-level" id="zoomLevel07">100%</span><button class="zoom-btn" onclick="zoom(1)">+</button></div><button class="btn-salvar" onclick="salvarPainel('p07')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p07')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="canvas-frame"><div class="canvas" id="canvas07" style="transform:scale(1);transform-origin:top left;"><svg class="grid-overlay" data-panel="p07" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"></svg><div style="background:linear-gradient(135deg,#3B2312,#5C3A1E);height:130px;display:flex;align-items:center;justify-content:center;padding:0 40px;font-family:Futura,Arial,sans-serif;"><h1 style="font-size:30px;font-weight:900;color:#fff;line-height:1.2;text-align:center;margin:0;">Peso de cada Componente da <span style="color:#F5A623;">Mochila Viva</span></h1></div><div style="display:flex;align-items:center;justify-content:center;height:1070px;"><div style="text-align:center;color:#9ca3af;"><div style="font-size:48px;margin-bottom:16px;">⚖️</div><div style="font-size:20px;font-weight:700;">Em construcao</div><div style="font-size:14px;margin-top:8px;">Ilustracao 07 — Pesos</div></div></div></div></div></div></div></div>
 
 <!-- ══════ PANEL 08 — ILUSTRACAO COMPARATIVO (placeholder) ══════ -->
-<div class="panel" id="p08"><div class="panel-strip"><span class="panel-strip-num">08</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Ilustracao 08</div><ul class="checklist"><li>Tabela Viva vs Genericas</li><li>7 criterios comparados</li><li>Sem citar marca concorrente</li><li>Fonte grande p/ celular</li></ul></div><div class="canvas-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--purple);color:#fff">ILUSTRACAO</span><span class="size">1200 x 1200 · PNG</span><button class="btn-grid" onclick="toggleGridPanel('p08')"><span>▦</span> Grade</button><select class="grid-size-select" data-panel="p08" onchange="updateGridPanel('p08',this.value)"><option value="6">6x6 (A-F)</option><option value="8">8x8 (A-H)</option><option value="12" selected>12x12 (A-L)</option></select><span class="coord-display" data-panel="p08">—</span><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoom(-1)">−</button><span class="zoom-level" id="zoomLevel08">100%</span><button class="zoom-btn" onclick="zoom(1)">+</button></div><button class="btn-export" onclick="exportCanvas('p08')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="canvas-frame"><div class="canvas" id="canvas08" style="display:flex;align-items:center;justify-content:center;transform:scale(1);transform-origin:top left;"><svg class="grid-overlay" data-panel="p08" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"></svg><div style="text-align:center;color:#9ca3af;"><div style="font-size:48px;margin-bottom:16px;">📊</div><div style="font-size:20px;font-weight:700;">Em construcao</div><div style="font-size:14px;margin-top:8px;">Ilustracao 08 — Comparativo</div></div></div></div></div></div></div>
+<div class="panel" id="p08"><div class="panel-strip"><span class="panel-strip-num">08</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Ilustracao 08</div><ul class="checklist"><li>Tabela Viva vs Genericas</li><li>7 criterios comparados</li><li>Sem citar marca concorrente</li><li>Fonte grande p/ celular</li></ul></div><div class="canvas-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--purple);color:#fff">ILUSTRACAO</span><span class="size">1200 x 1200 · PNG</span><button class="btn-grid" onclick="toggleGridPanel('p08')"><span>▦</span> Grade</button><select class="grid-size-select" data-panel="p08" onchange="updateGridPanel('p08',this.value)"><option value="6">6x6 (A-F)</option><option value="8">8x8 (A-H)</option><option value="12" selected>12x12 (A-L)</option></select><span class="coord-display" data-panel="p08">—</span><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoom(-1)">−</button><span class="zoom-level" id="zoomLevel08">100%</span><button class="zoom-btn" onclick="zoom(1)">+</button></div><button class="btn-salvar" onclick="salvarPainel('p08')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p08')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="canvas-frame"><div class="canvas" id="canvas08" style="transform:scale(1);transform-origin:top left;"><svg class="grid-overlay" data-panel="p08" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg"></svg><div style="background:linear-gradient(135deg,#3B2312,#5C3A1E);height:130px;display:flex;align-items:center;justify-content:center;padding:0 40px;font-family:Futura,Arial,sans-serif;"><h1 style="font-size:30px;font-weight:900;color:#fff;line-height:1.2;text-align:center;margin:0;">Comparativo <span style="color:#F5A623;">Mochila Viva</span> vs Genéricas</h1></div><div style="display:flex;align-items:center;justify-content:center;height:1070px;"><div style="text-align:center;color:#9ca3af;"><div style="font-size:48px;margin-bottom:16px;">📊</div><div style="font-size:20px;font-weight:700;">Em construcao</div><div style="font-size:14px;margin-top:8px;">Ilustracao 08 — Comparativo</div></div></div></div></div></div></div></div>
 
 <!-- ══════ PANELS 09, 10 — FOTOS REAIS ══════ -->
-<div class="panel" id="p09"><div class="panel-strip"><span class="panel-strip-num">09</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 09</div><ul class="checklist"><li>1-2 promotores em calcadao/evento</li><li>Publico ao redor</li><li>Placa acima das cabecas</li><li>Iluminacao natural</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-export" onclick="exportCanvas('p09')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="dropzone" data-name="foto-09.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-09.jpg</div></div></div></div></div>
+<div class="panel" id="p09"><div class="panel-strip"><span class="panel-strip-num">09</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 09</div><ul class="checklist"><li>1-2 promotores em calcadao/evento</li><li>Publico ao redor</li><li>Placa acima das cabecas</li><li>Iluminacao natural</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-salvar" onclick="salvarPainel('p09')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p09')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button><button class="btn-text" onclick="addTextOverlay(this)">T TEXTO</button><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoomDropzone(this,-1)">−</button><span class="zoom-level">100%</span><button class="zoom-btn" onclick="zoomDropzone(this,1)">+</button></div></div><div class="dropzone" data-name="foto-09.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-09.jpg</div></div></div></div></div>
 
-<div class="panel" id="p10"><div class="panel-strip"><span class="panel-strip-num">10</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 10</div><ul class="checklist"><li>Contexto diferente da foto 09</li><li>Promotor em ambiente externo</li><li>Placa visivel e legivel</li><li>Cenario urbano ou comercial</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-export" onclick="exportCanvas('p10')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button></div><div class="dropzone" data-name="foto-10.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-10.jpg</div></div></div></div></div>
+<div class="panel" id="p10"><div class="panel-strip"><span class="panel-strip-num">10</span></div><div class="workspace"><div class="sidebar"><div class="sidebar-title">Referencia — Foto 10</div><ul class="checklist"><li>Contexto diferente da foto 09</li><li>Promotor em ambiente externo</li><li>Placa visivel e legivel</li><li>Cenario urbano ou comercial</li></ul></div><div class="dropzone-wrap"><div class="canvas-toolbar"><span class="badge" style="background:var(--green);color:#fff">FOTO REAL</span><span class="size">1200 x 1200 · JPG</span><button class="btn-salvar" onclick="salvarPainel('p10')">SALVAR</button><button class="btn-export" onclick="exportCanvas('p10')">Exportar PNG</button><button class="btn-refresh" onclick="reloadKeepTab()">↻ ATUALIZAR</button><button class="btn-inspect" onclick="toggleInspect()"><span class="btn-inspect-dot"></span> INSPETOR</button><button class="btn-analyze" onclick="toggleImgAnalysis(this)">🔍 ANALISAR</button><button class="btn-text" onclick="addTextOverlay(this)">T TEXTO</button><div class="zoom-controls"><span class="zoom-label">Zoom</span><button class="zoom-btn" onclick="zoomDropzone(this,-1)">−</button><span class="zoom-level">100%</span><button class="zoom-btn" onclick="zoomDropzone(this,1)">+</button></div></div><div class="dropzone" data-name="foto-10.jpg"><div class="dropzone-icon">📷</div><div class="dropzone-text">Arraste a foto aqui</div><div class="dropzone-hint">ou clique para selecionar</div><div class="dropzone-filename">foto-10.jpg</div></div></div></div></div>
 
 
 <!-- ══════ MODAL ANALISAR IMAGEM ══════ -->
@@ -1814,27 +2296,32 @@
 </div>
 
 <script>
-// ══════ TABS ══════
+// ══════ NAV SIDEBAR ══════
+function toggleNavSidebar() {
+  document.getElementById('navSidebar').classList.toggle('active');
+  document.getElementById('pageWrap').classList.toggle('shifted');
+}
+
+function navegarItem(item) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  item.classList.add('active');
+  document.getElementById(item.dataset.panel).classList.add('active');
+  sessionStorage.setItem('activeTab', item.dataset.panel);
+}
+
 // Restaurar aba salva (default p03)
 (function() {
   const saved = sessionStorage.getItem('activeTab') || 'p03';
-  const tab = document.querySelector('.tab[data-panel="' + saved + '"]');
-  if (tab) {
-    tab.classList.add('active');
+  const item = document.querySelector('.nav-item[data-panel="' + saved + '"]');
+  if (item) {
+    item.classList.add('active');
     document.getElementById(saved).classList.add('active');
   }
 })();
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(tab.dataset.panel).classList.add('active');
-    sessionStorage.setItem('activeTab', tab.dataset.panel);
-  });
-});
+
 function reloadKeepTab() {
-  const active = document.querySelector('.tab.active');
+  const active = document.querySelector('.nav-item.active');
   if (active) sessionStorage.setItem('activeTab', active.dataset.panel);
   location.reload();
 }
@@ -2126,7 +2613,7 @@ document.addEventListener('click', function(e) {
 function getTarget(e) {
   let el = e.target;
   // Skip inspector UI, grid overlay, highlight elements, tabs, header
-  if (el.closest('.inspector') || el.closest('.ctx-menu') || el.closest('.tabs') || el.closest('.header')) return null;
+  if (el.closest('.inspector') || el.closest('.ctx-menu') || el.closest('.nav-sidebar') || el.closest('.header')) return null;
   while (el && (el.classList.contains('inspect-highlight') || el.classList.contains('inspect-tag') || el.closest('.grid-overlay'))) {
     el.style.pointerEvents = 'none';
     el = document.elementFromPoint(e.clientX, e.clientY);
@@ -2592,6 +3079,20 @@ function zoom(dir) {
   });
 }
 
+// ══════ ZOOM DROPZONE (fotos) ══════
+function zoomDropzone(btn, dir) {
+  const wrap = btn.closest('.dropzone-wrap');
+  if (!wrap) return;
+  const dz = wrap.querySelector('.dropzone');
+  if (!dz) return;
+  const levelEl = btn.closest('.zoom-controls').querySelector('.zoom-level');
+  let current = parseInt(levelEl.textContent) || 100;
+  current = Math.max(50, Math.min(200, current + dir * 25));
+  levelEl.textContent = current + '%';
+  dz.style.transform = 'scale(' + (current/100) + ')';
+  dz.style.transformOrigin = 'top left';
+}
+
 // ══════ ANALISAR IMAGEM ══════
 function toggleImgAnalysis(btn) {
   // Encontrar o painel ativo
@@ -2647,9 +3148,14 @@ function analyzeImage(img) {
   const is1200 = (w === 1200 && h === 1200);
   const isSquare = Math.abs(aspectRatio - 1) < 0.01;
   const format = guessFormat(img.src);
-  const dominantColors = getDominantColors(ctx, w, h, 6);
-  const bgWhite = checkWhiteBackground(ctx, w, h);
-  const centering = checkCentering(ctx, w, h);
+
+  // Check for tainted canvas (CORS/file:// issue)
+  let canReadPixels = true;
+  try { ctx.getImageData(0, 0, 1, 1); } catch(e) { canReadPixels = false; }
+
+  const dominantColors = canReadPixels ? getDominantColors(ctx, w, h, 6) : [];
+  const bgWhite = canReadPixels ? checkWhiteBackground(ctx, w, h) : { isWhite: false, pct: 0 };
+  const centering = canReadPixels ? checkCentering(ctx, w, h) : { centered: false, offsetX: 0, offsetY: 0 };
 
   // Status helpers
   function st(ok) { return ok ? 'ok' : 'fail'; }
@@ -2935,35 +3441,699 @@ function exportCanvas(panelId) {
       return;
     }
 
-    // FOTO — exportar imagem em 1200x1200
-    const c = document.createElement('canvas');
-    c.width = 1200; c.height = 1200;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, 1200, 1200);
+    const hasText = dropzone.querySelectorAll('.text-overlay').length > 0;
 
-    // Fit imagem centralizada no 1200x1200
-    const iw = img.naturalWidth;
-    const ih = img.naturalHeight;
-    const scale = Math.min(1200 / iw, 1200 / ih);
-    const sw = iw * scale;
-    const sh = ih * scale;
-    const sx = (1200 - sw) / 2;
-    const sy = (1200 - sh) / 2;
-    ctx.drawImage(img, sx, sy, sw, sh);
+    if (hasText) {
+      // FOTO + TEXTO — usar html2canvas para capturar overlays
+      const origTransform = dropzone.style.transform;
+      dropzone.style.transform = 'none';
+      dropzone.querySelectorAll('.text-overlay').forEach(t => t.classList.remove('selected'));
+      hideTextToolbar();
 
-    const link = document.createElement('a');
-    link.download = 'foto-' + panelId.replace('p','') + '.png';
-    link.href = c.toDataURL('image/png');
-    link.click();
+      html2canvas(dropzone, {
+        width: 1200, height: 1200, scale: 1,
+        useCORS: true, backgroundColor: '#ffffff'
+      }).then(function(c) {
+        dropzone.style.transform = origTransform;
+        if (btn) { btn.textContent = origText; btn.disabled = false; }
+        const link = document.createElement('a');
+        link.download = 'foto-' + panelId.replace('p','') + '.png';
+        link.href = c.toDataURL('image/png');
+        link.click();
+      }).catch(function(err) {
+        dropzone.style.transform = origTransform;
+        if (btn) { btn.textContent = origText; btn.disabled = false; }
+        alert('Erro ao exportar: ' + err.message);
+      });
+    } else {
+      // FOTO SEM TEXTO — exportacao nativa via canvas
+      const c = document.createElement('canvas');
+      c.width = 1200; c.height = 1200;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 1200, 1200);
 
-    if (btn) { btn.textContent = origText; btn.disabled = false; }
+      const iw = img.naturalWidth;
+      const ih = img.naturalHeight;
+      const scale = Math.min(1200 / iw, 1200 / ih);
+      const sw = iw * scale;
+      const sh = ih * scale;
+      const sx = (1200 - sw) / 2;
+      const sy = (1200 - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh);
+
+      const link = document.createElement('a');
+      link.download = 'foto-' + panelId.replace('p','') + '.png';
+      link.href = c.toDataURL('image/png');
+      link.click();
+
+      if (btn) { btn.textContent = origText; btn.disabled = false; }
+    }
   } else {
     if (btn) { btn.textContent = origText; btn.disabled = false; }
     alert('Nada para exportar nesta aba.');
   }
 }
+
+/* ══════ TEXT OVERLAY — legendas e titulos sobre fotos ══════ */
+
+var activeTextToolbar = null;
+
+function addTextOverlay(btn) {
+  var wrap = btn.closest('.dropzone-wrap');
+  var dz = wrap.querySelector('.dropzone');
+  if (!dz || !dz.querySelector('img')) {
+    alert('Carregue uma foto primeiro.');
+    return;
+  }
+
+  var el = document.createElement('div');
+  el.className = 'text-overlay';
+  el.contentEditable = false;
+  el.textContent = 'Legenda';
+  el.style.left = '50%';
+  el.style.bottom = '12%';
+  el.style.transform = 'translateX(-50%)';
+  dz.appendChild(el);
+
+  makeTextDraggable(el);
+
+  el.addEventListener('dblclick', function(e) {
+    e.stopPropagation();
+    el.contentEditable = true;
+    el.classList.add('editing');
+    el.focus();
+    var sel = window.getSelection();
+    sel.selectAllChildren(el);
+  });
+
+  el.addEventListener('blur', function() {
+    el.contentEditable = false;
+    el.classList.remove('editing');
+    if (!el.textContent.trim()) el.textContent = 'Legenda';
+  });
+
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (el.contentEditable === 'true') return;
+    dz.querySelectorAll('.text-overlay').forEach(function(t) { t.classList.remove('selected'); });
+    el.classList.add('selected');
+    showTextToolbar(el);
+  });
+}
+
+function makeTextDraggable(el) {
+  var startX, startY, origLeft, origTop, dragging = false;
+
+  el.addEventListener('mousedown', function(e) {
+    if (el.contentEditable === 'true') return;
+    e.preventDefault();
+    e.stopPropagation();
+    dragging = true;
+
+    // Reset transform so positioning is absolute left/top
+    el.style.transform = 'none';
+    var rect = el.getBoundingClientRect();
+    var dzRect = el.parentElement.getBoundingClientRect();
+    origLeft = rect.left - dzRect.left;
+    origTop = rect.top - dzRect.top;
+    el.style.left = origLeft + 'px';
+    el.style.top = origTop + 'px';
+    el.style.bottom = 'auto';
+
+    startX = e.clientX;
+    startY = e.clientY;
+
+    function onMove(ev) {
+      if (!dragging) return;
+      var dx = ev.clientX - startX;
+      var dy = ev.clientY - startY;
+      var newLeft = origLeft + dx;
+      var newTop = origTop + dy;
+
+      // Limitar dentro da dropzone
+      var dzW = el.parentElement.clientWidth;
+      var dzH = el.parentElement.clientHeight;
+      var elW = el.offsetWidth;
+      var elH = el.offsetHeight;
+      newLeft = Math.max(0, Math.min(newLeft, dzW - elW));
+      newTop = Math.max(0, Math.min(newTop, dzH - elH));
+
+      el.style.left = newLeft + 'px';
+      el.style.top = newTop + 'px';
+    }
+
+    function onUp() {
+      dragging = false;
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      if (activeTextToolbar) showTextToolbar(el);
+    }
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+}
+
+function showTextToolbar(textEl) {
+  hideTextToolbar();
+
+  var tb = document.createElement('div');
+  tb.className = 'text-toolbar';
+
+  // Font size
+  var sizeInput = document.createElement('input');
+  sizeInput.type = 'number';
+  sizeInput.min = 10;
+  sizeInput.max = 120;
+  sizeInput.value = parseInt(window.getComputedStyle(textEl).fontSize) || 32;
+  sizeInput.title = 'Tamanho (px)';
+  sizeInput.addEventListener('input', function() {
+    textEl.style.fontSize = this.value + 'px';
+  });
+  tb.appendChild(sizeInput);
+
+  // Text color
+  var colorInput = document.createElement('input');
+  colorInput.type = 'color';
+  colorInput.value = rgbToHex(window.getComputedStyle(textEl).color);
+  colorInput.title = 'Cor do texto';
+  colorInput.addEventListener('input', function() {
+    textEl.style.color = this.value;
+  });
+  tb.appendChild(colorInput);
+
+  // Background color
+  var bgInput = document.createElement('input');
+  bgInput.type = 'color';
+  bgInput.value = '#000000';
+  bgInput.title = 'Cor do fundo';
+  bgInput.addEventListener('input', function() {
+    textEl.style.background = this.value + '80'; // 50% opacity
+  });
+  tb.appendChild(bgInput);
+
+  // Bold toggle
+  var boldBtn = document.createElement('button');
+  boldBtn.textContent = 'B';
+  boldBtn.style.fontWeight = '900';
+  boldBtn.title = 'Negrito';
+  boldBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var fw = window.getComputedStyle(textEl).fontWeight;
+    textEl.style.fontWeight = (fw === '700' || fw === 'bold') ? '400' : '700';
+  });
+  tb.appendChild(boldBtn);
+
+  // No background button
+  var noBgBtn = document.createElement('button');
+  noBgBtn.textContent = 'sem fundo';
+  noBgBtn.title = 'Remover fundo';
+  noBgBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    textEl.style.background = 'transparent';
+  });
+  tb.appendChild(noBgBtn);
+
+  // Delete button
+  var delBtn = document.createElement('button');
+  delBtn.className = 'btn-del';
+  delBtn.innerHTML = '&#128465;';
+  delBtn.title = 'Remover texto';
+  delBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    removeTextOverlay(textEl);
+  });
+  tb.appendChild(delBtn);
+
+  textEl.appendChild(tb);
+  activeTextToolbar = tb;
+}
+
+function hideTextToolbar() {
+  if (activeTextToolbar) {
+    activeTextToolbar.remove();
+    activeTextToolbar = null;
+  }
+  document.querySelectorAll('.text-overlay.selected').forEach(function(t) {
+    t.classList.remove('selected');
+  });
+}
+
+function removeTextOverlay(textEl) {
+  hideTextToolbar();
+  textEl.remove();
+}
+
+function rgbToHex(rgb) {
+  if (rgb.startsWith('#')) return rgb;
+  var parts = rgb.match(/\d+/g);
+  if (!parts || parts.length < 3) return '#ffffff';
+  return '#' + parts.slice(0, 3).map(function(x) {
+    return parseInt(x).toString(16).padStart(2, '0');
+  }).join('');
+}
+
+// Fechar toolbar ao clicar fora dos textos
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.text-overlay') && !e.target.closest('.text-toolbar')) {
+    hideTextToolbar();
+  }
+});
+
+// ══════ KIT DROPZONES (p02) ══════
+function initKitDropzones() {
+  var dzs = document.querySelectorAll('#canvas02 .kit-mini-dz, #canvas02 .kit-photo-main');
+  dzs.forEach(function(dz) {
+    dz.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      dz.style.borderColor = '#d4941e';
+      dz.style.background = 'rgba(245,166,35,0.12)';
+    });
+    dz.addEventListener('dragleave', function() {
+      dz.style.borderColor = '#F5A623';
+      dz.style.background = '#fefcf7';
+    });
+    dz.addEventListener('drop', function(e) {
+      e.preventDefault();
+      dz.style.borderColor = '#F5A623';
+      dz.style.background = '#fefcf7';
+      var file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        loadImageIntoKitDz(dz, file);
+      }
+    });
+    dz.addEventListener('click', function() {
+      if (dz.classList.contains('has-image')) return;
+      var inp = document.createElement('input');
+      inp.type = 'file';
+      inp.accept = 'image/*';
+      inp.onchange = function() {
+        if (inp.files[0]) loadImageIntoKitDz(dz, inp.files[0]);
+      };
+      inp.click();
+    });
+  });
+}
+
+function loadImageIntoKitDz(dz, file) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    // Remove placeholder
+    var ph = dz.querySelector('.kit-mini-dz-placeholder');
+    if (ph) ph.remove();
+    // Remove any existing image
+    var old = dz.querySelector('img');
+    if (old) old.remove();
+    var img = document.createElement('img');
+    img.src = e.target.result;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    if (!dz.classList.contains('kit-photo-main')) {
+      img.style.position = 'absolute';
+      img.style.top = '0';
+      img.style.left = '0';
+    }
+    dz.appendChild(img);
+    dz.classList.add('has-image');
+    dz.style.borderStyle = 'solid';
+    // Mark checklist item as done
+    markKitChecklist(dz);
+    // Salvar no localStorage (comprimido)
+    var slot = dz.dataset.kitSlot;
+    if (slot) compressAndSaveKit(slot, e.target.result, dz.classList.contains('kit-photo-main'));
+  };
+  reader.readAsDataURL(file);
+}
+
+// Comprimir imagem antes de salvar no localStorage
+function compressAndSaveKit(slot, dataUrl, isMain) {
+  var maxW = isMain ? 800 : 400;
+  var maxH = isMain ? 700 : 270;
+  var tmpImg = new Image();
+  tmpImg.onload = function() {
+    var w = tmpImg.width, h = tmpImg.height;
+    if (w > maxW) { h = h * maxW / w; w = maxW; }
+    if (h > maxH) { w = w * maxH / h; h = maxH; }
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(tmpImg, 0, 0, w, h);
+    var compressed = c.toDataURL('image/jpeg', 0.7);
+    try { localStorage.setItem('kit_' + slot, compressed); } catch(err) {
+      console.warn('Kit p02: localStorage cheio, slot ' + slot);
+    }
+  };
+  tmpImg.src = dataUrl;
+}
+
+// Restaurar foto de dataURL salvo (sem File)
+function restoreKitPhoto(dz, dataUrl) {
+  var ph = dz.querySelector('.kit-mini-dz-placeholder');
+  if (ph) ph.remove();
+  var hint = dz.querySelector('.kit-dz-hint');
+  if (hint) hint.remove();
+  var old = dz.querySelector('img');
+  if (old) old.remove();
+  var img = document.createElement('img');
+  img.src = dataUrl;
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  if (!dz.classList.contains('kit-photo-main')) {
+    img.style.position = 'absolute';
+    img.style.top = '0';
+    img.style.left = '0';
+  }
+  dz.appendChild(img);
+  dz.classList.add('has-image');
+  dz.style.borderStyle = 'solid';
+  markKitChecklist(dz);
+}
+
+function markKitChecklist(dz) {
+  var sidebar = document.querySelector('#p02 .checklist');
+  if (!sidebar) return;
+  var items = sidebar.querySelectorAll('li');
+  var callout = dz.closest('.kit-callout');
+  if (dz.classList.contains('kit-photo-main')) {
+    if (items[0]) items[0].classList.add('done');
+  } else if (callout) {
+    var allCallouts = document.querySelectorAll('#canvas02 .kit-callout');
+    var idx = Array.prototype.indexOf.call(allCallouts, callout);
+    if (idx >= 0 && items[idx + 1]) items[idx + 1].classList.add('done');
+  }
+}
+
+initKitDropzones();
+
+// ══════ RESTAURAR FOTOS KIT DO LOCALSTORAGE ══════
+(function restoreKitFromStorage() {
+  var slots = document.querySelectorAll('#canvas02 [data-kit-slot]');
+  slots.forEach(function(dz) {
+    var key = 'kit_' + dz.dataset.kitSlot;
+    var saved = localStorage.getItem(key);
+    if (saved) {
+      restoreKitPhoto(dz, saved);
+      if (localStorage.getItem('kit_done_' + dz.dataset.kitSlot)) {
+        dz.classList.add('finalized');
+      }
+    }
+  });
+})();
+
+// ══════ CARREGAR APROVADAS (batch) ══════
+function loadKitApproved() {
+  var inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.multiple = true;
+  inp.onchange = function() {
+    var files = Array.from(inp.files);
+    if (!files.length) return;
+    // Ordem: principal, E1, E2, E3, D1, D2, D3
+    var mainDz = document.querySelector('#canvas02 .kit-photo-main');
+    var calloutDzs = document.querySelectorAll('#canvas02 .kit-callout .kit-mini-dz');
+    var slots = [mainDz];
+    calloutDzs.forEach(function(d) { slots.push(d); });
+    // Preencher slots vazios primeiro, depois sobrescrever
+    var emptySlots = slots.filter(function(s) { return !s.classList.contains('has-image'); });
+    var target = emptySlots.length > 0 ? emptySlots : slots;
+    files.forEach(function(file, i) {
+      if (i < target.length && target[i]) {
+        loadImageIntoKitDz(target[i], file);
+      }
+    });
+  };
+  inp.click();
+}
+
+function removeKitPhoto(btn) {
+  var dz = btn.parentElement;
+  dz.classList.remove('has-image');
+  dz.classList.remove('finalized');
+  dz.style.borderStyle = 'dashed';
+  dz.style.borderColor = '#F5A623';
+  // Remover img
+  var img = dz.querySelector('img');
+  if (img) img.remove();
+  // Restaurar placeholder se nao existe
+  if (!dz.querySelector('.kit-mini-dz-placeholder')) {
+    var ph = document.createElement('span');
+    ph.className = 'kit-mini-dz-placeholder';
+    ph.innerHTML = '&#128247;';
+    dz.insertBefore(ph, btn.nextSibling);
+  }
+  if (!dz.querySelector('.kit-dz-hint')) {
+    var hint = document.createElement('span');
+    hint.className = 'kit-dz-hint';
+    hint.textContent = dz.classList.contains('kit-photo-main') ? 'Carregar foto principal' : 'Carregar foto';
+    dz.appendChild(hint);
+  }
+  // Limpar localStorage
+  var slot = dz.dataset.kitSlot;
+  if (slot) {
+    localStorage.removeItem('kit_' + slot);
+    localStorage.removeItem('kit_done_' + slot);
+  }
+  // Desmarcar checklist
+  unmarkKitChecklist(dz);
+}
+
+function toggleKitDone(btn) {
+  var dz = btn.parentElement;
+  if (!dz.classList.contains('has-image')) return;
+  var isFinal = dz.classList.toggle('finalized');
+  // Salvar estado finalizado
+  var slot = dz.dataset.kitSlot;
+  if (slot) {
+    if (isFinal) {
+      localStorage.setItem('kit_done_' + slot, '1');
+    } else {
+      localStorage.removeItem('kit_done_' + slot);
+    }
+  }
+  if (isFinal) {
+    markKitChecklist(dz);
+  } else {
+    unmarkKitChecklist(dz);
+  }
+}
+
+function unmarkKitChecklist(dz) {
+  var sidebar = document.querySelector('#p02 .checklist');
+  if (!sidebar) return;
+  var items = sidebar.querySelectorAll('li');
+  var callout = dz.closest('.kit-callout');
+  if (dz.classList.contains('kit-photo-main')) {
+    if (items[0]) items[0].classList.remove('done');
+  } else if (callout) {
+    var allCallouts = document.querySelectorAll('#canvas02 .kit-callout');
+    var idx = Array.prototype.indexOf.call(allCallouts, callout);
+    if (idx >= 0 && items[idx + 1]) items[idx + 1].classList.remove('done');
+  }
+}
+
+// ══════ SERVER WORKBENCH — SALVAR / FINALIZAR / CARREGAR ══════
+
+function showServerToast(msg, isError) {
+  var old = document.querySelector('.ctx-toast');
+  if (old) old.remove();
+  var t = document.createElement('div');
+  t.className = 'ctx-toast';
+  t.textContent = msg;
+  if (isError) t.style.background = '#ef4444';
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3000);
+}
+
+function marcarNavDot(panelId, salvo) {
+  var dot = document.querySelector('.nav-saved-dot[data-dot="' + panelId + '"]');
+  if (dot) {
+    if (salvo) dot.classList.add('visible');
+    else dot.classList.remove('visible');
+  }
+}
+
+function gerarImagemPainel(panelId) {
+  return new Promise(function(resolve, reject) {
+    var panel = document.getElementById(panelId);
+    if (!panel) return reject(new Error('Painel nao encontrado'));
+
+    var canvasDiv = panel.querySelector('.canvas');
+    var dropzone = panel.querySelector('.dropzone');
+
+    if (canvasDiv) {
+      var origTransform = canvasDiv.style.transform;
+      var origOrigin = canvasDiv.style.transformOrigin;
+      canvasDiv.style.transform = 'none';
+
+      html2canvas(canvasDiv, {
+        width: 1200, height: 1200, scale: 1,
+        useCORS: true, backgroundColor: '#ffffff'
+      }).then(function(c) {
+        canvasDiv.style.transform = origTransform;
+        canvasDiv.style.transformOrigin = origOrigin;
+        resolve(c.toDataURL('image/png'));
+      }).catch(function(err) {
+        canvasDiv.style.transform = origTransform;
+        canvasDiv.style.transformOrigin = origOrigin;
+        reject(err);
+      });
+
+    } else if (dropzone) {
+      var img = dropzone.querySelector('img');
+      if (!img) return reject(new Error('Nenhuma imagem no painel'));
+
+      var hasText = dropzone.querySelectorAll('.text-overlay').length > 0;
+
+      if (hasText) {
+        var origT = dropzone.style.transform;
+        dropzone.style.transform = 'none';
+        dropzone.querySelectorAll('.text-overlay').forEach(function(t) { t.classList.remove('selected'); });
+        hideTextToolbar();
+
+        html2canvas(dropzone, {
+          width: 1200, height: 1200, scale: 1,
+          useCORS: true, backgroundColor: '#ffffff'
+        }).then(function(c) {
+          dropzone.style.transform = origT;
+          resolve(c.toDataURL('image/png'));
+        }).catch(function(err) {
+          dropzone.style.transform = origT;
+          reject(err);
+        });
+      } else {
+        var c = document.createElement('canvas');
+        c.width = 1200; c.height = 1200;
+        var ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, 1200, 1200);
+        var iw = img.naturalWidth, ih = img.naturalHeight;
+        var scale = Math.min(1200 / iw, 1200 / ih);
+        var sw = iw * scale, sh = ih * scale;
+        var sx = (1200 - sw) / 2, sy = (1200 - sh) / 2;
+        ctx.drawImage(img, sx, sy, sw, sh);
+        resolve(c.toDataURL('image/png'));
+      }
+    } else {
+      reject(new Error('Nada para exportar'));
+    }
+  });
+}
+
+function salvarPainel(panelId) {
+  var defaultName = panelId.replace('p', 'foto_');
+  var panel = document.getElementById(panelId);
+  if (panel && panel.querySelector('.canvas')) {
+    defaultName = panelId.replace('p', 'ilustracao_');
+  }
+
+  var name = prompt('Nome para salvar:', defaultName);
+  if (!name) return;
+
+  var btn = null;
+  if (panel) {
+    var btns = panel.querySelectorAll('.btn-salvar');
+    if (btns.length) btn = btns[0];
+  }
+  if (btn) { btn.textContent = 'Salvando...'; btn.disabled = true; }
+
+  gerarImagemPainel(panelId).then(function(dataUrl) {
+    return fetch('/api/salvar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ panelId: panelId, name: name, imageData: dataUrl })
+    });
+  }).then(function(res) { return res.json(); })
+  .then(function(data) {
+    if (btn) { btn.textContent = 'SALVAR'; btn.disabled = false; }
+    if (data.ok) {
+      showServerToast('Salvo: ' + data.filename);
+      marcarNavDot(panelId, true);
+    } else {
+      showServerToast('Erro: ' + (data.error || 'desconhecido'), true);
+    }
+  }).catch(function(err) {
+    if (btn) { btn.textContent = 'SALVAR'; btn.disabled = false; }
+    showServerToast('Erro: ' + err.message, true);
+  });
+}
+
+function finalizarTudo() {
+  var ids = ['p01','p02','p03','p04','p05','p06','p07','p08','p09','p10'];
+  var btnFin = document.querySelector('.btn-finalizar');
+  if (btnFin) { btnFin.textContent = 'Exportando...'; btnFin.disabled = true; }
+
+  var promises = ids.map(function(pid) {
+    return gerarImagemPainel(pid).then(function(dataUrl) {
+      return { panelId: pid, imageData: dataUrl };
+    }).catch(function() {
+      return null;
+    });
+  });
+
+  Promise.all(promises).then(function(results) {
+    var paineis = results.filter(function(r) { return r !== null; });
+    if (paineis.length === 0) {
+      showServerToast('Nenhum painel com conteudo para finalizar', true);
+      if (btnFin) { btnFin.textContent = 'FINALIZAR TUDO'; btnFin.disabled = false; }
+      return;
+    }
+
+    fetch('/api/finalizar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paineis: paineis })
+    }).then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (btnFin) { btnFin.textContent = 'FINALIZAR TUDO'; btnFin.disabled = false; }
+      if (data.ok) {
+        showServerToast(data.total + ' imagens exportadas para Prontos_ML/');
+      } else {
+        showServerToast('Erro: ' + (data.error || 'desconhecido'), true);
+      }
+    }).catch(function(err) {
+      if (btnFin) { btnFin.textContent = 'FINALIZAR TUDO'; btnFin.disabled = false; }
+      showServerToast('Erro: ' + err.message, true);
+    });
+  });
+}
+
+function carregarSalvos() {
+  fetch('/api/carregar').then(function(res) { return res.json(); })
+  .then(function(mapa) {
+    Object.keys(mapa).forEach(function(panelId) {
+      var filename = mapa[panelId];
+      var panel = document.getElementById(panelId);
+      if (!panel) return;
+
+      marcarNavDot(panelId, true);
+
+      var dropzone = panel.querySelector('.dropzone');
+      if (dropzone && !dropzone.querySelector('img')) {
+        var imgUrl = '/Fotos_Infograficos_aprovados/' + filename;
+        var img = document.createElement('img');
+        img.src = imgUrl;
+        img.onload = function() {
+          dropzone.classList.add('has-image');
+          dropzone.appendChild(img);
+        };
+      }
+    });
+  }).catch(function() {
+    // Server nao disponivel — modo offline, sem auto-load
+  });
+}
+
+// Auto-load ao iniciar (so funciona quando servido pelo Flask)
+if (location.port === '5002' || location.hostname === 'localhost') {
+  document.addEventListener('DOMContentLoaded', carregarSalvos);
+}
+
 </script>
+
+</div><!-- /page-wrap -->
 
 </body>
 </html>
